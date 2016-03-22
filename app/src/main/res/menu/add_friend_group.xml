@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/popupmenu">
+        <item
+            android:id="@+id/add_friend"
+            android:icon="@mipmap/add_friend"
+            android:title="新增好友" />
+        <item
+            android:id="@+id/add_group"
+            android:icon="@mipmap/add_group"
+            android:title="新增群組" />
+        <item
+            android:id="@+id/generate_qrcode"
+            android:icon="@mipmap/qrcode"
+            android:title="自身帳號QRcode" />
+        <item
+            android:id="@+id/deleted_friend_list"
+            android:icon="@mipmap/deleted_friend"
+            android:title="好友刪除清單" />
+    </group>
+</menu>

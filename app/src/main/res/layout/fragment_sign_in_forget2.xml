@@ -1,0 +1,129 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.SignIn.Ft2_forget.SignInForget2Fragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:scrollbars="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="親愛的會員 : "
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <TextView
+                        android:id="@+id/textView43"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="我們已將 4位數 驗證碼寄至"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="email"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="#ffa920"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView41"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="請您在時限內完成開通手續"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <TextView
+                        android:id="@+id/textView42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="貼心提醒 : \n若操作逾時，請點擊重送鍵，重新取得驗證碼" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textColorHint="#555555"
+                        android:theme="@style/TextEd">
+
+                        <EditText
+                            android:id="@+id/RegId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:gravity="center"
+                            android:hint="驗證碼"
+                            android:maxLength="4" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/RequestCodeBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="重新獲得驗證碼" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#bdc3c7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView123"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/sendTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_active_forget_tv"
+            android:gravity="center"
+            android:text="送出"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</LinearLayout>

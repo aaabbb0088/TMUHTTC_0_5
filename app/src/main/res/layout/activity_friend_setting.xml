@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fSettingScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:overScrollMode="never"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft4_setting.FriendSettingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:id="@+id/friNickNameLy">
+
+            <ImageView
+                android:id="@+id/imageView28"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/edit_friend" />
+
+            <TextView
+                android:id="@+id/friNickNameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="好友暱稱"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shareDataLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/background_friend_setting"
+            android:divider="@drawable/background_friend_setting_divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/textView55"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="分享給好友"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView59"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="量測數據"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView60"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="用藥紀錄"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView61"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="繳費紀錄"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView62"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="健康報告書"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView75"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="服務歷程"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView77"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="定位資訊"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shareNoticeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/background_friend_setting"
+            android:divider="@drawable/background_friend_setting_divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/textView57"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="讓好友收到"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView78"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="數據異常推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView79"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="用藥紀錄推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView80"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="繳費提醒推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView81"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="月報告書推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView82"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="服務歷程推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/receiveNoticeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/background_friend_setting"
+            android:divider="@drawable/background_friend_setting_divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/textView58"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="接收好友訊息"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView83"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="數據異常推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView84"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="用藥紀錄推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView85"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="繳費提醒推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView86"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="月報告書推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView87"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="服務歷程推撥"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sb_default16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical" />
+                </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

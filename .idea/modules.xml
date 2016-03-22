@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/TMUHTTC_0_5.iml" filepath="$PROJECT_DIR$/TMUHTTC_0_5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chat/chat.iml" filepath="$PROJECT_DIR$/chat/chat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/secrettextview/secrettextview.iml" filepath="$PROJECT_DIR$/secrettextview/secrettextview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/timescroller/timescroller.iml" filepath="$PROJECT_DIR$/timescroller/timescroller.iml" />
+    </modules>
+  </component>
+</project>

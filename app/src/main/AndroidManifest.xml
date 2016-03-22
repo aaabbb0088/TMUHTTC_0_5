@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.test.tonychuang.tmuhttc_0_5">
+
+    <!-- Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- VIBRATE -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--QRCode-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!--************************************************************************************-->
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SignIn.LogoPageActivity"
+            android:screenOrientation="portrait" >
+
+        </activity>
+        <activity
+            android:name=".SignIn.SignInActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"> <!-- 強制跳出鍵盤 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignIn.Ft1_active.SignInActiveActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignIn.Ft2_forget.SignInForgetActivity"
+            android:screenOrientation="portrait" />
+
+        <!--************************************************************************************-->
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <!--************************************************************************************-->
+
+        <activity
+            android:name=".Tab1_person.VP1_data.Ft1_press.PersonDataPressActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP1_data.Ft2_glycemia.PersonDataGlycemiaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP1_data.Ft3_msg.PersonMsgGlycemiaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP1_data.Ft3_msg.PersonMsgPressActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP2_service.Ft1_medicine.PersonServiceMedicineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP2_service.Ft2_report.PersonServiceReportActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP2_service.Ft3_pay.PersonServicePayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab1_person.VP2_service.Ft4_record.PersonServiceRecordActivity"
+            android:screenOrientation="portrait" />
+
+        <!--************************************************************************************-->
+
+        <activity
+            android:name=".Tab2_friend.Ft1_board.FriendBoardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft2_map.FriendMapActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.FriendPersonalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft1_press.FriendPersonalPressActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft2_glycemia.FriendPersonalGlycemiaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft3_medicine.FriendPersonalMedicineActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft4_report.FriendPersonalReportActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft5_pay.FriendPersonalPayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft6_record.FriendPersonalRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft7_msg.FriendMsgGlycemiaActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Tab2_friend.Ft3_personal.Ft7_msg.FriendMsgPressActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab2_friend.Ft4_setting.FriendSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <!--************************************************************************************-->
+
+        <activity
+            android:name=".Tab4_setting.SettingPersonalDataActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab4_setting.SettingNoticeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Tab4_setting.SettingFeedbackActivity"
+            android:screenOrientation="portrait" />
+
+        <!--************************************************************************************-->
+
+        <activity
+            android:name="com.test.tonychuang.chat.ChatActivity"
+            android:screenOrientation="portrait"/>
+
+    </application>
+
+</manifest>

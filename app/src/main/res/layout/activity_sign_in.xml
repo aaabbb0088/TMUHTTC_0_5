@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:background="@drawable/background_signin_layout"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/signin_user" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:theme="@style/TextEd">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/editPid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="身分證字號"
+                    android:maxLength="10"
+                    android:singleLine="true"
+                    app:met_baseColor="#000000"
+                    app:met_clearButton="true"
+                    app:met_maxCharacters="10" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/signin_pwd" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:theme="@style/TextEd">
+
+                <com.maksim88.passwordedittext.PasswordEditText
+                    android:id="@+id/editPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:hint="密碼"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    app:pet_hoverShowsPw="true"
+                    app:pet_nonMonospaceFont="true" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/btnSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="登入"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        custom:pb_colorComplete="@color/green_complete"
+        custom:pb_colorNormal="@color/colorPrimary"
+        custom:pb_colorPressed="@color/colorPrimaryDeepDark"
+        custom:pb_colorProgress="@color/purple_progress"
+        custom:pb_textComplete="登入成功"
+        custom:pb_textError="發生錯誤"
+        custom:pb_textProgress="登入中" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/activeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_signin_btn"
+            android:text="註冊帳號"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/forgetBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_signin_btn"
+            android:text="忘記密碼"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/pleaseWaitImgView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/please_wait"
+        android:visibility="invisible" />
+</LinearLayout>

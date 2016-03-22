@@ -1,0 +1,34 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:actionBarTabTextStyle">@style/ActionBarTabTextStyle.Tabtheme</item>
+        <item name="actionBarTabTextStyle">@style/ActionBarTabTextStyle.Tabtheme</item>
+
+        <item name="android:actionBarSize">45dp</item>
+    </style>
+
+    <style name="ActionBarTabTextStyle.Tabtheme" parent="Widget.AppCompat.Light.ActionBar.TabText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextEd" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="RadioGrp" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#327FC2</item>
+        <item name="colorPrimaryDark">#327FC2</item>
+        <item name="colorAccent">#327FC2</item>
+    </style>
+
+</resources>

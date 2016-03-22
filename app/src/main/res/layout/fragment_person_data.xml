@@ -1,0 +1,313 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.PersonDataFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView9" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/presslayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_presslayout"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/pressValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="xxx / xx"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#ffffff"
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/pressUnitText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/pressDateText"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_toEndOf="@+id/pressValueText"
+                    android:layout_toRightOf="@+id/pressValueText"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:text="毫米汞柱"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/pressDateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="M/d a hh:mm"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/pressValueText"
+                    android:layout_centerHorizontal="true"
+                    android:text="   收縮壓         舒張壓"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#ffffff" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@+id/textView4"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/textView4"
+                    android:layout_toStartOf="@+id/textView4"
+                    android:src="@mipmap/pressure_wi" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_thumbbtn"
+                android:clickable="true"
+                android:focusable="true"
+                android:foregroundGravity="center"
+                android:orientation="horizontal"
+                android:id="@+id/pressThbBtn">
+
+                <ImageView
+                    android:id="@+id/button7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_thumb_up_white_24dp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/textView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:autoText="false"
+                    android:gravity="center"
+                    android:text="x"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#FFFFFF" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/pressMsgBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_msgbtn"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_chat_bubble_white_24dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView38" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/glycemialayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_glycemialayout"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/glycemiaValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="xxx"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#ffffff"
+                    android:textSize="40sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/glycemiaUnitText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/glycemiaDateText"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="right"
+                    android:text="毫克/分升"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/glycemiaDateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="M/d a hh:mm"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/glycemiaMealText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/glycemiaValueText"
+                    android:layout_centerHorizontal="true"
+                    android:text="飯前血糖"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#ffffff" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignTop="@+id/glycemiaMealText"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="15dp"
+                    android:layout_toLeftOf="@+id/glycemiaMealText"
+                    android:layout_toStartOf="@+id/glycemiaMealText"
+                    android:src="@mipmap/glycemia_gwi" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_thumbbtn"
+                android:clickable="true"
+                android:focusable="true"
+                android:foregroundGravity="center"
+                android:orientation="horizontal"
+                android:id="@+id/glycemiaThbBtn">
+
+                <ImageView
+                    android:id="@+id/imageButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_thumb_up_white_24dp" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/textView26"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:autoText="false"
+                    android:gravity="center"
+                    android:text="x"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#FFFFFF" />
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/textView28"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/glycemiaMsgBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_msgbtn"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_chat_bubble_white_24dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView27" />
+
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#E7B510</color>
+    <color name="colorPrimaryDark">#D7A500</color>
+    <color name="colorPrimaryDeepDark">#A47200</color>
+    <color name="colorAccent">#303F9F</color>
+    <color name="colorTabClicked">#D7A500</color>
+
+    <color name="press">#ffffff</color>
+    <color name="nomal">#73ADED</color>
+    
+    <color name="unChangeTextColor">#888888</color>
+    <color name="changeTextColor">#000000</color>
+    <color name="warningTextColor">#FF0000</color>
+</resources>

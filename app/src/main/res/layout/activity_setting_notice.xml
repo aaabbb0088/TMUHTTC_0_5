@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:divider="@drawable/divider_setting"
+    android:dividerPadding="20dp"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.Tab4_setting.SettingNoticeActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView109"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="數據異常提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/wDataSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/wDataSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView111"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="藥物提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/medSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/medSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView113"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="繳費提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/paySettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/paySettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView115"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="新健康報告書提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/rptSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/rptSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView117"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="服務歷程通知"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/rcdSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/rcdSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView119"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="健康公佈欄提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/hBoardSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/hBoardSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout11"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/selector_setting_personal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView121"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="遠距中心留言板回覆提醒"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/hRspndSettingTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="開啟/關閉"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/hRspndSettingSb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="center_vertical"
+            android:checked="false" />
+    </LinearLayout>
+
+</LinearLayout>

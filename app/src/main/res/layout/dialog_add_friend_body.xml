@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft1_add.FriendAddActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <RadioGroup
+            android:id="@+id/addWayRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:theme="@style/RadioGrp">
+
+            <RadioButton
+                android:id="@+id/pidBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="身分證字號" />
+
+            <RadioButton
+                android:id="@+id/aidBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="系統ID" />
+
+            <RadioButton
+                android:id="@+id/qrcodeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="QR Code" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/idLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/pidInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/pidEd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="身分證字號"
+                    android:maxLength="10"
+                    android:singleLine="true"
+                    android:theme="@style/TextEd"
+                    app:met_baseColor="#000000"
+                    app:met_clearButton="true"
+                    app:met_floatingLabel="none"
+                    app:met_maxCharacters="10" />
+
+                <Button
+                    android:id="@+id/pidSearchBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="搜尋" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/aidInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/aidEd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="APP 12碼 帳號"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:singleLine="true"
+                    android:theme="@style/TextEd"
+                    app:met_baseColor="#000000"
+                    app:met_clearButton="true"
+                    app:met_floatingLabel="none"
+                    app:met_maxCharacters="12" />
+
+                <Button
+                    android:id="@+id/aidSearchBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="搜尋" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/idResultLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/avatarImv"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/happy_blue" />
+
+                <TextView
+                    android:id="@+id/nameTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="會員姓名"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/nicknameTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="會員暱稱"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qrLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/qrReadLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <FrameLayout
+                    android:layout_width="250dp"
+                    android:layout_height="300dp">
+
+                    <com.dlazaro66.qrcodereaderview.QRCodeReaderView
+                        android:id="@+id/qrDecoderView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/qrResultLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/qrAvatarImv"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/happy_blue" />
+
+                <TextView
+                    android:id="@+id/qrNameTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="會員姓名"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/qrNickNameTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="會員暱稱"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cancelTv"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_setting_personal"
+            android:gravity="center"
+            android:text="取消"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#33000000" />
+
+        <TextView
+            android:id="@+id/confirmTv"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_setting_personal"
+            android:gravity="center"
+            android:text="確定"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+</LinearLayout>

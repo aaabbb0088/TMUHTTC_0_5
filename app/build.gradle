@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.test.tonychuang.tmuhttc_0_5"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile files('libs/android-viewbadger.jar')
+    //繪圖控件
+    //自動縮放文字控件
+    //側滑控件
+    //用於側滑控件，呈現卡片樣式
+    //switch
+    //processBtn
+    //多功能EditText
+    //password EditText
+    compile project(':timescroller')
+    //時間scroller
+    compile project(':secrettextview')
+    //隨機淡入淡出TextView
+    compile project(':chat')
+    //隨機淡入淡出TextView
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.android.support:design:23.2.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
+    compile 'me.grantland:autofittextview:0.2.1'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
+    compile 'com.android.support:cardview-v7:23.2.1'
+    compile 'com.kyleduo.switchbutton:library:1.3.4'
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.github.maksim88:PasswordEditText:v0.5'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    //圓形ImageView
+    compile 'com.github.Kennyc1012:BottomSheet:2.1.1'
+    //BottomSheet(未用到)
+    compile 'com.lantouzi.wheelview:library:1.1.1'
+    //時間軸滾輪(未用到)
+    compile 'com.orhanobut:dialogplus:1.11@aar'
+    //dialogplis
+    compile 'com.brucetoo.pickview:library:1.1.1'
+    //仿IOS時間滾輪
+    compile('com.github.afollestad.material-dialogs:commons:0.8.5.7@aar') {
+        transitive = true
+    }
+    //多功能Dialog,目前用於同步資料時的等待Dialog
+    compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0' //解析QRCode
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
