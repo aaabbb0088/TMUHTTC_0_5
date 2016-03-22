@@ -161,6 +161,9 @@ public class SignInActivity extends AppCompatActivity {
      * 1.輸入身分證字號、密碼，呼叫登入API
      * 2.回傳登入結果(無此帳號、帳號或密碼錯誤、系統發生錯誤)
      * 3.登入成功，將登入結果寫入SignInShrPref(帳號[加密過]、密碼[加密過]、登入時間、登入狀態)
+     *
+     *
+     * 123123123
      */
 
 
