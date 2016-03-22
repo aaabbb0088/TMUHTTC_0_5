@@ -95,6 +95,13 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
      * d1
      */
     /**
+     * 更新資料
+     * medUpdatedFlag = 0;更新資料
+     * medUpdatedFlag = 1;已更新資料
+     *
+     * 個人用藥紀錄表ServiceMedicineTable (僅登入者資料)
+     */
+    /**
      *
      */
 

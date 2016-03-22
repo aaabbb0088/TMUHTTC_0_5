@@ -40,7 +40,6 @@ public class SignInActive2Fragment extends Fragment {
         initViews();
 
         initBottomBar();
-
         return view;
     }
 
@@ -108,6 +107,12 @@ public class SignInActive2Fragment extends Fragment {
 
     /**
      * d1
+     */
+    /**
+     * 註冊帳號第二步-輸入驗證碼
+     * 1.輸入驗證碼
+     * 2.如果超時，可按重新獲得驗證碼鍵(驗證碼鍵有倒數計時)
+     * 3.輸入驗證碼，送出驗證碼，取得結果(1.開通成功,跳到登入畫面,顯示要求再次輸入帳號密碼，2.驗證碼錯誤,重新申請驗證碼，3.系統發生異常)
      */
     /**
      *

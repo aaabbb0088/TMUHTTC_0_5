@@ -214,6 +214,20 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
      * d1
      */
     /**
+     * 每次開啟FriPsnalAty，更新一次
+     * 1.個人警戒值上下限設定檔WarningLevelSetting
+     * 2.個人血壓流水資料PressDataTable
+     * 3.個人血壓留言PressMsgTable
+     * 4.個人每日平均血壓PressAvgTable
+     * 5.個人血糖流水資料GlycemiaDataTable
+     * 6.個人血糖留言GlycemiaMsgTable
+     * 7.個人每日平均血壓GlycemiaAvgTable
+     * 8.個人用藥紀錄表ServiceMedicineTable
+     * 9.個人健康報告書表ServiceReportTable
+     * 10.個人繳費紀錄表ServicePayTable
+     * 11.個人服務歷程紀錄表ServiceRecordTable
+     */
+    /**
      *
      */
 

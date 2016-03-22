@@ -43,6 +43,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FragmentManager fragmentManager; //用於對Fragment進行管理
 
+    private static int mainUpdatedFlag = 0;
+    public static int medUpdatedFlag = 0;
+    public static int rptUpdatedFlag = 0;
+    public static int payUpdatedFlag = 0;
+    public static int rcdUpdatedFlag = 0;
+    public static int friUpdatedFlag = 0;
+    public static int friBoardUpdatedFlag = 0;
+    public static int comUpdatedFlag = 0;
+
+    private boolean isMemberflag = true;
+
     public static ActionBar actionBar;
 
     @Override
@@ -53,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initViews();
         initBar();
         fragmentManager = getSupportFragmentManager();
-        setTabSelection(0);// 第一次啟動時選中第0個tab
+        memberTabSetting(); //正式時，放在非同步完成資料更新後
 
-        //test code
+        //test code 同步中的表示Dialog
 //        final MySyncingDialog mySyncDialog = new MySyncingDialog(false, MainActivity.this, "資料同步中,請稍後");
 //        mySyncDialog.show();
 //        new Handler().postDelayed(new Runnable() {
@@ -140,6 +151,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     //endregion
+
+    private void memberTabSetting() {
+        if (isMemberflag) {   //如果是遠距會員->if,如果是非遠距會員->else
+            setTabSelection(0);// 第一次啟動時選中第0個tab
+        } else {
+            setTabSelection(1);
+            personLayout.setVisibility(View.GONE);
+        }
+    }
+
     //region 處理TAB切換分頁
     /**
      * 根據傳入的index參數來設置選中的tab頁。
@@ -261,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transaction.hide(settingFragment);
         }
     }
+
     //endregion
     //region 按下返回鍵出現確認離開視窗 onKeyDown, dialog
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -313,14 +335,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
 
 
-
     /**
      * d1
      */
     /**
+     * 同步所有個人資料
+     *
+     * 一、判斷是不是遠距會員
+     *   是-> isMemberflag = true
+     *        更新遠距會員個人資料
+     *   否-> isMemberflag = false
+     *        更新APP會員個人資料
+     *
+     * 二、更新資料
+     * mainUpdatedFlag = 0;//更新資料
+     * mainUpdatedFlag = 1;//已更新資料
+     *
+     * APP會員
+     * 1.個人基本設定PersonalDataSetting
+     * 2.個人設定PersonalSetting
+     *
+     *
+     * 遠距會員
+     * 1.個人基本設定PersonalDataSetting
+     * 2.個人設定PersonalSetting
+     *
+     * 1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料)
+     * 2.個人血壓流水資料PressDataTable (僅登入者資料)
+     * 3.個人血壓留言PressMsgTable (僅登入者資料)
+     * 4.個人每日平均血壓PressAvgTable (僅登入者資料)
+     * 5.個人血糖流水資料GlycemiaDataTable (僅登入者資料)
+     * 6.個人血糖留言GlycemiaMsgTable (僅登入者資料)
+     * 7.個人每日平均血壓GlycemiaAvgTable (僅登入者資料)
+     * 8.APP使用者個人訊息表PersonalNoticeTable
+     * 9.APP使用者中心訊息表CenterNoticeTable
+     */
+    /**
      *
      */
-
 
 
     /**
@@ -329,8 +381,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-
-
 
 
 }

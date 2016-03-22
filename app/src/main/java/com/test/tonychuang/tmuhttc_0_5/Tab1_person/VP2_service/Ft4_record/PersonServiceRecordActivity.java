@@ -97,6 +97,13 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
      * d1
      */
     /**
+     * 更新資料
+     * rcdUpdatedFlag = 0;更新資料
+     * rcdUpdatedFlag = 1;已更新資料
+     *
+     * 個人服務歷程紀錄表ServiceRecordTable (僅登入者資料)
+     */
+    /**
      *
      */
 

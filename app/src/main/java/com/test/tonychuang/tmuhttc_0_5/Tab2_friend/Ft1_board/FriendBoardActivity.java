@@ -44,6 +44,14 @@ public class FriendBoardActivity extends AppCompatActivity {
      * d1
      */
     /**
+     * 更新資料
+     * friBoardUpdatedFlag = 0;更新資料
+     * friBoardUpdatedFlag = 1;已更新資料
+     *
+     * APP使用者好友個人訊息表FriendNoticeTable
+     * APP使用者好友邀請訊息表FriendAddNoticeTable
+     */
+    /**
      *
      */
 

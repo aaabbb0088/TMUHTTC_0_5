@@ -73,8 +73,18 @@ public class FriendSettingActivity extends AppCompatActivity implements View.OnC
      * v1
      */
     /**
+     * 好友非遠距會員("接收好友訊息"選單隱藏)、自己非遠距會員("分享給好友","讓好友收到"選單隱藏)
+     */
+    /**
+     * 每次開啟FriSettingAty，更新一次
+     * APP使用者個人資料分享好友設定表FriendShareSettingTable
+     * APP使用者個人訊息分享好友設定表FriendShareNoticeSettingTable
+     * APP使用者好友訊息接受設定表FriendReceiveNoticeSettingTable
+     */
+    /**
      *
      */
+
     private void initBar() {
         myInitReturnBar = new MyInitReturnBar(this, "好友設定 - 會員暱稱", 0);
     }

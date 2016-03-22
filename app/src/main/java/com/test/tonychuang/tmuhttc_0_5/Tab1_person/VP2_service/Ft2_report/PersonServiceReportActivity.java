@@ -94,6 +94,13 @@ public class PersonServiceReportActivity extends AppCompatActivity implements Pr
      * d1
      */
     /**
+     * 更新資料
+     * rptUpdatedFlag = 0;更新資料
+     * rptUpdatedFlag = 1;已更新資料
+     *
+     * 個人健康報告書表ServiceReportTable (僅登入者資料)
+     */
+    /**
      *
      */
 

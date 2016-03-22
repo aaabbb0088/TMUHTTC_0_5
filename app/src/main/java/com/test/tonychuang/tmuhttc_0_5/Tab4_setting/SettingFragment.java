@@ -101,6 +101,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
      * v1
      */
     /**
+     * 自己非遠距會員("提醒設定"按鈕隱藏)
+     */
+    /**
      *
      */
     public void initBar() {

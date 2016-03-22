@@ -24,6 +24,10 @@ import java.util.Locale;
  * 1.日期選擇 : TEXTVIEW -> datepicker dialog
  * 2.時間選擇 : Ruler -> 外部控件
  * 3.Bar顯示被追蹤者暱稱
+ *
+ *
+ * 開啟MapActivity時，先更新，補齊到最新資料(從上次最後一筆資料往後同步)，如果沒有資料，抓2天資料
+ * 之後用多執行緒，每3分鐘下載一次資料
  */
 
 
