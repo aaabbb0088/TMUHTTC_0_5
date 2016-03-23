@@ -58,7 +58,7 @@
                             android:theme="@style/TextEd">
 
                             <com.maksim88.passwordedittext.PasswordEditText
-                                android:id="@+id/editPassword"
+                                android:id="@+id/editPwdEd"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="start"
@@ -91,7 +91,7 @@
                             android:theme="@style/TextEd">
 
                             <com.maksim88.passwordedittext.PasswordEditText
-                                android:id="@+id/editPasswordCheck"
+                                android:id="@+id/editPwdCheckEd"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="start"

@@ -101,7 +101,7 @@
                                 android:id="@+id/editEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="E-mail"
+                                android:hint="註冊的E-mail"
                                 android:inputType="textEmailAddress"
                                 app:met_baseColor="#000000"
                                 app:met_clearButton="true"
@@ -113,8 +113,10 @@
                     <Button
                         android:id="@+id/changOnLineBtn"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="線上修改密碼 - 3步驟" />
+                        android:layout_height="35dp"
+                        android:background="@drawable/selector_setting_signout"
+                        android:text="線上修改密碼 - 3步驟"
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -138,8 +140,11 @@
                     <Button
                         android:id="@+id/changOnPhoneBtn"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="聯繫遠距照護中心" />
+                        android:layout_height="35dp"
+                        android:background="@drawable/selector_setting_signout"
+                        android:text="電話聯繫遠距照護中心"
+                        android:layout_marginTop="10dp"
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

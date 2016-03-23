@@ -3,10 +3,16 @@ package com.test.tonychuang.tmuhttc_0_5.SignIn.Ft2_forget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +21,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyValidator;
+
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +42,10 @@ public class SignInForget1Fragment extends Fragment {
 
     private Button changOnLineBtn;
     private Button changOnPhoneBtn;
+    private MaterialEditText editPid;
+    private MaterialEditText editEmail;
+
+    private final static String CALL = "android.intent.action.CALL";
 
 
     public SignInForget1Fragment() {
@@ -41,8 +59,20 @@ public class SignInForget1Fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_sign_in_forget1, container, false);
         initBar();
         initViews();
+        initBtn();
 
-        initBottomBar();
+        //test code
+        changOnLineBtn.setEnabled(true);
+        changOnLineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+//                                .addToBackStack(null)
+                        .replace(R.id.content, new SignInForget2Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
+                        .commit();
+            }
+        });
+        //test code
 
         return view;
     }
@@ -55,28 +85,62 @@ public class SignInForget1Fragment extends Fragment {
      *
      */
 
-    private void initBottomBar() {
+    private void initBtn() {
         changOnLineBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.content, new SignInForget2Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                        .commit();
+                requestCode();
             }
         });
 
         changOnPhoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "電話連略遠距健康中心", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "撥號中... 請稍後", Toast.LENGTH_LONG).show();
+                Intent call = new Intent(CALL, Uri.parse("tel:" + "0221765226"));
+                startActivity(call);
             }
         });
     }
 
     private void initViews() {
         changOnLineBtn = (Button) view.findViewById(R.id.changOnLineBtn);
+        changOnLineBtn.setEnabled(false);
         changOnPhoneBtn = (Button) view.findViewById(R.id.changOnPhoneBtn);
+        editPid = (MaterialEditText) view.findViewById(R.id.editPid);
+        editEmail = (MaterialEditText) view.findViewById(R.id.editEmail);
+
+        editPid.addTextChangedListener(getTextWatch());
+        editEmail.addTextChangedListener(getTextWatch());
+        editPid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    editPid.setError(null);
+                } else {
+                    if (TextUtils.isEmpty(editPid.getText())) {
+                        editPid.setError("必填");
+                    } else if (!MyValidator.isValidTWPID(editPid.getText().toString())) {
+                        editPid.setError("身分證格式錯誤");
+                    }
+                }
+            }
+        });
+
+        editEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    editEmail.setError(null);
+                } else {
+                    if (TextUtils.isEmpty(editEmail.getText())) {
+                        editEmail.setError("必填");
+                    } else if (!MyValidator.isValidEmail(editEmail.getText().toString())) {
+                        editEmail.setError("Email格式錯誤");
+                    }
+                }
+            }
+        });
     }
 
     void initBar() {
@@ -114,6 +178,29 @@ public class SignInForget1Fragment extends Fragment {
     /**
      *
      */
+    private TextWatcher getTextWatch() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (MyValidator.isValidTWPID(editPid.getText().toString())
+                        && MyValidator.isValidEmail(editEmail.getText().toString())) {
+                    changOnLineBtn.setEnabled(true);
+                } else {
+                    changOnLineBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+    }
 
 
     /**
@@ -128,6 +215,57 @@ public class SignInForget1Fragment extends Fragment {
     /**
      *
      */
+    private void requestCode() {
+        final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您申請驗證碼，請稍後");
+        new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                String string = "error";
+
+                try {
+                    JSONObject jsonObject = httcjsonapi.frgtReSendreg(params[0], params[1]);
+                    string = jsonParser.parseString(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return string;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                mySyncingDialog.dismiss();
+                switch (string) {
+                    case "true":
+                        SignInForgetActivity.pid = editPid.getText().toString();
+                        SignInForgetActivity.email = editEmail.getText().toString();
+                        getActivity().getSupportFragmentManager().beginTransaction()
+//                                .addToBackStack(null)
+                                .replace(R.id.content, new SignInForget2Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
+                                .commit();
+                        break;
+                    case "false":
+                        Toast.makeText(getActivity(), "資料錯誤，請確認", Toast.LENGTH_LONG).show();
+                        break;
+                    case "error":
+                        Toast.makeText(getActivity(), "系統發生錯誤，請稍後再註冊，感謝您", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), SignInActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(intent);
+                        getActivity().finish();
+                        break;
+                }
+            }
+        }.execute(editPid.getText().toString(), editEmail.getText().toString());
+    }
 
 
     /**

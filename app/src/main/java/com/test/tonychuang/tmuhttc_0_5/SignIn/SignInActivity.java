@@ -127,14 +127,19 @@ public class SignInActivity extends AppCompatActivity {
         activeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editPid.setText("");
+                editPassword.setText("");
                 Intent intent = new Intent().setClass(SignInActivity.this, SignInActiveActivity.class);
                 startActivity(intent);
+
             }
         });
 
         forgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editPid.setText("");
+                editPassword.setText("");
                 Intent intent = new Intent().setClass(SignInActivity.this, SignInForgetActivity.class);
                 startActivity(intent);
             }

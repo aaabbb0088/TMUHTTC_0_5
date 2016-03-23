@@ -31,7 +31,6 @@
         <activity
             android:name=".SignIn.LogoPageActivity"
             android:screenOrientation="portrait" >
-
         </activity>
         <activity
             android:name=".SignIn.SignInActivity"

@@ -18,6 +18,8 @@ import com.test.tonychuang.tmuhttc_0_5.R;
 public class SignInForgetActivity extends AppCompatActivity {
 
     static ActionBar actionBar;
+    static String pid;
+    static String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -17,6 +17,7 @@ import com.test.tonychuang.tmuhttc_0_5.Tab1_person.PersonFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.FriendFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab3_community.CommunityFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab4_setting.SettingFragment;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int friBoardUpdatedFlag = 0;
     public static int comUpdatedFlag = 0;
 
-    private boolean isMemberflag = true;
-
     public static ActionBar actionBar;
 
     @Override
@@ -65,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initBar();
         fragmentManager = getSupportFragmentManager();
         memberTabSetting(); //正式時，放在非同步完成資料更新後
+
+        updateData();
 
         //test code 同步中的表示Dialog
 //        final MySyncingDialog mySyncDialog = new MySyncingDialog(false, MainActivity.this, "資料同步中,請稍後");
@@ -153,7 +154,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //endregion
 
     private void memberTabSetting() {
-        if (isMemberflag) {   //如果是遠距會員->if,如果是非遠距會員->else
+        //test code
+        SignInShrPref signInShrPref = new SignInShrPref(this);
+        signInShrPref.setMemberFlag(true);
+
+        if (new SignInShrPref(this).getMemberFlag()) {   //如果是遠距會員->if,如果是非遠距會員->else
             setTabSelection(0);// 第一次啟動時選中第0個tab
         } else {
             setTabSelection(1);
@@ -353,12 +358,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *
      * APP會員
      * 1.個人基本設定PersonalDataSetting
-     * 2.個人設定PersonalSetting
-     *
+     * 2.個人設定PersonalSetting (判斷與上次使用的裝置,相同 不用更新，不同 需要更新)
      *
      * 遠距會員
      * 1.個人基本設定PersonalDataSetting
-     * 2.個人設定PersonalSetting
+     * 2.個人設定PersonalSetting (判斷與上次使用的裝置,相同 不用更新，不同 需要更新)
      *
      * 1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料)
      * 2.個人血壓流水資料PressDataTable (僅登入者資料)
@@ -373,6 +377,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
+    private void updateData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        Toast.makeText(MainActivity.this, "哈哈哈", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
+    }
 
 
     /**

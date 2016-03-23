@@ -1,4 +1,4 @@
-package com.test.tonychuang.tmuhttc_0_5.SignIn.Ft2_forget;
+package com.test.tonychuang.tmuhttc_0_5.SignIn.Ft1_active;
 
 
 import android.annotation.SuppressLint;
@@ -32,7 +32,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SignInForget2Fragment extends Fragment {
+public class SignInActive3Fragment extends Fragment {
 
 
     private ActionBar actionBar;
@@ -43,7 +43,7 @@ public class SignInForget2Fragment extends Fragment {
     private CountDownTimer countDownTimer;
 
 
-    public SignInForget2Fragment() {
+    public SignInActive3Fragment() {
         // Required empty public constructor
     }
 
@@ -51,24 +51,10 @@ public class SignInForget2Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_sign_in_forget2, container, false);
+        view = inflater.inflate(R.layout.fragment_sign_in_active3, container, false);
         initBar();
         initViews();
         initBtn();
-
-        //test
-        setTvEnabledTrue(sendTv);
-        sendTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .addToBackStack(null)
-                        .replace(R.id.content, new SignInForget3Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                        .commit();
-            }
-        });
-        //test
-
         return view;
     }
 
@@ -80,7 +66,7 @@ public class SignInForget2Fragment extends Fragment {
      *
      */
     void initBar() {
-        actionBar = SignInForgetActivity.actionBar;
+        actionBar = SignInActiveActivity.actionBar;
         if (actionBar != null) {
             actionBar.setElevation(0);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD); // Specify that tabs should be displayed in the action bar.
@@ -203,30 +189,30 @@ public class SignInForget2Fragment extends Fragment {
      * d1
      */
     /**
-     * 忘記密第二步-輸入驗證碼
+     * 註冊帳號第二步-輸入驗證碼
      * 1.輸入驗證碼
      * 2.如果超時，可按重新獲得驗證碼鍵(驗證碼鍵有倒數計時)
-     * 3.輸入驗證碼，送出驗證碼，取得結果(1.成功,跳到下一頁，2.驗證碼錯誤,重新申請驗證碼，3.系統發生異常)
+     * 3.輸入驗證碼，送出驗證碼，取得結果(1.開通成功,跳到登入畫面,顯示要求再次輸入帳號密碼，2.驗證碼錯誤,重新申請驗證碼，3.系統發生異常)
      */
     /**
      *
      */
     private void sendReId() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您註冊中，請稍後");
-        new AsyncTask<String, Void, Boolean>() {
+        new AsyncTask<String, Void, String>() {
             @Override
-            protected Boolean doInBackground(String... params) {
+            protected String doInBackground(String... params) {
                 HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
                 JSONParser jsonParser = new JSONParser();
-                Boolean aBoolean = false;
+                String string = "error";
 
                 try {
-                    JSONObject jsonObject = httcjsonapi.InputRegNumFrgt(params[0], params[1]);
-                    aBoolean = jsonParser.parseBoolean(jsonObject);
+                    JSONObject jsonObject = httcjsonapi.InputRegNum(params[0], params[1]);
+                    string = jsonParser.parseString(jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return aBoolean;
+                return string;
             }
 
             @Override
@@ -236,22 +222,29 @@ public class SignInForget2Fragment extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                super.onPostExecute(aBoolean);
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
                 mySyncingDialog.dismiss();
                 Intent intent = new Intent(getActivity(), SignInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                if (aBoolean) {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-//                                .addToBackStack(null)
-                            .replace(R.id.content, new SignInForget3Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                            .commit();
-                } else {
-                    Toast.makeText(getActivity(), "驗證碼錯誤，請重新申請驗證碼", Toast.LENGTH_LONG).show();
-                    countDownTimer.onFinish();
+                switch (s) {
+                    case "true":
+                        Toast.makeText(getActivity(), "感謝您完成註冊\n請使用註冊的帳號密碼登入", Toast.LENGTH_LONG).show();
+                        startActivity(intent);
+                        getActivity().finish();
+                        break;
+                    case "false":
+                        Toast.makeText(getActivity(), "驗證碼錯誤，請重新申請驗證碼", Toast.LENGTH_LONG).show();
+                        countDownTimer.onFinish();
+                        break;
+                    case "error":
+                        Toast.makeText(getActivity(), "系統發生錯誤，請稍後再註冊，感謝您", Toast.LENGTH_LONG).show();
+                        startActivity(intent);
+                        getActivity().finish();
+                        break;
                 }
             }
-        }.execute(SignInForgetActivity.pid, RegNumEd.getText().toString());
+        }.execute(SignInActiveActivity.pid, RegNumEd.getText().toString());
     }
 
     private void requestCode() {
@@ -286,15 +279,14 @@ public class SignInForget2Fragment extends Fragment {
                     Toast.makeText(getActivity(), "新註冊碼已寄出", Toast.LENGTH_LONG).show();
                     initcountdown();
                 } else {
-                    Toast.makeText(getActivity(), "系統發生錯誤，請稍後再嘗試\n" +
-                            "或者，直接聯繫遠距照護中心，感謝您", Toast.LENGTH_LONG).show();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-//                                .addToBackStack(null)
-                            .replace(R.id.content, new SignInForget1Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                            .commit();
+                    Toast.makeText(getActivity(), "系統發生錯誤，請稍後再註冊，感謝您", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getActivity(), SignInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
-        }.execute(SignInForgetActivity.pid, SignInForgetActivity.email);
+        }.execute(SignInActiveActivity.pid, SignInActiveActivity.email);
     }
 
 

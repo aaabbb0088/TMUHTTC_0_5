@@ -11,6 +11,8 @@ public class SignInActiveActivity extends AppCompatActivity {
 
 
     static ActionBar actionBar;
+    static String pid;
+    static String email;
 
 
     @Override

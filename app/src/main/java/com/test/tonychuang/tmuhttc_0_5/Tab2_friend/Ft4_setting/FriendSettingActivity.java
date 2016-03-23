@@ -76,7 +76,7 @@ public class FriendSettingActivity extends AppCompatActivity implements View.OnC
      * 好友非遠距會員("接收好友訊息"選單隱藏)、自己非遠距會員("分享給好友","讓好友收到"選單隱藏)
      */
     /**
-     * 每次開啟FriSettingAty，更新一次
+     * 每次開啟FriSettingAty，判斷與上次使用的裝飾是否相同，相同不用更新，不同需要更新
      * APP使用者個人資料分享好友設定表FriendShareSettingTable
      * APP使用者個人訊息分享好友設定表FriendShareNoticeSettingTable
      * APP使用者好友訊息接受設定表FriendReceiveNoticeSettingTable
