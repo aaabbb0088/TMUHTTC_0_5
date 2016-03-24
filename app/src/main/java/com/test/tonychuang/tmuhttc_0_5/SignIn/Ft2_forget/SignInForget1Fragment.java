@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -60,19 +61,6 @@ public class SignInForget1Fragment extends Fragment {
         initBar();
         initViews();
         initBtn();
-
-        //test code
-        changOnLineBtn.setEnabled(true);
-        changOnLineBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-//                                .addToBackStack(null)
-                        .replace(R.id.content, new SignInForget2Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                        .commit();
-            }
-        });
-        //test code
 
         return view;
     }
@@ -217,6 +205,7 @@ public class SignInForget1Fragment extends Fragment {
      */
     private void requestCode() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您申請驗證碼，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
@@ -264,7 +253,9 @@ public class SignInForget1Fragment extends Fragment {
                         break;
                 }
             }
-        }.execute(editPid.getText().toString(), editEmail.getText().toString());
+        }
+                .execute(editPid.getText().toString(),
+                        editEmail.getText().toString());
     }
 
 

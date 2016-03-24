@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -199,6 +200,7 @@ public class SignInActive3Fragment extends Fragment {
      */
     private void sendReId() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您註冊中，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
@@ -244,11 +246,13 @@ public class SignInActive3Fragment extends Fragment {
                         break;
                 }
             }
-        }.execute(SignInActiveActivity.pid, RegNumEd.getText().toString());
+        }
+                .execute(SignInActiveActivity.pid, RegNumEd.getText().toString());
     }
 
     private void requestCode() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您申請新驗證碼，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -286,7 +290,9 @@ public class SignInActive3Fragment extends Fragment {
                     getActivity().finish();
                 }
             }
-        }.execute(SignInActiveActivity.pid, SignInActiveActivity.email);
+        }
+                .execute(SignInActiveActivity.pid,
+                        SignInActiveActivity.email);
     }
 
 

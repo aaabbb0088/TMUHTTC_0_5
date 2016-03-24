@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -193,8 +194,8 @@ public class SignInActive2Fragment extends Fragment {
      */
     private void InputNamePhome() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您註冊中，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, Boolean>() {
-
             @Override
             protected Boolean doInBackground(String... params) {
                 HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
@@ -233,7 +234,15 @@ public class SignInActive2Fragment extends Fragment {
                     getActivity().finish();
                 }
             }
-        }.execute(SignInActiveActivity.pid, editName.getText().toString(), editPhone.getText().toString());
+        }.execute(SignInActiveActivity.pid,
+                editName.getText().toString(),
+                editPhone.getText().toString());
+
+        /**
+         myAES.EncryptAES(SignInActiveActivity.pid),
+         myAES.EncryptAES(editName.getText().toString()),
+         myAES.EncryptAES(editPhone.getText().toString())
+         */
     }
 
 

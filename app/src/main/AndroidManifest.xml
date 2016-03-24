@@ -31,16 +31,17 @@
         <activity
             android:name=".SignIn.LogoPageActivity"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".SignIn.SignInActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"> <!-- 強制跳出鍵盤 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SignIn.SignInActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"> <!-- 強制跳出鍵盤 -->
+
         </activity>
         <activity
             android:name=".SignIn.Ft1_active.SignInActiveActivity"

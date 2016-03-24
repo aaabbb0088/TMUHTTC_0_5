@@ -207,6 +207,22 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject SignIn(String pid,String pwd,String phone_sid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "SignIn");
+        p.put("pid",mapObject(pid));
+        p.put("pwd",mapObject(pwd));
+        p.put("phone_sid",mapObject(phone_sid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

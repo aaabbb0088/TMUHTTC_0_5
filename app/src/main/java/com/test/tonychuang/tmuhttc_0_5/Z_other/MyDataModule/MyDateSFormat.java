@@ -11,15 +11,15 @@ public class MyDateSFormat {
     public MyDateSFormat() {
     }
 
-    public SimpleDateFormat getC2MDateFormat() {
+    public SimpleDateFormat getC2MFrmt_yMdahm() {
         return new SimpleDateFormat("yyyy/MM/dd a hh:mm", Locale.TAIWAN);
     }
 
-    public SimpleDateFormat getM2CDateFormat() {
+    public SimpleDateFormat getM2CFrmt_yMd() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
     }
 
-    public SimpleDateFormat getM2CDateFormatDetail() {
+    public SimpleDateFormat getM2CFrmt_yMdHm() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN);
     }
 }

@@ -24,6 +24,7 @@ import com.maksim88.passwordedittext.PasswordEditText;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -208,6 +209,7 @@ public class SignInActive1Fragment extends Fragment {
      */
     private void Input3Data() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您註冊中，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
@@ -273,7 +275,10 @@ public class SignInActive1Fragment extends Fragment {
                         break;
                 }
             }
-        }.execute(editPid.getText().toString(), editPassword.getText().toString(), editEmail.getText().toString(), Build.SERIAL);
+        }.execute(myAES.EncryptAES(editPid.getText().toString()),
+                myAES.EncryptAES(editPassword.getText().toString()),
+                myAES.EncryptAES(editEmail.getText().toString()),
+                myAES.EncryptAES(Build.SERIAL));
     }
 
 

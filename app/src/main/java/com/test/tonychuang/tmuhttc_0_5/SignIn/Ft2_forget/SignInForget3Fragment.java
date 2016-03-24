@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.maksim88.passwordedittext.PasswordEditText;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -168,6 +169,7 @@ public class SignInForget3Fragment extends Fragment {
      */
     private void changePwd() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您修改密碼，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -209,7 +211,9 @@ public class SignInForget3Fragment extends Fragment {
                             .commit();
                 }
             }
-        }.execute(SignInForgetActivity.pid, editPwdEd.getText().toString());
+        }
+                .execute(SignInForgetActivity.pid,
+                        editPwdEd.getText().toString());
     }
 
 

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -55,19 +56,6 @@ public class SignInForget2Fragment extends Fragment {
         initBar();
         initViews();
         initBtn();
-
-        //test
-        setTvEnabledTrue(sendTv);
-        sendTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .addToBackStack(null)
-                        .replace(R.id.content, new SignInForget3Fragment())    // 也可用.add()，差在原Fragment會不會觸發destory
-                        .commit();
-            }
-        });
-        //test
 
         return view;
     }
@@ -213,6 +201,7 @@ public class SignInForget2Fragment extends Fragment {
      */
     private void sendReId() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您註冊中，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -251,11 +240,13 @@ public class SignInForget2Fragment extends Fragment {
                     countDownTimer.onFinish();
                 }
             }
-        }.execute(SignInForgetActivity.pid, RegNumEd.getText().toString());
+        }
+                .execute(SignInForgetActivity.pid, RegNumEd.getText().toString());
     }
 
     private void requestCode() {
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "正在為您申請新驗證碼，請稍後");
+        MyAES myAES = new MyAES();
         new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -294,7 +285,9 @@ public class SignInForget2Fragment extends Fragment {
                             .commit();
                 }
             }
-        }.execute(SignInForgetActivity.pid, SignInForgetActivity.email);
+        }
+                .execute(SignInForgetActivity.pid,
+                        SignInForgetActivity.email);
     }
 
 
