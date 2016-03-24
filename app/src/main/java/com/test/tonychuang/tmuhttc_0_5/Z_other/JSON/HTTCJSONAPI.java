@@ -223,6 +223,21 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject SignOut(String aid,String phone_sid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "SignOut");
+        p.put("aid",mapObject(aid));
+        p.put("phone_sid",mapObject(phone_sid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

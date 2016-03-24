@@ -242,7 +242,7 @@ public class SignInActivity extends AppCompatActivity {
                 String string = "error";
 
                 try {
-                    JSONObject jsonObject = httcjsonapi.SignIn(params[0],params[1],params[2]);
+                    JSONObject jsonObject = httcjsonapi.SignIn(params[0], params[1], params[2]);
                     string = jsonParser.parseString(jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -267,19 +267,30 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                String[] token = s.split(",");
+                String resultStr = token[0];
+                String aid = "";
+                String sid = "";
+                if (token.length == 2) {
+                    aid = token[1];
+                }
+                if (token.length == 3) {
+                    aid = token[1];
+                    sid = token[2];
+                }
                 mySyncingDialog.dismiss();
-                switch (s) {
+                switch (resultStr) {
                     case "trueMS":
-                        getSignInSuccessResult(true, true);
+                        getSignInSuccessResult(aid, sid, true, true);
                         break;
                     case "trueUMS":
-                        getSignInSuccessResult(false, true);
+                        getSignInSuccessResult(aid, sid, false, true);
                         break;
                     case "trueMD":
-                        getSignInSuccessResult(true, false);
+                        getSignInSuccessResult(aid, sid, true, false);
                         break;
                     case "trueUMD":
-                        getSignInSuccessResult(false, false);
+                        getSignInSuccessResult(aid, sid, false, false);
                         break;
                     case "false":
                         getSignInFailResult("帳號密碼錯誤，請確認登入資料");
@@ -302,19 +313,23 @@ public class SignInActivity extends AppCompatActivity {
     /**
      *
      */
-    private void getSignInSuccessResult(Boolean memBerFlag, Boolean sameMachineFlag) {
+    private void getSignInSuccessResult(String aid, String sid, Boolean memBerFlag, Boolean sameMachineFlag) {
         signInBtn.setProgress(100);//成功登入的Btn
         SignInShrPref signInShrPref = new SignInShrPref(SignInActivity.this,
                 editPid.getText().toString(),
                 editPassword.getText().toString(),
+                aid,
+                sid,
                 new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()),
                 true,
                 memBerFlag,
                 sameMachineFlag);
 
-        //測試用，用來顯示APP端登入紀錄與使用者身分
+////        測試用，用來顯示APP端登入紀錄與使用者身分
 //        String str = signInShrPref.getPID() + "\n"
 //                + signInShrPref.getPWD() + "\n"
+//                + signInShrPref.getAID() + "\n"
+//                + signInShrPref.getSID() + "\n"
 //                + signInShrPref.getSignInDatetime() + "\n"
 //                + String.valueOf(signInShrPref.getSignInStatus()) + "\n"
 //                + String.valueOf(signInShrPref.getMemberFlag()) + "\n"

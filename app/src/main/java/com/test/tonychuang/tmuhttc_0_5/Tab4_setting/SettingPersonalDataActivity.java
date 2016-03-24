@@ -1,6 +1,9 @@
 package com.test.tonychuang.tmuhttc_0_5.Tab4_setting;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -22,8 +25,17 @@ import com.orhanobut.dialogplus.OnBackPressListener;
 import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyInitReturnBar;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +62,8 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     private PasswordEditText checkPasswordEd;
     private InputMethodManager imm;
 
+    private SignInShrPref signInShrPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +71,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
 
         initBar();
         initView();
+        initData();
     }
 
     @Override
@@ -78,7 +93,8 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 changePwdDialog();
                 break;
             case R.id.signOutBtn:
-                Toast.makeText(SettingPersonalDataActivity.this, "SignOut", Toast.LENGTH_SHORT).show();
+                signOot();
+//                Toast.makeText(SettingPersonalDataActivity.this, "SignOut", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -112,6 +128,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         });
     }
+
     private void initView() {
         imm = (InputMethodManager) getSystemService(SettingPersonalDataActivity.INPUT_METHOD_SERVICE);
         avatarLayout = (LinearLayout) findViewById(R.id.avatarLayout);
@@ -131,6 +148,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
         myBirthdayTv = (TextView) findViewById(R.id.myBirthdayTv);
 
     }
+
     private void editNickNameDialog() {
         View dialogTitleView = LayoutInflater.from(this).inflate(R.layout.dialog_setting_psn_nickname_title, null);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_setting_psn_nickname_body, null);
@@ -172,6 +190,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         });
     }
+
     private void settingSexDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_sex_setting, null);
         dialog = DialogPlus
@@ -184,6 +203,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 .create();
         dialog.show();
     }
+
     private void editBirthdayTimeWheel() {
         String initDate;
         if (myBirthdayTv.getText().toString().equals("yyyy-MM-dd")) {
@@ -210,6 +230,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
         datePickerPopWin.showPopWin(this);
         datePickerPopWin.contentView.setClickable(false); //點擊外部畫面,不會往下縮
     }
+
     private void changePwdDialog() {
         View dialogTitleView = LayoutInflater.from(this).inflate(R.layout.dialog_setting_chg_pwd_title, null);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_setting_chg_pwd_body, null);
@@ -267,6 +288,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         };
     }
+
     private OnClickListener getOnClickListener_settingSex() {
         return new OnClickListener() {
             @Override
@@ -286,6 +308,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         };
     }
+
     private OnBackPressListener getOnBackPressListener() {
         return new OnBackPressListener() {
             @Override
@@ -294,6 +317,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         };
     }
+
     private TextWatcher getPwdTvWatcher(final TextView confirmTv) {
         return new TextWatcher() {
             @Override
@@ -318,6 +342,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             }
         };
     }
+
     private OnClickListener getOnClickListener_changePwd(final View dialogView) {
         return new OnClickListener() {
             @Override
@@ -354,7 +379,56 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     /**
      *
      */
+    private void initData() {
+        signInShrPref = new SignInShrPref(this);
+    }
 
+    private void signOot() {
+        signOutBtn.setEnabled(false);
+        final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, SettingPersonalDataActivity.this, "正在登出中，請稍後");
+        new AsyncTask<String, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                Boolean aBoolean = false;
+
+                try {
+                    JSONObject jsonObject = httcjsonapi.SignOut(params[0], params[1]);
+                    aBoolean = jsonParser.parseBoolean(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return aBoolean;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
+                if (aBoolean) {
+                    signInShrPref.setSignInStatus(false);
+                    signInShrPref.setSignInDatetime(new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()));
+                    Intent intent = new Intent(SettingPersonalDataActivity.this, SignInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(intent);
+                    SettingPersonalDataActivity.this.finish();
+                    if(MainActivity.mainActivity != null){
+                        MainActivity.mainActivity.finish();
+                    }
+                } else {
+                    Toast.makeText(SettingPersonalDataActivity.this, "登出失敗，請稍後再嘗試", Toast.LENGTH_SHORT).show();
+                    signOutBtn.setEnabled(true);
+                }
+            }
+        }.execute(signInShrPref.getAID(), Build.SERIAL);
+    }
 
 
     /**

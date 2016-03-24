@@ -54,11 +54,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int comUpdatedFlag = 0;
 
     public static ActionBar actionBar;
+    public static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity = this;
 
         initViews();
         initBar();

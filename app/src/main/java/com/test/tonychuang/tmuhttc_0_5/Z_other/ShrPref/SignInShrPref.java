@@ -14,6 +14,8 @@ public class SignInShrPref {
     private String SHARE_PREFERENCE_NAME = "App_SignIn_Status";
     private String PID = "pid";
     private String PWD = "pwd";
+    private String AID = "aid";
+    private String SID = "sid";
     private String SignInDatetime = "signInDatetime";
     private String SignInStatus = "signInStatus";
     private String MemberFlag = "MemberFlag";
@@ -23,12 +25,14 @@ public class SignInShrPref {
         settings = context.getSharedPreferences(SHARE_PREFERENCE_NAME, 0);
     }
 
-    public SignInShrPref(Context context, String pid, String pwd, String signInDatetime,
+    public SignInShrPref(Context context, String pid, String pwd, String aid, String sid, String signInDatetime,
                          boolean signInStatus, boolean memberflag, boolean SameSignInMachine) {
         settings = context.getSharedPreferences(SHARE_PREFERENCE_NAME, 0);
         settings.edit()
                 .putString(this.PID, pid)
                 .putString(this.PWD, pwd)
+                .putString(this.AID, aid)
+                .putString(this.SID, sid)
                 .putString(this.SignInDatetime, signInDatetime)
                 .putBoolean(this.SignInStatus, signInStatus)
                 .putBoolean(this.MemberFlag, memberflag)
@@ -50,6 +54,22 @@ public class SignInShrPref {
 
     public void setPWD(String pwd) {
         settings.edit().putString(this.PWD, pwd).apply();
+    }
+
+    public String getAID() {
+        return settings.getString(this.AID, "error");
+    }
+
+    public void setAID(String aid) {
+        settings.edit().putString(this.AID, aid).apply();
+    }
+
+    public String getSID() {
+        return settings.getString(this.SID, "error");
+    }
+
+    public void setSID(String sid) {
+        settings.edit().putString(this.SID, sid).apply();
     }
 
     public String getSignInDatetime() {

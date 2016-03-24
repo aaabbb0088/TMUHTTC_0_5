@@ -86,64 +86,79 @@ public class LogoPageActivity extends AppCompatActivity {
             public void run() {
                 MyDateSFormat myDateSFormat = new MyDateSFormat();
                 SignInShrPref signInShrPref = new SignInShrPref(LogoPageActivity.this);
-                if (!signInShrPref.getPID().equals("error")) {
-                    try {
-                        if (7 >= differ(myDateSFormat.getM2CFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
-                            //處理TextShow與自動登入時間不定誰長問題(主要問題:登入時間短於2.5秒，TextShow尚未跑完)
-                            asyncTask = new AsyncTask<String, Void, String>() {
-                                @Override
-                                protected String doInBackground(String... params) {
-                                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                                    JSONParser jsonParser = new JSONParser();
-                                    String string = "error";
+                if (signInShrPref.getSignInStatus()) {
+                    if (!signInShrPref.getPID().equals("error")) {
+                        try {
+                            if (7 >= differ(myDateSFormat.getM2CFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
+                                //處理TextShow與自動登入時間不定誰長問題(主要問題:登入時間短於2.5秒，TextShow尚未跑完)
+                                asyncTask = new AsyncTask<String, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(String... params) {
+                                        HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                        JSONParser jsonParser = new JSONParser();
+                                        String string = "error";
 
-                                    try {
-                                        JSONObject jsonObject = httcjsonapi.SignIn(params[0], params[1], params[2]);
-                                        string = jsonParser.parseString(jsonObject);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        try {
+                                            JSONObject jsonObject = httcjsonapi.SignIn(params[0], params[1], params[2]);
+                                            string = jsonParser.parseString(jsonObject);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        return string;
                                     }
-                                    return string;
-                                }
 
-                                @Override
-                                protected void onPreExecute() {
-                                    super.onPreExecute();
-                                }
-
-                                @Override
-                                protected void onPostExecute(String s) {
-                                    super.onPostExecute(s);
-                                    switch (s) {
-                                        case "trueMS":
-                                            getSignInSuccessResult(true, true);
-                                            break;
-                                        case "trueUMS":
-                                            getSignInSuccessResult(false, true);
-                                            break;
-                                        case "trueMD":
-                                            getSignInSuccessResult(true, false);
-                                            break;
-                                        case "trueUMD":
-                                            getSignInSuccessResult(false, false);
-                                            break;
-                                        case "false":
-                                            getSignInFailResult();
-                                            break;
-                                        case "error":
-                                            getSignInFailResult();
-                                            break;
-                                        case "test":
-                                            getSignInFailResult();
-                                            break;
+                                    @Override
+                                    protected void onPreExecute() {
+                                        super.onPreExecute();
                                     }
-                                }
-                            }.execute(signInShrPref.getPID(), signInShrPref.getPWD(), Build.SERIAL);
-                        } else {
-                            getSignInFailResult();
+
+                                    @Override
+                                    protected void onPostExecute(String s) {
+                                        super.onPostExecute(s);
+                                        String[] token = s.split(",");
+                                        String resultStr = token[0];
+                                        String aid = "";
+                                        String sid = "";
+                                        if (token.length == 2) {
+                                            aid = token[1];
+                                        }
+                                        if (token.length == 3) {
+                                            aid = token[1];
+                                            sid = token[2];
+                                        }
+                                        switch (resultStr) {
+                                            case "trueMS":
+                                                getSignInSuccessResult(aid, sid, true, true);
+                                                break;
+                                            case "trueUMS":
+                                                getSignInSuccessResult(aid, sid, true, true);
+                                                break;
+                                            case "trueMD":
+                                                getSignInSuccessResult(aid, sid, true, true);
+                                                break;
+                                            case "trueUMD":
+                                                getSignInSuccessResult(aid, sid, true, true);
+                                                break;
+                                            case "false":
+                                                getSignInFailResult();
+                                                break;
+                                            case "error":
+                                                getSignInFailResult();
+                                                break;
+                                            case "test":
+                                                getSignInFailResult();
+                                                break;
+                                        }
+                                    }
+                                }.execute(signInShrPref.getPID(), signInShrPref.getPWD(), Build.SERIAL);
+                            } else {
+                                getSignInFailResult();
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    } else {
+                        getSignInFailResult();
                     }
                 } else {
                     getSignInFailResult();
@@ -164,15 +179,19 @@ public class LogoPageActivity extends AppCompatActivity {
         return date2.getTime() / 86400000 - date1.getTime() / 86400000;  //用立即數，減少乘法計算的開銷
     }
 
-    private void getSignInSuccessResult(Boolean memBerFlag, Boolean sameMachineFlag) {
+    private void getSignInSuccessResult(String aid, String sid, Boolean memBerFlag, Boolean sameMachineFlag) {
+        signInShrPref.setAID(aid);
+        signInShrPref.setSID(sid);
         signInShrPref.setSignInDatetime(new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()));
         signInShrPref.setSignInStatus(true);
         signInShrPref.setMemberFlag(memBerFlag);
         signInShrPref.setSameSignInMachine(sameMachineFlag);
 
-        //測試用，用來顯示APP端登入紀錄與使用者身分
+////        測試用，用來顯示APP端登入紀錄與使用者身分
 //        String str = signInShrPref.getPID() + "\n"
 //                + signInShrPref.getPWD() + "\n"
+//                + signInShrPref.getAID() + "\n"
+//                + signInShrPref.getSID() + "\n"
 //                + signInShrPref.getSignInDatetime() + "\n"
 //                + String.valueOf(signInShrPref.getSignInStatus()) + "\n"
 //                + String.valueOf(signInShrPref.getMemberFlag()) + "\n"
