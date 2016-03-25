@@ -120,13 +120,6 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     /**
      *
      */
-    /**
-     * 更新資料
-     * comUpdatedFlag = 0;更新資料
-     * comUpdatedFlag = 1;已更新資料
-     *
-     * APP使用者中心留言板表CenterMessageTable
-     */
 
 
 

@@ -86,8 +86,8 @@ public class PsnDataSettingShrPref {
         return settings.getString(this.NICKNAME, "error");
     }
 
-    public String getSEX() {
-        return settings.getString(this.SEX, "error");
+    public int getSEX() {
+        return settings.getInt(this.SEX, 9);
     }
 
     public String getBIRTHDAY() {

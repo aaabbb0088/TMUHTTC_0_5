@@ -12,9 +12,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView9" />
+        android:id="@+id/textView9"
+        android:layout_weight="1.5" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,12 +116,13 @@
                 android:focusable="true"
                 android:foregroundGravity="center"
                 android:orientation="horizontal"
-                android:id="@+id/pressThbBtn">
+                android:id="@+id/pressThbBtn"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/button7"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/ic_thumb_up_white_24dp" />
@@ -147,14 +149,20 @@
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/pressMsgBtn"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/selector_msgbtn"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_chat_bubble_white_24dp" />
+                android:id="@+id/pressMsgBtn">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageView6"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_chat_bubble_white_24dp" />
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -162,9 +170,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView38" />
+        android:id="@+id/textView38"
+        android:layout_weight="1.5" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -262,12 +271,13 @@
                 android:focusable="true"
                 android:foregroundGravity="center"
                 android:orientation="horizontal"
-                android:id="@+id/glycemiaThbBtn">
+                android:id="@+id/glycemiaThbBtn"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/imageButton3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="25dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/ic_thumb_up_white_24dp" />
@@ -293,21 +303,29 @@
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/glycemiaMsgBtn"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/selector_msgbtn"
-                android:scaleType="fitCenter"
-                android:src="@mipmap/ic_chat_bubble_white_24dp" />
+                android:id="@+id/glycemiaMsgBtn">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageView29"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_chat_bubble_white_24dp" />
+            </FrameLayout>
+
         </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView27" />
+        android:id="@+id/textView27"
+        android:layout_weight="1.5" />
 
 </LinearLayout>

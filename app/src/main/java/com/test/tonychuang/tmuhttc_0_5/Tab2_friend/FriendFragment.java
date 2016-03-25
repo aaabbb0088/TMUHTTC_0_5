@@ -465,17 +465,6 @@ public class FriendFragment extends Fragment {
      * d1
      */
     /**
-     * 更新資料
-     * friUpdatedFlag = 0;更新資料
-     * friUpdatedFlag = 1;已更新資料
-     *
-     * 判斷與上次使用的裝飾是否相同，相同不用更新以下兩項，不同需要更新以下兩項
-     * APP使用者好友關係表FriendTable -> 好友非遠距會員(中間不能點擊)、好友是遠距會員(中間可以點擊)
-     *                                 如果自己與好友都不是遠距會員(好友設定不能點擊)
-     *                                 ----------------------以上兩項判斷在Adapter中執行------------
-     * APP使用者好友群組表FriendGroupTable
-     */
-    /**
      *
      */
 

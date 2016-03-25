@@ -50,26 +50,28 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <ImageView
                 android:id="@+id/today_3Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
 
             <ImageView
                 android:id="@+id/today_2Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
 
             <ImageView
                 android:id="@+id/today_1Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
         </TableRow>
@@ -414,12 +416,33 @@
                 android:text="今天"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <ImageView
-                android:id="@+id/todayImage"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="15"
-                android:src="@mipmap/happy_blue" />
+                android:layout_weight="15">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/textView101"
+                    android:layout_weight="2" />
+
+                <ImageView
+                    android:id="@+id/todayImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/happy_blue"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/textView107"
+                    android:layout_weight="2" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

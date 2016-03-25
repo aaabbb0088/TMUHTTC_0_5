@@ -21,7 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HTTCJSONAPI {
-    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://10.15.2.113/HTTCJSONAPI/Handler.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
 	    String result = "";
