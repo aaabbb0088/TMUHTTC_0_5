@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -31,6 +30,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialo
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyValidator;
 
 import org.json.JSONObject;
+
+import me.grantland.widget.AutofitTextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -150,7 +151,7 @@ public class SignInForget1Fragment extends Fragment {
                     Gravity.CENTER);
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title_active, null);
-            TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+            AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
             actionBarText.setText("步驟 1 選擇修改密碼方法");
             actionBarText.setTextColor(Color.WHITE);
             actionBar.setCustomView(titleView, lp);

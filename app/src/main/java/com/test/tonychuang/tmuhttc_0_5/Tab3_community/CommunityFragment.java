@@ -13,11 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.test.tonychuang.chat.ChatActivity;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
+
+import me.grantland.widget.AutofitTextView;
 
 /**
  * 留言板，參考EmojiChat-master、Android-Chat-Widget-Example、TMUHTTC_0_4
@@ -96,7 +97,7 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
                 Gravity.CENTER);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title, null);
-        TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+        AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
         actionBarText.setText("聯繫醫療單位");
         actionBarText.setTextColor(Color.WHITE);
         actionBar.setCustomView(titleView, lp);
@@ -119,13 +120,6 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
      */
     /**
      *
-     */
-    /**
-     * 更新資料
-     * comUpdatedFlag = 0;更新資料
-     * comUpdatedFlag = 1;已更新資料
-     *
-     * APP使用者中心留言板表CenterMessageTable
      */
 
 

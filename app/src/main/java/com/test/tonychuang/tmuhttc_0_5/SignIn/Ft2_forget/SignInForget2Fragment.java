@@ -30,6 +30,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialo
 
 import org.json.JSONObject;
 
+import me.grantland.widget.AutofitTextView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -41,6 +43,7 @@ public class SignInForget2Fragment extends Fragment {
     private EditText RegNumEd;
     private Button RequestCodeBtn;
     private TextView sendTv;
+    private TextView emailTv;
     private CountDownTimer countDownTimer;
 
 
@@ -86,7 +89,7 @@ public class SignInForget2Fragment extends Fragment {
                     Gravity.CENTER);
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title_active, null);
-            TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+            AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
             actionBarText.setText("步驟 2 輸入驗證碼");
             actionBarText.setTextColor(Color.WHITE);
             actionBar.setCustomView(titleView, lp);
@@ -101,6 +104,8 @@ public class SignInForget2Fragment extends Fragment {
         RequestCodeBtn.setEnabled(false);
         sendTv = (TextView) view.findViewById(R.id.sendTv);
         setTvEnabledFalse(sendTv);
+        emailTv = (TextView) view.findViewById(R.id.emailTv);
+        emailTv.setText(SignInForgetActivity.email);
         initcountdown();
     }
 

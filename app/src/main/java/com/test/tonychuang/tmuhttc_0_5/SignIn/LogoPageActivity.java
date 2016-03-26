@@ -131,13 +131,13 @@ public class LogoPageActivity extends AppCompatActivity {
                                                 getSignInSuccessResult(aid, sid, true, true);
                                                 break;
                                             case "trueUMS":
-                                                getSignInSuccessResult(aid, sid, true, true);
+                                                getSignInSuccessResult(aid, sid, false, true);
                                                 break;
                                             case "trueMD":
-                                                getSignInSuccessResult(aid, sid, true, true);
+                                                getSignInSuccessResult(aid, sid, true, false);
                                                 break;
                                             case "trueUMD":
-                                                getSignInSuccessResult(aid, sid, true, true);
+                                                getSignInSuccessResult(aid, sid, false, false);
                                                 break;
                                             case "false":
                                                 getSignInFailResult();

@@ -6,7 +6,7 @@ package com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat;
  */
 public class PsnSettingRow {
     private String data_not_flag;
-    private String medine_not_flag;
+    private String medicine_not_flag;
     private String pay_not_flag;
     private String report_not_flag;
     private String record_not_flag;
@@ -17,7 +17,7 @@ public class PsnSettingRow {
 
     public PsnSettingRow() {
         this.data_not_flag = null;
-        this.medine_not_flag = null;
+        this.medicine_not_flag = null;
         this.pay_not_flag = null;
         this.report_not_flag = null;
         this.record_not_flag = null;
@@ -27,11 +27,11 @@ public class PsnSettingRow {
         this.updatetime = null;
     }
 
-    public PsnSettingRow(String data_not_flag, String medine_not_flag, String pay_not_flag,
+    public PsnSettingRow(String data_not_flag, String medicine_not_flag, String pay_not_flag,
                          String report_not_flag, String record_not_flag, String center_not_flag,
                          String center_msg_flag, String location_flag, String updatetime) {
         this.data_not_flag = data_not_flag;
-        this.medine_not_flag = medine_not_flag;
+        this.medicine_not_flag = medicine_not_flag;
         this.pay_not_flag = pay_not_flag;
         this.report_not_flag = report_not_flag;
         this.record_not_flag = record_not_flag;
@@ -49,12 +49,12 @@ public class PsnSettingRow {
         this.data_not_flag = data_not_flag;
     }
 
-    public String getMedine_not_flag() {
-        return medine_not_flag;
+    public String getMedicine_not_flag() {
+        return medicine_not_flag;
     }
 
-    public void setMedine_not_flag(String medine_not_flag) {
-        this.medine_not_flag = medine_not_flag;
+    public void setMedicine_not_flag(String medicine_not_flag) {
+        this.medicine_not_flag = medicine_not_flag;
     }
 
     public String getPay_not_flag() {

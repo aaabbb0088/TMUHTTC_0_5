@@ -29,6 +29,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialo
 
 import org.json.JSONObject;
 
+import me.grantland.widget.AutofitTextView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -85,7 +87,7 @@ public class SignInActive2Fragment extends Fragment {
                     Gravity.CENTER);
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title_active, null);
-            TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+            AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
             actionBarText.setText("步驟 1 輸入基本資料2");
             actionBarText.setTextColor(Color.WHITE);
             actionBar.setCustomView(titleView, lp);

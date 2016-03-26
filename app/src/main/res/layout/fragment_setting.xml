@@ -31,14 +31,14 @@
             app:civ_border_width="2dp" />
 
         <TextView
-            android:id="@+id/textView93"
+            android:id="@+id/NameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="會員名稱"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/textView94"
+            android:id="@+id/NickNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="會員暱稱"

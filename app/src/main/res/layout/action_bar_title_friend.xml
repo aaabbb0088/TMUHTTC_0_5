@@ -24,15 +24,16 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/actionBarLeftLayout"></FrameLayout>
+            android:id="@+id/actionBarLeftLayout"/>
     </RelativeLayout>
 
-    <TextView
+    <me.grantland.widget.AutofitTextView
         android:id="@+id/actionBarText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:maxLines="1"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -54,7 +55,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/actionBarRightLayput"></FrameLayout>
+            android:id="@+id/actionBarRightLayput"/>
     </RelativeLayout>
 
 </LinearLayout>

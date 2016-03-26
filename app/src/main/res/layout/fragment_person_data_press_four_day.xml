@@ -49,27 +49,28 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <ImageView
                 android:id="@+id/today_3Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
 
             <ImageView
                 android:id="@+id/today_2Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
 
             <ImageView
                 android:id="@+id/today_1Image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/happy_blue" />
         </TableRow>
@@ -420,14 +421,38 @@
             android:text="今天"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ImageView
-            android:id="@+id/todayImage"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="15"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/happy_blue" />
+            android:orientation="vertical"
+            android:layout_weight="15">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView52"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_weight="2" />
+
+            <ImageView
+                android:id="@+id/todayImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/happy_blue" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textView53"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_weight="2" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -491,7 +516,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="top|center"
+                            android:gravity="center"
                             android:text="mm-Hg"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
@@ -528,7 +553,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="top|center"
+                            android:gravity="center"
                             android:text="mm-Hg"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
@@ -565,7 +590,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="top|center"
+                            android:gravity="center"
                             android:text="bpm"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
@@ -632,7 +657,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="提供與血壓相關的\n個人化生活資訊"
+            android:text="提供與血壓相關的\n個人化生活資訊\n依照近況顯示內容"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 

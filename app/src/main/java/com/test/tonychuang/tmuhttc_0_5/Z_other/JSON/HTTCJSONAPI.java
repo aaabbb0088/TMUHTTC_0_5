@@ -21,7 +21,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HTTCJSONAPI {
-    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://10.15.2.113/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://192.168.0.12/HTTCJSONAPI/Handler.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
 	    String result = "";
@@ -232,6 +234,48 @@ public class HTTCJSONAPI {
         o.put("method", "SignOut");
         p.put("aid",mapObject(aid));
         p.put("phone_sid",mapObject(phone_sid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdatePsnDataSetting(String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePsnDataSetting");
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdatePsnSetting(String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePsnSetting");
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateWLevelShrPref(String sid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateWLevelShrPref");
+        p.put("sid",mapObject(sid));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

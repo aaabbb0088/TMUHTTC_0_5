@@ -15,7 +15,7 @@ public class PsnSettingShrPref {
     private SharedPreferences settings;
     private String SHARE_PREFERENCE_NAME = "App_Psn_Setting";
     private String DATA_NOT_FLAG = "data_not_flag";
-    private String MEDINE_NOT_FLAG = "medine_not_flag";
+    private String MEDICINE_NOT_FLAG = "medicine_not_flag";
     private String PAY_NOT_FLAG = "pay_not_flag";
     private String REPORT_NOT_FLAG = "report_not_flag";
     private String RECORD_NOT_FLAG = "record_not_flag";
@@ -33,7 +33,21 @@ public class PsnSettingShrPref {
         settings = context.getSharedPreferences(aid + SHARE_PREFERENCE_NAME, 0);
         settings.edit()
                 .putString(this.DATA_NOT_FLAG, psnSettingRow.getData_not_flag())
-                .putString(this.MEDINE_NOT_FLAG, psnSettingRow.getMedine_not_flag())
+                .putString(this.MEDICINE_NOT_FLAG, psnSettingRow.getMedicine_not_flag())
+                .putString(this.PAY_NOT_FLAG, psnSettingRow.getPay_not_flag())
+                .putString(this.REPORT_NOT_FLAG, psnSettingRow.getReport_not_flag())
+                .putString(this.RECORD_NOT_FLAG, psnSettingRow.getRecord_not_flag())
+                .putString(this.CENTER_NOT_FLAG, psnSettingRow.getCenter_not_flag())
+                .putString(this.CENTER_MSG_FLAG, psnSettingRow.getCenter_msg_flag())
+                .putString(this.LOCATION_FLAG, psnSettingRow.getLocation_flag())
+                .putString(this.UPDATETIME, psnSettingRow.getUpdatetime())
+                .apply();
+    }
+
+    public void setAllData(PsnSettingRow psnSettingRow) {
+        settings.edit()
+                .putString(this.DATA_NOT_FLAG, psnSettingRow.getData_not_flag())
+                .putString(this.MEDICINE_NOT_FLAG, psnSettingRow.getMedicine_not_flag())
                 .putString(this.PAY_NOT_FLAG, psnSettingRow.getPay_not_flag())
                 .putString(this.REPORT_NOT_FLAG, psnSettingRow.getReport_not_flag())
                 .putString(this.RECORD_NOT_FLAG, psnSettingRow.getRecord_not_flag())
@@ -48,8 +62,8 @@ public class PsnSettingShrPref {
         return settings.getString(this.DATA_NOT_FLAG, "error");
     }
 
-    public String getMEDINE_NOT_FLAG() {
-        return settings.getString(this.MEDINE_NOT_FLAG, "error");
+    public String getMEDICINE_NOT_FLAG() {
+        return settings.getString(this.MEDICINE_NOT_FLAG, "error");
     }
 
     public String getPAY_NOT_FLAG() {
@@ -84,8 +98,8 @@ public class PsnSettingShrPref {
         settings.edit().putString(this.DATA_NOT_FLAG, DATA_NOT_FLAG).apply();
     }
 
-    public void setMEDINE_NOT_FLAG(String MEDINE_NOT_FLAG) {
-        settings.edit().putString(this.MEDINE_NOT_FLAG, MEDINE_NOT_FLAG).apply();
+    public void setMEDICINE_NOT_FLAG(String MEDICINE_NOT_FLAG) {
+        settings.edit().putString(this.MEDICINE_NOT_FLAG, MEDICINE_NOT_FLAG).apply();
     }
 
     public void setPAY_NOT_FLAG(String PAY_NOT_FLAG) {

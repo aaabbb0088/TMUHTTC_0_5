@@ -9,9 +9,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.test.tonychuang.tmuhttc_0_5.R;
+
+import me.grantland.widget.AutofitTextView;
 
 /**
  * Created by TonyChuang on 2016/3/18.
@@ -44,7 +45,7 @@ public class MyInitReturnBar {
                     Gravity.CENTER);
             LayoutInflater inflater = (LayoutInflater) appCompatActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title_return, null);
-            TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+            AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
             actionBarLeftLayout = (FrameLayout) titleView.findViewById(R.id.actionBarLeftLayout);
             actionBarLeftLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

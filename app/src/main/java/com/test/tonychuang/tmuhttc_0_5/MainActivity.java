@@ -1,6 +1,7 @@
 package com.test.tonychuang.tmuhttc_0_5;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,12 +13,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.PersonFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.FriendFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab3_community.CommunityFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab4_setting.SettingFragment;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,14 +60,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FragmentManager fragmentManager; //用於對Fragment進行管理
 
-    private static int mainUpdatedFlag = 0;
-    public static int medUpdatedFlag = 0;
-    public static int rptUpdatedFlag = 0;
-    public static int payUpdatedFlag = 0;
-    public static int rcdUpdatedFlag = 0;
-    public static int friUpdatedFlag = 0;
-    public static int friBoardUpdatedFlag = 0;
-    public static int comUpdatedFlag = 0;
+    private SignInShrPref signInShrPref;
+    private MySyncingDialog mySyncingDialog;
+
+    private Boolean[] updateEndflag;
+    public static Boolean medUpdatedFlag = true;
+    public static Boolean rptUpdatedFlag = true;
+    public static Boolean payUpdatedFlag = true;
+    public static Boolean rcdUpdatedFlag = true;
+    public static Boolean friBoardUpdatedFlag = true;
+
+    private int DB_VERSION = 1;
 
     public static ActionBar actionBar;
     public static MainActivity mainActivity;
@@ -62,10 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mainActivity = this;
 
-        initViews();
         initBar();
-        fragmentManager = getSupportFragmentManager();
-        memberTabSetting(); //正式時，放在非同步完成資料更新後
+        initViews();
+        initFragmentManager();
+        initTabSetting();
+        initData();
 
         updateData();
 
@@ -127,7 +147,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //region 初始化View、Bar
+    private void initBar() {
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+        }
+    }
+
     private void initViews() {
         personLayout = findViewById(R.id.person_layout);
         personLayout.setOnClickListener(this);
@@ -147,18 +173,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         settingText = (TextView) findViewById(R.id.setting_text);
     }
 
-    private void initBar() {
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0);
-        }
+    private void initFragmentManager() {
+        fragmentManager = getSupportFragmentManager();
     }
-    //endregion
 
-    private void memberTabSetting() {
-        //test code
-        SignInShrPref signInShrPref = new SignInShrPref(this);
-        signInShrPref.setMemberFlag(true);
+    //判斷是否是遠距會員，決定Tab顯示
+    private void initTabSetting() {
+//        //test code
+//        SignInShrPref signInShrPref = new SignInShrPref(this);
+//        signInShrPref.setMemberFlag(true);
+//        //test code
 
         if (new SignInShrPref(this).getMemberFlag()) {   //如果是遠距會員->if,如果是非遠距會員->else
             setTabSelection(0);// 第一次啟動時選中第0個tab
@@ -168,13 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //region 處理TAB切換分頁
-    /**
-     * 根據傳入的index參數來設置選中的tab頁。
-     */
-    /**
-     * @param index
-     */
+    //根據傳入的index參數來設置選中的tab頁。
     private void setTabSelection(int index) {
         // 每次選中之前先清楚掉上次的選中狀態
         clearSelection();
@@ -248,49 +266,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
-    /**
-     * 清除掉所有的選中狀態。
-     */
-    /**
-     *
-     */
-    private void clearSelection() {
-        personImage.setImageResource(R.mipmap.ic_accessibility_white_24dp);
-        personText.setTextColor(Color.parseColor("#FFFFFF"));
-        personLayout.setBackgroundColor(Color.TRANSPARENT); //背景透明
-        friendImage.setImageResource(R.mipmap.ic_people_white_24dp);
-        friendText.setTextColor(Color.parseColor("#FFFFFF"));
-        friendLayout.setBackgroundColor(Color.TRANSPARENT);
-        communityImage.setImageResource(R.mipmap.ic_person_pin_white_24dp);
-        communityText.setTextColor(Color.parseColor("#FFFFFF"));
-        communityLayout.setBackgroundColor(Color.TRANSPARENT);
-        settingImage.setImageResource(R.mipmap.ic_settings_white_24dp);
-        settingText.setTextColor(Color.parseColor("#FFFFFF"));
-        settingLayout.setBackgroundColor(Color.TRANSPARENT);
-    }
-
-    /**
-     * 將所有的Fragment都置為隱藏狀態。
-     */
-    /**
-     * @param transaction
-     */
-    private void hideFragments(FragmentTransaction transaction) {
-        if (personFragment != null) {
-            transaction.hide(personFragment);
-        }
-        if (friendFragment != null) {
-            transaction.hide(friendFragment);
-        }
-        if (communityFragment != null) {
-            transaction.hide(communityFragment);
-        }
-        if (settingFragment != null) {
-            transaction.hide(settingFragment);
-        }
-    }
-
-    //endregion
     //region 按下返回鍵出現確認離開視窗 onKeyDown, dialog
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (settingFragment != null && SettingFragment.getDialog() != null) {
@@ -340,32 +315,190 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
+    //清除掉所有的選中狀態。
+    private void clearSelection() {
+        personImage.setImageResource(R.mipmap.ic_accessibility_white_24dp);
+        personText.setTextColor(Color.parseColor("#FFFFFF"));
+        personLayout.setBackgroundColor(Color.TRANSPARENT); //背景透明
+        friendImage.setImageResource(R.mipmap.ic_people_white_24dp);
+        friendText.setTextColor(Color.parseColor("#FFFFFF"));
+        friendLayout.setBackgroundColor(Color.TRANSPARENT);
+        communityImage.setImageResource(R.mipmap.ic_person_pin_white_24dp);
+        communityText.setTextColor(Color.parseColor("#FFFFFF"));
+        communityLayout.setBackgroundColor(Color.TRANSPARENT);
+        settingImage.setImageResource(R.mipmap.ic_settings_white_24dp);
+        settingText.setTextColor(Color.parseColor("#FFFFFF"));
+        settingLayout.setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    //將所有的Fragment都置為隱藏狀態。
+    private void hideFragments(FragmentTransaction transaction) {
+        if (personFragment != null) {
+            transaction.hide(personFragment);
+        }
+        if (friendFragment != null) {
+            transaction.hide(friendFragment);
+        }
+        if (communityFragment != null) {
+            transaction.hide(communityFragment);
+        }
+        if (settingFragment != null) {
+            transaction.hide(settingFragment);
+        }
+    }
 
 
     /**
      * d1
      */
     /**
-     * 同步所有個人資料
+     * 新增非同步更新資料的 endFlag 在 initData()
+     */
+    /**
      *
-     * 一、判斷是不是遠距會員
-     *   是-> isMemberflag = true
-     *        更新遠距會員個人資料
-     *   否-> isMemberflag = false
-     *        更新APP會員個人資料
+     */
+    private void initData() {
+        signInShrPref = new SignInShrPref(this);
+        updateEndflag = new Boolean[]{false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
+    }
+
+    private void updateData() {
+        if (!(updateEndflag[0] || updateEndflag[1] || updateEndflag[2] ||
+                updateEndflag[3] || updateEndflag[4])) {
+            mySyncingDialog = new MySyncingDialog(false, this, "資料同步中，請稍後");
+            mySyncingDialog.show();
+            UpdatePsnDataSetting();
+            UpdatePsnSetting();
+            UpdateMemberData();
+            UpdateFriendData();
+            UpdateCommunityData();
+        }
+    }
+
+
+    /**
+     * d2
+     */
+    /**
      *
-     * 二、更新資料
-     * mainUpdatedFlag = 0;//更新資料
-     * mainUpdatedFlag = 1;//已更新資料
-     *
-     * APP會員
-     * 1.個人基本設定PersonalDataSetting
-     * 2.個人設定PersonalSetting (判斷與上次使用的裝置,相同 不用更新，不同 需要更新)
-     *
-     * 遠距會員
-     * 1.個人基本設定PersonalDataSetting
-     * 2.個人設定PersonalSetting (判斷與上次使用的裝置,相同 不用更新，不同 需要更新)
-     *
+     */
+    //更新 .個人基本資料PersonalDataSetting (修改 遠距會員身分flag,修改 密碼、會員頭像、暱稱、性別、生日)
+    private void UpdatePsnDataSetting() {
+        new AsyncTask<String, Void, ArrayList<PsnDataSettingRow>>() {
+            @Override
+            protected ArrayList<PsnDataSettingRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<PsnDataSettingRow> psnDataSettingRows = null;
+
+                try {
+                    JSONObject jsonObject = httcjsonapi.UpdatePsnDataSetting(params[0]);
+                    psnDataSettingRows = jsonParser.parsePsnDataSettingRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return psnDataSettingRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<PsnDataSettingRow> psnDataSettingRows) {
+                super.onPostExecute(psnDataSettingRows);
+                if (psnDataSettingRows != null) {
+                    PsnDataSettingShrPref psnDataSettingShrPref = new PsnDataSettingShrPref(MainActivity.this, signInShrPref.getAID());
+                    if (psnDataSettingShrPref.getPID().equals("error")) {
+                        //空資料，要整筆下載
+                        psnDataSettingShrPref.setAllData(psnDataSettingRows.get(0));
+
+//                        //test
+//                        String str = psnDataSettingShrPref.getPID() + "\n"
+//                                + psnDataSettingShrPref.getPWD() + "\n"
+//                                + psnDataSettingShrPref.getAID() + "\n"
+//                                + psnDataSettingShrPref.getSID() + "\n"
+//                                + psnDataSettingShrPref.getNICKNAME() + "11111";
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        //test
+
+                    } else {
+                        //已有資料，只需更新 遠距會員身分flag
+                        psnDataSettingShrPref.setMEMBERFLAG(psnDataSettingRows.get(0).getMemberflag());
+                        //不同裝置，更新 密碼、會員頭像、暱稱、性別、生日
+                        if (!signInShrPref.getSameSignInMachine()) {
+                            psnDataSettingShrPref.setPWD(psnDataSettingRows.get(0).getPwd());
+                            psnDataSettingShrPref.setAVATAR(psnDataSettingRows.get(0).getAvatar());
+                            psnDataSettingShrPref.setNICKNAME(psnDataSettingRows.get(0).getNickname());
+                            psnDataSettingShrPref.setSEX(psnDataSettingRows.get(0).getSex());
+                            psnDataSettingShrPref.setBIRTHDAY(psnDataSettingRows.get(0).getBirthday());
+                        }
+
+//                        //test
+//                        String str = psnDataSettingShrPref.getPID() + "\n"
+//                                + psnDataSettingShrPref.getPWD() + "\n"
+//                                + psnDataSettingShrPref.getAID() + "\n"
+//                                + psnDataSettingShrPref.getSID() + "\n"
+//                                + psnDataSettingShrPref.getNICKNAME() + "22222";
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        //test
+
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "個人資料更新失敗", Toast.LENGTH_SHORT).show();
+                }
+                //更新結束，不論結果都要執行
+                updateRnEndflagSetting(0);
+            }
+        }.execute(signInShrPref.getAID());
+    }
+
+    //不同裝置登入 個人設定 全部更新
+    private void UpdatePsnSetting() {
+        if (!signInShrPref.getSameSignInMachine()) { //不同裝置
+            //更新動作
+            new AsyncTask<String, Void, ArrayList<PsnSettingRow>>() {
+                @Override
+                protected ArrayList<PsnSettingRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PsnSettingRow> psnSettingRows = null;
+
+                    try {
+                        JSONObject jsonObject = httcjsonapi.UpdatePsnSetting(params[0]);
+                        psnSettingRows = jsonParser.parsePsnSettingRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return psnSettingRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PsnSettingRow> psnSettingRows) {
+                    super.onPostExecute(psnSettingRows);
+                    if (psnSettingRows != null) { //撈取資料成功
+                        PsnSettingShrPref psnSettingShrPref =
+                                new PsnSettingShrPref(MainActivity.this, signInShrPref.getAID(),
+                                        psnSettingRows.get(0));
+
+//                        //test
+//                        String str = psnSettingShrPref.getCENTER_MSG_FLAG() + "\n"
+//                                + psnSettingShrPref.getCENTER_NOT_FLAG() + "\n"
+//                                + psnSettingShrPref.getDATA_NOT_FLAG() + "\n"
+//                                + psnSettingShrPref.getLOCATION_FLAG() + "\n"
+//                                + psnSettingShrPref.getMEDICINE_NOT_FLAG();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        //test
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人設定更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+                    //更新結束
+                    updateRnEndflagSetting(1);
+                }
+            }.execute(signInShrPref.getAID());
+        } else { //同裝置
+            updateRnEndflagSetting(1);
+        }
+    }
+
+    /**
      * 1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料)
      * 2.個人血壓流水資料PressDataTable (僅登入者資料)
      * 3.個人血壓留言PressMsgTable (僅登入者資料)
@@ -379,34 +512,157 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    private void updateData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 10; i++) {
+    //遠距會員 更新 9個Table 刪除舊資料
+    private void UpdateMemberData() {
+        if (signInShrPref.getMemberFlag()) { //遠距會員
+            //更新動作
+            //1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料)
+            new AsyncTask<String, Void, ArrayList<WLevelRow>>() {
+                @Override
+                protected ArrayList<WLevelRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<WLevelRow> WLevelRows = null;
+
                     try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
+                        JSONObject jsonObject = httcjsonapi.UpdateWLevelShrPref(params[0]);
+                        WLevelRows = jsonParser.parseWLevelRow(jsonObject);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    return WLevelRows;
                 }
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        Toast.makeText(MainActivity.this, "哈哈哈", Toast.LENGTH_SHORT).show();
+
+                @Override
+                protected void onPostExecute(ArrayList<WLevelRow> wLevelRows) {
+                    super.onPostExecute(wLevelRows);
+                    if (wLevelRows != null) {
+                        WLevelShrPref wLevelShrPref = new WLevelShrPref(MainActivity.this,
+                                signInShrPref.getAID(), wLevelRows.get(0));
+
+//                        //test
+//                        Toast.makeText(MainActivity.this,
+//                                String.valueOf(wLevelShrPref.getBG_AM_Max()),
+//                                Toast.LENGTH_SHORT).show();
+//                        //test
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人警戒值資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
-        }).start();
+                    updateRnEndflagSetting(2);
+                }
+            }.execute(signInShrPref.getSID());
+            //2.個人血壓流水資料PressDataTable (僅登入者資料) 關係到兩個表與表的生成
+            //3.個人血壓留言PressMsgTable (僅登入者資料)
+            /**
+             * 創或開Table
+             *
+             * 參數:sid，更新到最後一筆的資料時間
+             * 前動作:如果APP端沒有資料，從30天前更新起，如果有資料，從最後一筆開始更新
+             * 回傳:DataTable
+             * 後動作:資料為空，不動作;資料非空，全部寫入;刪除舊的資料
+             */
+            new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
+                @Override
+                protected ArrayList<PreMsgRow> doInBackground(String... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreMsgRow> preMsgRows) {
+                    super.onPostExecute(preMsgRows);
+                }
+            }.execute(signInShrPref.getAID()/*, 最後一筆資料的時間*/);
+
+            //4.個人每日平均血壓PressAvgTable (僅登入者資料)
+            //5.個人血糖流水資料GlycemiaDataTable (僅登入者資料)
+            //6.個人血糖留言GlycemiaMsgTable (僅登入者資料)
+            //7.個人每日平均血壓GlycemiaAvgTable (僅登入者資料)
+            //8.APP使用者個人訊息表PersonalNoticeTable
+            //9.APP使用者中心訊息表CenterNoticeTable
+
+
+            //更新結束，若成功執行
+            /**
+             * 1.創或開Table
+             * 2.搜尋最後一筆時間(沒資料->自定義抓取時間、有資料->使用資料時間抓取資料)
+             * 3.將資料寫入SQLite
+             */
+            //更新結束，不論結果都要執行
+            updateRnEndflagSetting(2);
+        } else { //非遠距會員
+            updateRnEndflagSetting(2);
+        }
     }
 
-
     /**
-     * d2
+     * 判斷與上次使用的裝飾是否相同，相同不用更新以下兩項，不同需要更新以下兩項
+     * APP使用者好友關係表FriendTable -> 好友非遠距會員(中間不能點擊)、好友是遠距會員(中間可以點擊)
+     *                                 如果自己與好友都不是遠距會員(好友設定不能點擊)
+     *                                 ----------------------以上兩項判斷在Adapter中執行------------
+     * APP使用者好友群組表FriendGroupTable
      */
     /**
      *
      */
+    //更新好友關係表、好友群組表
+    private void UpdateFriendData() {
+        if (signInShrPref.getSameSignInMachine()) { //不同裝置
+
+            //更新動作
 
 
+            //更新結束，若成功執行
+            /**
+             * 1.創或開Table
+             * 2.搜尋最後一筆時間(沒資料->自定義抓取時間、有資料->使用資料時間抓取資料)
+             * 3.將資料寫入SQLite
+             */
+
+            //更新結束，不論結果都要執行
+            updateRnEndflagSetting(updateEndflag.length - 2);
+        } else { //同裝置
+            updateRnEndflagSetting(updateEndflag.length - 2);
+        }
+    }
+
+    /**
+     * 更新資料
+     * APP使用者中心留言板表CenterMessageTable
+     */
+    /**
+     *
+     */
+    //更新 APP使用者中心留言板表CenterMessageTable
+    private void UpdateCommunityData() {
+
+        //更新動作
+
+
+        //更新結束，若成功執行
+        /**
+         * 1.創或開Table
+         * 2.搜尋最後一筆時間(沒資料->自定義抓取時間、有資料->使用資料時間抓取資料)
+         * 3.將資料寫入SQLite
+         */
+
+        //更新結束，不論結果都要執行
+        updateRnEndflagSetting(updateEndflag.length - 1);
+    }
+
+
+    private void updateRnEndflagSetting(int Num) {
+        updateEndflag[Num] = true;
+        int endFlagCount = 0;
+
+        for (int i = 0; i < updateEndflag.length; i++) {
+            if (updateEndflag[i]) {
+                endFlagCount = endFlagCount + 1;
+            }
+        }
+
+        if (endFlagCount >= updateEndflag.length) {
+            mySyncingDialog.dismiss();
+        }
+    }
 }

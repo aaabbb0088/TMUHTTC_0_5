@@ -65,6 +65,31 @@ public class WLevelShrPref {
                 .apply();
     }
 
+    public void setAllData(WLevelRow wLevelRow) {
+        levels.edit()
+                .putInt(this.BP_SY_Max, wLevelRow.getBP_SY_Max())
+                .putInt(this.BP_SY_Min, wLevelRow.getBP_SY_Min())
+                .putInt(this.BP_DI_Max, wLevelRow.getBP_DI_Max())
+                .putInt(this.BP_DI_Min, wLevelRow.getBP_DI_Min())
+                .putInt(this.BP_HR_Max, wLevelRow.getBP_HR_Max())
+                .putInt(this.BP_HR_Min, wLevelRow.getBP_HR_Min())
+                .putInt(this.BP_SY_MaxDang, wLevelRow.getBP_SY_MaxDang())
+                .putInt(this.BP_SY_MinDang, wLevelRow.getBP_SY_MinDang())
+                .putInt(this.BP_DI_MaxDang, wLevelRow.getBP_DI_MaxDang())
+                .putInt(this.BP_DI_MinDang, wLevelRow.getBP_DI_MinDang())
+                .putInt(this.BP_HR_MaxDang, wLevelRow.getBP_HR_MaxDang())
+                .putInt(this.BP_HR_MinDang, wLevelRow.getBP_HR_MinDang())
+                .putInt(this.BG_BM_Max, wLevelRow.getBG_BM_Max())
+                .putInt(this.BG_BM_Min, wLevelRow.getBG_BM_Min())
+                .putInt(this.BG_BM_MaxDang, wLevelRow.getBG_BM_MaxDang())
+                .putInt(this.BG_BM_MinDang, wLevelRow.getBG_BM_MinDang())
+                .putInt(this.BG_AM_Max, wLevelRow.getBG_AM_Max())
+                .putInt(this.BG_AM_Min, wLevelRow.getBG_AM_Min())
+                .putInt(this.BG_AM_MaxDang, wLevelRow.getBG_AM_MaxDang())
+                .putInt(this.BG_AM_MinDang, wLevelRow.getBG_AM_MinDang())
+                .apply();
+    }
+
     public int getBP_SY_Max() {
         return levels.getInt(this.BP_SY_Max, 0);
     }

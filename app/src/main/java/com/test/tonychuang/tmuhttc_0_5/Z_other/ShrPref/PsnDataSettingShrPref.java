@@ -39,18 +39,37 @@ public class PsnDataSettingShrPref {
         settings.edit()
                 .putString(this.PID, psnDataSettingRow.getPid())
                 .putString(this.PWD, psnDataSettingRow.getPwd())
-                .putString(this.AID,psnDataSettingRow.getAid())
-                .putString(this.SID,psnDataSettingRow.getAid())
-                .putString(this.MEMBERFLAG,psnDataSettingRow.getMemberflag())
-                .putString(this.AVATAR,psnDataSettingRow.getAvatar())
-                .putString(this.NAME,psnDataSettingRow.getName())
-                .putString(this.NICKNAME,psnDataSettingRow.getNickname())
-                .putInt(this.SEX,psnDataSettingRow.getSex())
-                .putString(this.BIRTHDAY,psnDataSettingRow.getBirthday())
-                .putString(this.EMAIL,psnDataSettingRow.getEmail())
-                .putString(this.PHONE,psnDataSettingRow.getPhone())
-                .putString(this.GCMID,psnDataSettingRow.getGcmId())
-                .putString(this.UPDATETIME,psnDataSettingRow.getUpdatetime())
+                .putString(this.AID, psnDataSettingRow.getAid())
+                .putString(this.SID, psnDataSettingRow.getSid())
+                .putString(this.MEMBERFLAG, psnDataSettingRow.getMemberflag())
+                .putString(this.AVATAR, psnDataSettingRow.getAvatar())
+                .putString(this.NAME, psnDataSettingRow.getName())
+                .putString(this.NICKNAME, psnDataSettingRow.getNickname())
+                .putInt(this.SEX, psnDataSettingRow.getSex())
+                .putString(this.BIRTHDAY, psnDataSettingRow.getBirthday())
+                .putString(this.EMAIL, psnDataSettingRow.getEmail())
+                .putString(this.PHONE, psnDataSettingRow.getPhone())
+                .putString(this.GCMID, psnDataSettingRow.getGcmId())
+                .putString(this.UPDATETIME, psnDataSettingRow.getUpdatetime())
+                .apply();
+    }
+
+    public void setAllData(PsnDataSettingRow psnDataSettingRow) {
+        settings.edit()
+                .putString(this.PID, psnDataSettingRow.getPid())
+                .putString(this.PWD, psnDataSettingRow.getPwd())
+                .putString(this.AID, psnDataSettingRow.getAid())
+                .putString(this.SID, psnDataSettingRow.getSid())
+                .putString(this.MEMBERFLAG, psnDataSettingRow.getMemberflag())
+                .putString(this.AVATAR, psnDataSettingRow.getAvatar())
+                .putString(this.NAME, psnDataSettingRow.getName())
+                .putString(this.NICKNAME, psnDataSettingRow.getNickname())
+                .putInt(this.SEX, psnDataSettingRow.getSex())
+                .putString(this.BIRTHDAY, psnDataSettingRow.getBirthday())
+                .putString(this.EMAIL, psnDataSettingRow.getEmail())
+                .putString(this.PHONE, psnDataSettingRow.getPhone())
+                .putString(this.GCMID, psnDataSettingRow.getGcmId())
+                .putString(this.UPDATETIME, psnDataSettingRow.getUpdatetime())
                 .apply();
     }
 
@@ -86,8 +105,8 @@ public class PsnDataSettingShrPref {
         return settings.getString(this.NICKNAME, "error");
     }
 
-    public String getSEX() {
-        return settings.getString(this.SEX, "error");
+    public int getSEX() {
+        return settings.getInt(this.SEX, 9);
     }
 
     public String getBIRTHDAY() {

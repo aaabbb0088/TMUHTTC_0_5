@@ -12,6 +12,7 @@ public class PreMsgRow {
     private String PMsg_datetime;
     private String PMsg_content;
     private String PMsg_status;
+    private String TableName = " PressMsgTable";
 
     public PreMsgRow() {
         this.PMsg_table_id = null;
@@ -28,6 +29,10 @@ public class PreMsgRow {
         this.PMsg_datetime = PMsg_datetime;
         this.PMsg_content = PMsg_content;
         this.PMsg_status = PMsg_status;
+    }
+
+    public String getTableName() {
+        return this.TableName;
     }
 
     public String getPMsg_table_id() {
@@ -70,7 +75,7 @@ public class PreMsgRow {
         this.PMsg_status = PMsg_status;
     }
 
-    public ArrayList<String> getColumnNameAry(){
+    public ArrayList<String> getColumnNameAry() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("PMsg_table_id");
         arrayList.add("PMsg_aid");
@@ -80,7 +85,7 @@ public class PreMsgRow {
         return arrayList;
     }
 
-    public ArrayList<String> getColumnTypeAry(){
+    public ArrayList<String> getColumnTypeAry() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("INTEGER");
         arrayList.add("TEXT");

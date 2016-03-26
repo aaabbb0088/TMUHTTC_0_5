@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -37,6 +36,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 import org.json.JSONObject;
 
 import java.util.Date;
+
+import me.grantland.widget.AutofitTextView;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -85,7 +86,7 @@ public class SignInActivity extends AppCompatActivity {
                     Gravity.CENTER);
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title, null);
-            TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+            AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
             actionBarText.setText("台北醫學大學 遠距照護中心");
             actionBarText.setTextColor(Color.WHITE);
             actionBar.setCustomView(titleView, lp);
@@ -103,7 +104,7 @@ public class SignInActivity extends AppCompatActivity {
         editPid = (MaterialEditText) findViewById(R.id.editPid);
         editPassword = (PasswordEditText) findViewById(R.id.editPassword);
         pleaseWaitImgView = (ImageView) findViewById(R.id.pleaseWaitImgView);
-
+        pleaseWaitImgView.setVisibility(View.INVISIBLE);
         editPid.addTextChangedListener(getTextWatch());
         editPassword.addTextChangedListener(getTextWatch());
         editPid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -128,24 +129,6 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signIn();
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    int mProgress;
-//
-//                    @Override
-//                    public void run() {
-//                        mProgress += 10;
-//                        if (mProgress < 100) {
-//                            handler.postDelayed(this, new Random().nextInt(1000));
-//                        } else {
-//                            signInBtn.setProgress(100);
-////                            Toast.makeText(SignInActivity.this, "Loading Complete, button is disabled", Toast.LENGTH_LONG).show();
-//                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-//                            startActivity(intent);
-//                            SignInActivity.this.finish();
-//                        }
-//                    }
-//                }, new Random().nextInt(1000));
             }
         });
 

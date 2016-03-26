@@ -23,6 +23,10 @@ import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
+
+import me.grantland.widget.AutofitTextView;
 
 
 /**
@@ -55,8 +59,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private ActionBar actionBar;
     private TextView gpsSettingTv;
     private ImageView gpsSettingImv;
+    private TextView NameTv;
+    private TextView NickNameTv;
 
-    private static DialogPlus dialog;
+    private SignInShrPref signInShrPref;
+    private PsnDataSettingShrPref psnDataSettingShrPref;
+
+    private static DialogPlus dialog; //MainActivity 需要利用這個dialog做判斷
 
 
     public SettingFragment() {
@@ -70,6 +79,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         initBar();
         initView();
+        initData();
         return view;
     }
 
@@ -125,7 +135,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 Gravity.CENTER);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View titleView = inflater.inflate(R.layout.action_bar_title, null);
-        TextView actionBarText = (TextView) titleView.findViewById(R.id.actionBarText);
+        AutofitTextView actionBarText = (AutofitTextView) titleView.findViewById(R.id.actionBarText);
         actionBarText.setText("個人設定");
         actionBarText.setTextColor(Color.WHITE);
         actionBar.setCustomView(titleView, lp);
@@ -143,6 +153,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         feedbackLayout.setOnClickListener(SettingFragment.this);
         gpsSettingTv = (TextView) view.findViewById(R.id.gpsSettingTv);
         gpsSettingImv = (ImageView) view.findViewById(R.id.gpsSettingImv);
+        NameTv = (TextView) view.findViewById(R.id.NameTv);
+        NickNameTv = (TextView) view.findViewById(R.id.NickNameTv);
+
     }
     private void settingGPSBottomDialog() {
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_gps_setting, null);
@@ -206,7 +219,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     /**
      *
      */
-
+    private void initData() {
+        signInShrPref = new SignInShrPref(getActivity());
+        psnDataSettingShrPref = new PsnDataSettingShrPref(getActivity(), signInShrPref.getAID());
+        NameTv.setText(psnDataSettingShrPref.getNAME());
+        NickNameTv.setText(psnDataSettingShrPref.getNICKNAME());
+    }
 
 
     /**

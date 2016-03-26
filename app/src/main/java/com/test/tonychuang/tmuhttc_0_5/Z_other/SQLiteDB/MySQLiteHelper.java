@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * 單筆寫入
  * Created by TonyChuang on 2016/3/17.
  */
-public class SQLiteHelper extends SQLiteOpenHelper {
+public class MySQLiteHelper extends SQLiteOpenHelper {
 
     private static String DATABASE_NAME = null;    //資料庫名稱
     private static int DATABASE_VERSION = 1;    //資料庫版本
@@ -24,7 +24,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private Context context;
 
 
-    public SQLiteHelper(Context context, String dbName, int dbVersion) {
+    public MySQLiteHelper(Context context, String dbName, int dbVersion) { //dbName:使用登入者aid
         super(context, dbName, null, dbVersion);
         this.context = context;
         DATABASE_NAME = dbName;
