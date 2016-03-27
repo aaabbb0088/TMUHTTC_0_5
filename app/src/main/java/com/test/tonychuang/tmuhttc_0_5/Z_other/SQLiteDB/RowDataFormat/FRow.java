@@ -1,48 +1,67 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者好友關係表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FRow {
-    private String F_table_id;
+@Table("FriendTable")
+public class FRow extends BaseModel {
+    public static final String F_TABLE_ID = "F_table_id";
+    public static final String F_FRI_AID = "F_fri_aid";
+    public static final String F_FRI_SID = "F_fri_sid";
+    public static final String F_RELATION_FLAG = "F_relation_flag";
+    public static final String F_ACTIVE_DATETIME = "F_active_datetime";
+    public static final String F_MEMBER_FLAG = "F_member_flag";
+    public static final String F_AVATAR = "F_avatar";
+    public static final String F_NAME = "F_name";
+    public static final String F_NICKNAME = "F_nickname";
+    public static final String F_NICKNAME_FLAG = "F_nickname_flag";
+    public static final String F_SEX = "F_sex";
+    public static final String F_BIRTHDAY = "F_birthday";
+    public static final String F_PHONE = "F_phone";
+    public static final String F_EMAIL = "F_email";
+
+    @NotNull
+    private long F_table_id;
+    @NotNull
     private String F_fri_aid;
+    @NotNull
     private String F_fri_sid;
-    private String F_relation_flag;
+    @NotNull
+    private int F_relation_flag;
+    @NotNull
     private String F_active_datetime;
+    @NotNull
     private String F_member_flag;
+    @NotNull
     private String F_avatar;
+    @NotNull
     private String F_name;
+    @NotNull
     private String F_nickname;
+    @NotNull
     private String F_nickname_flag;
-    private String F_sex;
+    @NotNull
+    private int F_sex;
+    @NotNull
     private String F_birthday;
+    @NotNull
     private String F_phone;
+    @NotNull
     private String F_email;
 
     public FRow() {
-        this.F_table_id = null;
-        this.F_fri_aid = null;
-        this.F_fri_sid = null;
-        this.F_relation_flag = null;
-        this.F_active_datetime = null;
-        this.F_member_flag = null;
-        this.F_avatar = null;
-        this.F_name = null;
-        this.F_nickname = null;
-        this.F_nickname_flag = null;
-        this.F_sex = null;
-        this.F_birthday = null;
-        this.F_phone = null;
-        this.F_email = null;
     }
 
-    public FRow(String f_table_id, String f_fri_aid, String f_fri_sid, String f_relation_flag,
-                String f_active_datetime, String f_member_flag, String f_avatar, String f_name,
-                String f_nickname, String f_nickname_flag, String f_sex, String f_birthday,
-                String f_phone, String f_email) {
+    public FRow(long f_table_id, String f_fri_aid, String f_fri_sid, int f_relation_flag,
+                String f_active_datetime, String f_member_flag, String f_avatar,
+                String f_name, String f_nickname, String f_nickname_flag,
+                int f_sex, String f_birthday, String f_phone, String f_email) {
         F_table_id = f_table_id;
         F_fri_aid = f_fri_aid;
         F_fri_sid = f_fri_sid;
@@ -59,11 +78,11 @@ public class FRow {
         F_email = f_email;
     }
 
-    public String getF_table_id() {
+    public long getF_table_id() {
         return F_table_id;
     }
 
-    public void setF_table_id(String f_table_id) {
+    public void setF_table_id(long f_table_id) {
         F_table_id = f_table_id;
     }
 
@@ -83,11 +102,11 @@ public class FRow {
         F_fri_sid = f_fri_sid;
     }
 
-    public String getF_relation_flag() {
+    public int getF_relation_flag() {
         return F_relation_flag;
     }
 
-    public void setF_relation_flag(String f_relation_flag) {
+    public void setF_relation_flag(int f_relation_flag) {
         F_relation_flag = f_relation_flag;
     }
 
@@ -139,11 +158,11 @@ public class FRow {
         F_nickname_flag = f_nickname_flag;
     }
 
-    public String getF_sex() {
+    public int getF_sex() {
         return F_sex;
     }
 
-    public void setF_sex(String f_sex) {
+    public void setF_sex(int f_sex) {
         F_sex = f_sex;
     }
 

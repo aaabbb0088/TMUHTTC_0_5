@@ -27,6 +27,7 @@ public class LogoPageActivity extends AppCompatActivity {
     private SignInShrPref signInShrPref;
     private String result;
     private AsyncTask asyncTask;
+    private Boolean[] endflag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,15 @@ public class LogoPageActivity extends AppCompatActivity {
     private void textShow() {
         secretTextView.setIsVisible(true);
         secretTextView.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                endflag[0] = true;
+                if (endflag[1]) {
+                    doResult(result);
+                }
+            }
+        }, 3000);
     }
 
 
@@ -78,93 +88,109 @@ public class LogoPageActivity extends AppCompatActivity {
      */
     private void initData() {
         signInShrPref = new SignInShrPref(LogoPageActivity.this);
+        endflag = new Boolean[]{false, false};
     }
 
     private void autoSignIn() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                MyDateSFormat myDateSFormat = new MyDateSFormat();
-                SignInShrPref signInShrPref = new SignInShrPref(LogoPageActivity.this);
-                if (signInShrPref.getSignInStatus()) {
-                    if (!signInShrPref.getPID().equals("error")) {
-                        try {
-                            if (7 >= differ(myDateSFormat.getM2CFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
-                                //處理TextShow與自動登入時間不定誰長問題(主要問題:登入時間短於2.5秒，TextShow尚未跑完)
-                                asyncTask = new AsyncTask<String, Void, String>() {
-                                    @Override
-                                    protected String doInBackground(String... params) {
-                                        HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                                        JSONParser jsonParser = new JSONParser();
-                                        String string = "error";
+        MyDateSFormat myDateSFormat = new MyDateSFormat();
+        SignInShrPref signInShrPref = new SignInShrPref(LogoPageActivity.this);
+        if (signInShrPref.getSignInStatus()) {
+            if (!signInShrPref.getPID().equals("error")) {
+                try {
+                    if (7 >= differ(myDateSFormat.getM2CFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
+                        //處理TextShow與自動登入時間不定誰長問題(主要問題:登入時間短於2.5秒，TextShow尚未跑完)
+                        asyncTask = new AsyncTask<String, Void, String>() {
+                            @Override
+                            protected String doInBackground(String... params) {
+                                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                JSONParser jsonParser = new JSONParser();
+                                String string = "error";
 
-                                        try {
-                                            JSONObject jsonObject = httcjsonapi.SignIn(params[0], params[1], params[2]);
-                                            string = jsonParser.parseString(jsonObject);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        return string;
-                                    }
-
-                                    @Override
-                                    protected void onPreExecute() {
-                                        super.onPreExecute();
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(String s) {
-                                        super.onPostExecute(s);
-                                        String[] token = s.split(",");
-                                        String resultStr = token[0];
-                                        String aid = "";
-                                        String sid = "";
-                                        if (token.length == 2) {
-                                            aid = token[1];
-                                        }
-                                        if (token.length == 3) {
-                                            aid = token[1];
-                                            sid = token[2];
-                                        }
-                                        switch (resultStr) {
-                                            case "trueMS":
-                                                getSignInSuccessResult(aid, sid, true, true);
-                                                break;
-                                            case "trueUMS":
-                                                getSignInSuccessResult(aid, sid, false, true);
-                                                break;
-                                            case "trueMD":
-                                                getSignInSuccessResult(aid, sid, true, false);
-                                                break;
-                                            case "trueUMD":
-                                                getSignInSuccessResult(aid, sid, false, false);
-                                                break;
-                                            case "false":
-                                                getSignInFailResult();
-                                                break;
-                                            case "error":
-                                                getSignInFailResult();
-                                                break;
-                                            case "test":
-                                                getSignInFailResult();
-                                                break;
-                                        }
-                                    }
-                                }.execute(signInShrPref.getPID(), signInShrPref.getPWD(), Build.SERIAL);
-                            } else {
-                                getSignInFailResult();
+                                try {
+                                    JSONObject jsonObject = httcjsonapi.SignIn(params[0], params[1], params[2]);
+                                    string = jsonParser.parseString(jsonObject);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return string;
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                            }
+
+                            @Override
+                            protected void onPostExecute(String s) {
+                                super.onPostExecute(s);
+                                endflag[1] = true;
+                                result = s;
+                                if (endflag[0]) {
+                                    doResult(result);
+                                }
+                            }
+                        }.execute(signInShrPref.getPID(), signInShrPref.getPWD(), Build.SERIAL);
                     } else {
-                        getSignInFailResult();
+                        endflag[1] = true;
+                        result = "error";
+                        if (endflag[0]) {
+                            doResult(result);
+                        }
                     }
-                } else {
-                    getSignInFailResult();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                endflag[1] = true;
+                result = "error";
+                if (endflag[0]) {
+                    doResult(result);
                 }
             }
-        }, 3000);
+        } else {
+            endflag[1] = true;
+            result = "error";
+            if (endflag[0]) {
+                doResult(result);
+            }
+        }
+    }
+
+    private void doResult(String s) {
+        String[] token = s.split(",");
+        String resultStr = token[0];
+        String aid = "";
+        String sid = "";
+        if (token.length == 2) {
+            aid = token[1];
+        }
+        if (token.length == 3) {
+            aid = token[1];
+            sid = token[2];
+        }
+        switch (resultStr) {
+            case "trueMS":
+                getSignInSuccessResult(aid, sid, true, true);
+                break;
+            case "trueUMS":
+                getSignInSuccessResult(aid, sid, false, true);
+                break;
+            case "trueMD":
+                getSignInSuccessResult(aid, sid, true, false);
+                break;
+            case "trueUMD":
+                getSignInSuccessResult(aid, sid, false, false);
+                break;
+            case "false":
+                getSignInFailResult();
+                break;
+            case "error":
+                getSignInFailResult();
+                break;
+            case "test":
+                getSignInFailResult();
+                break;
+        }
     }
 
 

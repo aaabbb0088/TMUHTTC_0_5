@@ -1,31 +1,41 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者好友邀請訊息表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FAddNotRow {
-    private String FAddNot_table_id;
+@Table("FriendAddNoticeTable")
+public class FAddNotRow extends BaseModel {
+    public static final String FADDNOT_TABLE_ID = "FAddNot_table_id";
+    public static final String FADDNOT_FRI_AID = "FAddNot_fri_aid";
+    public static final String FADDNOT_TYPE = "FAddNot_type";
+    public static final String FADDNOT_SENDER_NAME = "FAddNot_sender_name";
+    public static final String FADDNOT_DATETIME = "FAddNot_datetime";
+    public static final String FADDNOT_STATUS_FLAG = "FAddNot_status_flag";
+
+    @NotNull
+    private long FAddNot_table_id;
+    @NotNull
     private String FAddNot_fri_aid;
-    private String FAddNot_type;
+    @NotNull
+    private int FAddNot_type;
+    @NotNull
     private String FAddNot_sender_name;
+    @NotNull
     private String FAddNot_datetime;
-    private String FAddNot_status_flag;
+    @NotNull
+    private int FAddNot_status_flag;
 
     public FAddNotRow() {
-        this.FAddNot_table_id = null;
-        this.FAddNot_fri_aid = null;
-        this.FAddNot_type = null;
-        this.FAddNot_sender_name = null;
-        this.FAddNot_datetime = null;
-        this.FAddNot_status_flag = null;
     }
 
-    public FAddNotRow(String FAddNot_table_id, String FAddNot_fri_aid, String FAddNot_type,
-                      String FAddNot_sender_name, String FAddNot_datetime,
-                      String FAddNot_status_flag) {
+    public FAddNotRow(long FAddNot_table_id, String FAddNot_fri_aid, int FAddNot_type,
+                      String FAddNot_sender_name, String FAddNot_datetime, int FAddNot_status_flag) {
         this.FAddNot_table_id = FAddNot_table_id;
         this.FAddNot_fri_aid = FAddNot_fri_aid;
         this.FAddNot_type = FAddNot_type;
@@ -34,11 +44,11 @@ public class FAddNotRow {
         this.FAddNot_status_flag = FAddNot_status_flag;
     }
 
-    public String getFAddNot_table_id() {
+    public long getFAddNot_table_id() {
         return FAddNot_table_id;
     }
 
-    public void setFAddNot_table_id(String FAddNot_table_id) {
+    public void setFAddNot_table_id(long FAddNot_table_id) {
         this.FAddNot_table_id = FAddNot_table_id;
     }
 
@@ -50,11 +60,11 @@ public class FAddNotRow {
         this.FAddNot_fri_aid = FAddNot_fri_aid;
     }
 
-    public String getFAddNot_type() {
+    public int getFAddNot_type() {
         return FAddNot_type;
     }
 
-    public void setFAddNot_type(String FAddNot_type) {
+    public void setFAddNot_type(int FAddNot_type) {
         this.FAddNot_type = FAddNot_type;
     }
 
@@ -74,11 +84,11 @@ public class FAddNotRow {
         this.FAddNot_datetime = FAddNot_datetime;
     }
 
-    public String getFAddNot_status_flag() {
+    public int getFAddNot_status_flag() {
         return FAddNot_status_flag;
     }
 
-    public void setFAddNot_status_flag(String FAddNot_status_flag) {
+    public void setFAddNot_status_flag(int FAddNot_status_flag) {
         this.FAddNot_status_flag = FAddNot_status_flag;
     }
 

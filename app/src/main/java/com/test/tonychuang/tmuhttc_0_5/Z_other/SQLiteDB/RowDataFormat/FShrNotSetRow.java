@@ -1,17 +1,40 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.Default;
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者個人訊息分享好友設定表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FShrNotSetRow {
+@Table("FriendShareNoticeSettingTable")
+public class FShrNotSetRow extends BaseModel {
+    public static final String FSHRNOTSET_FRI_AID = "FShrNotSet_fri_aid";
+    public static final String FSHRNOTSET_DATA_FLAG = "FShrNotSet_data_flag";
+    public static final String FSHRNOTSET_MEDINE_FLAG = "FShrNotSet_medine_flag";
+    public static final String FSHRNOTSET_PAY_FLAG = "FShrNotSet_pay_flag";
+    public static final String FSHRNOTSET_REPORT_FLAG = "FShrNotSet_report_flag";
+    public static final String FSHRNOTSET_RECORD_FLAG = "FShrNotSet_record_flag";
+
+    @NotNull
     private String FShrNotSet_fri_aid;
+    @NotNull
+    @Default("N")
     private String FShrNotSet_data_flag;
+    @NotNull
+    @Default("N")
     private String FShrNotSet_medine_flag;
+    @NotNull
+    @Default("N")
     private String FShrNotSet_pay_flag;
+    @NotNull
+    @Default("N")
     private String FShrNotSet_report_flag;
+    @NotNull
+    @Default("N")
     private String FShrNotSet_record_flag;
 
     public FShrNotSetRow() {

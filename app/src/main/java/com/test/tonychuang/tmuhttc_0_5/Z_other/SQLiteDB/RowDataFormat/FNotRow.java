@@ -1,37 +1,50 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者好友個人訊息表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FNotRow {
-    private String FNot_table_id;
-    private String FNot_fri_aid;
-    private String FNot_type;
+@Table("FriendNoticeTable")
+public class FNotRow extends BaseModel {
+    public static final String FNOT_TABLE_ID = "FNot_table_id";
+    public static final String FNOT_FRI_SID = "FNot_fri_sid";
+    public static final String FNOT_TYPE = "FNot_type";
+    public static final String FNOT_TITLE = "FNot_title";
+    public static final String FNOT_CONTENT = "FNot_content";
+    public static final String FNOT_SENDR_NAME = "FNot_sendr_name";
+    public static final String FNOT_DATETIME = "FNot_datetime";
+    public static final String FNOT_STATUS = "FNot_status";
+
+    @NotNull
+    private long FNot_table_id;
+    @NotNull
+    private String FNot_fri_sid;
+    @NotNull
+    private int FNot_type;
+    @NotNull
     private String FNot_title;
+    @NotNull
     private String FNot_content;
+    @NotNull
     private String FNot_sendr_name;
+    @NotNull
     private String FNot_datetime;
-    private String FNot_status;
+    @NotNull
+    private int FNot_status;
 
     public FNotRow() {
-        this.FNot_table_id = null;
-        this.FNot_fri_aid = null;
-        this.FNot_type = null;
-        this.FNot_title = null;
-        this.FNot_content = null;
-        this.FNot_sendr_name = null;
-        this.FNot_datetime = null;
-        this.FNot_status = null;
     }
 
-    public FNotRow(String FNot_table_id, String FNot_fri_aid, String FNot_type, String FNot_title,
+    public FNotRow(long FNot_table_id, String FNot_fri_sid, int FNot_type, String FNot_title,
                    String FNot_content, String FNot_sendr_name, String FNot_datetime,
-                   String FNot_status) {
+                   int FNot_status) {
         this.FNot_table_id = FNot_table_id;
-        this.FNot_fri_aid = FNot_fri_aid;
+        this.FNot_fri_sid = FNot_fri_sid;
         this.FNot_type = FNot_type;
         this.FNot_title = FNot_title;
         this.FNot_content = FNot_content;
@@ -40,27 +53,27 @@ public class FNotRow {
         this.FNot_status = FNot_status;
     }
 
-    public String getFNot_table_id() {
+    public long getFNot_table_id() {
         return FNot_table_id;
     }
 
-    public void setFNot_table_id(String FNot_table_id) {
+    public void setFNot_table_id(long FNot_table_id) {
         this.FNot_table_id = FNot_table_id;
     }
 
-    public String getFNot_fri_aid() {
-        return FNot_fri_aid;
+    public String getFNot_fri_sid() {
+        return FNot_fri_sid;
     }
 
-    public void setFNot_fri_aid(String FNot_fri_aid) {
-        this.FNot_fri_aid = FNot_fri_aid;
+    public void setFNot_fri_sid(String FNot_fri_sid) {
+        this.FNot_fri_sid = FNot_fri_sid;
     }
 
-    public String getFNot_type() {
+    public int getFNot_type() {
         return FNot_type;
     }
 
-    public void setFNot_type(String FNot_type) {
+    public void setFNot_type(int FNot_type) {
         this.FNot_type = FNot_type;
     }
 
@@ -96,11 +109,11 @@ public class FNotRow {
         this.FNot_datetime = FNot_datetime;
     }
 
-    public String getFNot_status() {
+    public int getFNot_status() {
         return FNot_status;
     }
 
-    public void setFNot_status(String FNot_status) {
+    public void setFNot_status(int FNot_status) {
         this.FNot_status = FNot_status;
     }
 

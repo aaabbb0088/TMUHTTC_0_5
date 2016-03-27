@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.DataBase;
+import com.litesuits.orm.db.assit.QueryBuilder;
+import com.litesuits.orm.db.assit.WhereBuilder;
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.PersonFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.FriendFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab3_community.CommunityFragment;
@@ -22,7 +26,8 @@ import com.test.tonychuang.tmuhttc_0_5.Tab4_setting.SettingFragment;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
-import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
@@ -33,7 +38,11 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static Boolean rcdUpdatedFlag = true;
     public static Boolean friBoardUpdatedFlag = true;
 
-    private int DB_VERSION = 1;
+    private DataBase mainDB;
 
     public static ActionBar actionBar;
     public static MainActivity mainActivity;
@@ -359,12 +368,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initData() {
         signInShrPref = new SignInShrPref(this);
-        updateEndflag = new Boolean[]{false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
+        updateEndflag = new Boolean[]{false, false, false, false, false, false, false, false
+                , false, false, false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
     }
 
     private void updateData() {
-        if (!(updateEndflag[0] || updateEndflag[1] || updateEndflag[2] ||
-                updateEndflag[3] || updateEndflag[4])) {
+        int allUpdateAsycFlag = 0;
+        for (int i = 0; i<updateEndflag.length; i++){
+            if (updateEndflag[i]){
+                allUpdateAsycFlag = 1;
+                break;
+            }
+        }
+        if (allUpdateAsycFlag == 0) {
             mySyncingDialog = new MySyncingDialog(false, this, "資料同步中，請稍後");
             mySyncingDialog.show();
             UpdatePsnDataSetting();
@@ -382,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //更新 .個人基本資料PersonalDataSetting (修改 遠距會員身分flag,修改 密碼、會員頭像、暱稱、性別、生日)
+    //更新 .個人基本資料PersonalDataSetting (修改 遠距會員身分flag,修改 密碼、會員頭像、暱稱、性別、生日) end[0]
     private void UpdatePsnDataSetting() {
         new AsyncTask<String, Void, ArrayList<PsnDataSettingRow>>() {
             @Override
@@ -449,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }.execute(signInShrPref.getAID());
     }
 
-    //不同裝置登入 個人設定 全部更新
+    //不同裝置登入 個人設定 全部更新 end[1]
     private void UpdatePsnSetting() {
         if (!signInShrPref.getSameSignInMachine()) { //不同裝置
             //更新動作
@@ -512,11 +528,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //遠距會員 更新 9個Table 刪除舊資料
+    //遠距會員 更新 11個Table 刪除舊資料
     private void UpdateMemberData() {
         if (signInShrPref.getMemberFlag()) { //遠距會員
+            mainDB = LiteOrm.newSingleInstance(MainActivity.this, signInShrPref.getAID());
+            final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
+            calendar.add(Calendar.MONTH, -1);
+            String lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+            Date lastTime;
+
             //更新動作
-            //1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料)
+            //1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料) end[2]
             new AsyncTask<String, Void, ArrayList<WLevelRow>>() {
                 @Override
                 protected ArrayList<WLevelRow> doInBackground(String... params) {
@@ -552,33 +574,134 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     updateRnEndflagSetting(2);
                 }
             }.execute(signInShrPref.getSID());
-            //2.個人血壓流水資料PressDataTable (僅登入者資料) 關係到兩個表與表的生成
-            //3.個人血壓留言PressMsgTable (僅登入者資料)
+
+
+            //2-1.個人血壓流水資料PressDataTable (僅登入者資料) end[3]
+            ArrayList<PreDataRow> list = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
+                    .whereEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(PreDataRow.ID)
+                    .limit(1, 1));
+            if (list.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getC2MFrmt_yMdahm().parse(list.get(0).getPData_datetime());
+                    if (lastTime.after(calendar.getTime())){
+                        lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<PreDataRow>>() {
+                @Override
+                protected ArrayList<PreDataRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PreDataRow> preDataRows = null;
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = httcjsonapi.UpdatePressDataTable(params[0], params[1]);
+                        preDataRows = jsonParser.parsePreDataRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return preDataRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreDataRow> preDataRows) {
+                    super.onPostExecute(preDataRows);
+                    if (preDataRows != null) {
+                        for (int i = 0; i < preDataRows.size(); i++) {
+                            mainDB.save(preDataRows.get(i));
+                        }
+                        long count = mainDB.queryCount(PreDataRow.class);
+
+//                        //test
+//                        ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        //test
+
+                        mainDB.delete(new WhereBuilder(PreDataRow.class)
+                                .lessThan(PreDataRow.PDATA_DATETIME, calendar.getTime()));
+                        LiteOrm.releaseMemory();
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人血壓量測資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+                    updateRnEndflagSetting(3);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
+
+            //2-2.個人血壓按讚PressThumbTable (僅登入者資料)
+
+
+            //3-1.個人血壓留言PressMsgTable (僅登入者資料)
             /**
-             * 創或開Table
+             * 創或開Table 使用LiteOrm
              *
              * 參數:sid，更新到最後一筆的資料時間
              * 前動作:如果APP端沒有資料，從30天前更新起，如果有資料，從最後一筆開始更新
              * 回傳:DataTable
              * 後動作:資料為空，不動作;資料非空，全部寫入;刪除舊的資料
              */
-            new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
-                @Override
-                protected ArrayList<PreMsgRow> doInBackground(String... params) {
-                    return null;
-                }
+//            ArrayList<PreMsgRow> list = mainDB.query(new QueryBuilder<PreMsgRow>(PreMsgRow.class)
+//                    .whereEquals(PreMsgRow.PMSG_SID, signInShrPref.getSID())
+//                    .appendOrderDescBy(PreMsgRow.PMSG_DATETIME)
+//                    .limit(1, 1));
+//            String lastDataTime;
+//            final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
+//            calendar.add(Calendar.MONTH, -1);
+//            if (list.size() != 0) {
+//                lastDataTime = new MyDateSFormat().getC2MFrmt_yMdahm().format(list.get(0).getPMsg_datetime());
+//            } else {
+//                lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+//            }
+//            new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
+//                @Override
+//                protected ArrayList<PreMsgRow> doInBackground(String... params) {
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(ArrayList<PreMsgRow> preMsgRows) {
+//                    super.onPostExecute(preMsgRows);
+//                    if (preMsgRows != null) {
+//                        for (int i = 0; i < preMsgRows.size(); i++) {
+//                            mainDB.save(preMsgRows.get(i));
+//                            mainDB.delete(new WhereBuilder(PreMsgRow.class)
+//                                    .lessThan(PreMsgRow.PMSG_DATETIME, calendar.getTime()));
+//                        }
+//                        updateRnEndflagSetting(2);
+//                    } else {
+//                        updateRnEndflagSetting(2);
+//                    }
+//                }
+//            }.execute(signInShrPref.getSID(), lastDataTime);
 
-                @Override
-                protected void onPostExecute(ArrayList<PreMsgRow> preMsgRows) {
-                    super.onPostExecute(preMsgRows);
-                }
-            }.execute(signInShrPref.getAID()/*, 最後一筆資料的時間*/);
+
+            //3-2.個人血糖按讚GlycemiaThumbTable (僅登入者資料)
+
 
             //4.個人每日平均血壓PressAvgTable (僅登入者資料)
+
+
             //5.個人血糖流水資料GlycemiaDataTable (僅登入者資料)
+
+
             //6.個人血糖留言GlycemiaMsgTable (僅登入者資料)
+
+
             //7.個人每日平均血壓GlycemiaAvgTable (僅登入者資料)
+
+
             //8.APP使用者個人訊息表PersonalNoticeTable
+
+
             //9.APP使用者中心訊息表CenterNoticeTable
 
 
@@ -589,9 +712,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              * 3.將資料寫入SQLite
              */
             //更新結束，不論結果都要執行
-            updateRnEndflagSetting(2);
+            updateRnEndflagSetting(4);
+            updateRnEndflagSetting(5);
+            updateRnEndflagSetting(6);
+            updateRnEndflagSetting(7);
+            updateRnEndflagSetting(8);
+            updateRnEndflagSetting(9);
+            updateRnEndflagSetting(10);
+            updateRnEndflagSetting(11);
+            updateRnEndflagSetting(12);
         } else { //非遠距會員
             updateRnEndflagSetting(2);
+            updateRnEndflagSetting(3);
+            updateRnEndflagSetting(4);
+            updateRnEndflagSetting(5);
+            updateRnEndflagSetting(6);
+            updateRnEndflagSetting(7);
+            updateRnEndflagSetting(8);
+            updateRnEndflagSetting(9);
+            updateRnEndflagSetting(10);
+            updateRnEndflagSetting(11);
+            updateRnEndflagSetting(12);
         }
     }
 
@@ -620,8 +761,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              */
 
             //更新結束，不論結果都要執行
+            updateRnEndflagSetting(updateEndflag.length - 3);
             updateRnEndflagSetting(updateEndflag.length - 2);
         } else { //同裝置
+            updateRnEndflagSetting(updateEndflag.length - 3);
             updateRnEndflagSetting(updateEndflag.length - 2);
         }
     }
@@ -663,6 +806,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (endFlagCount >= updateEndflag.length) {
             mySyncingDialog.dismiss();
+            if(mainDB != null){
+                mainDB.close();
+            }
         }
     }
 }

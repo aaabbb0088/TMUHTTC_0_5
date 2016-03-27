@@ -282,6 +282,21 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject UpdatePressDataTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePressDataTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

@@ -1,33 +1,45 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者個人訊息表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class PsnNotRow {
-    private String PsnNot_table_id;
-    private String PsnNot_type;
+@Table("PersonalNoticeTable")
+public class PsnNotRow extends BaseModel {
+    public static final String PSNNOT_TABLE_ID = "PsnNot_table_id";
+    public static final String PSNNOT_TYPE = "PsnNot_type";
+    public static final String PSNNOT_TITLE = "PsnNot_title";
+    public static final String PSNNOT_CONTENT = "PsnNot_content";
+    public static final String PSNNOT_SENDR_NAME = "PsnNot_sendr_name";
+    public static final String PSNNOT_DATETIME = "PsnNot_datetime";
+    public static final String PSNNOT_STATUS = "PsnNot_status";
+
+    @NotNull
+    private long PsnNot_table_id;
+    @NotNull
+    private int PsnNot_type;
+    @NotNull
     private String PsnNot_title;
+    @NotNull
     private String PsnNot_content;
+    @NotNull
     private String PsnNot_sendr_name;
+    @NotNull
     private String PsnNot_datetime;
-    private String PsnNot_status;
+    @NotNull
+    private int PsnNot_status;
 
     public PsnNotRow() {
-        this.PsnNot_table_id = null;
-        this.PsnNot_type = null;
-        this.PsnNot_title = null;
-        this.PsnNot_content = null;
-        this.PsnNot_sendr_name = null;
-        this.PsnNot_datetime = null;
-        this.PsnNot_status = null;
     }
 
-    public PsnNotRow(String psnNot_table_id, String psnNot_type, String psnNot_title,
-                     String psnNot_content, String psnNot_sendr_name, String psnNot_datetime,
-                     String psnNot_status) {
+    public PsnNotRow(long psnNot_table_id, int psnNot_type, String psnNot_title,
+                     String psnNot_content, String psnNot_sendr_name,
+                     String psnNot_datetime, int psnNot_status) {
         PsnNot_table_id = psnNot_table_id;
         PsnNot_type = psnNot_type;
         PsnNot_title = psnNot_title;
@@ -37,19 +49,19 @@ public class PsnNotRow {
         PsnNot_status = psnNot_status;
     }
 
-    public String getPsnNot_table_id() {
+    public long getPsnNot_table_id() {
         return PsnNot_table_id;
     }
 
-    public void setPsnNot_table_id(String psnNot_table_id) {
+    public void setPsnNot_table_id(long psnNot_table_id) {
         PsnNot_table_id = psnNot_table_id;
     }
 
-    public String getPsnNot_type() {
+    public int getPsnNot_type() {
         return PsnNot_type;
     }
 
-    public void setPsnNot_type(String psnNot_type) {
+    public void setPsnNot_type(int psnNot_type) {
         PsnNot_type = psnNot_type;
     }
 
@@ -85,11 +97,11 @@ public class PsnNotRow {
         PsnNot_datetime = psnNot_datetime;
     }
 
-    public String getPsnNot_status() {
+    public int getPsnNot_status() {
         return PsnNot_status;
     }
 
-    public void setPsnNot_status(String psnNot_status) {
+    public void setPsnNot_status(int psnNot_status) {
         PsnNot_status = psnNot_status;
     }
 

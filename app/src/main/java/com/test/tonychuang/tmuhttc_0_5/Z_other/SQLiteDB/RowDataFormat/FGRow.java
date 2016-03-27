@@ -1,13 +1,22 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者好友群組表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FGRow {
+@Table("FriendGroupTable")
+public class FGRow extends BaseModel {
+    public static final String FG_GROUP_NAME = "FG_group_name";
+    public static final String FG_FRI_AID = "FG_fri_aid";
+
+    @NotNull
     private String FG_group_name;
+    @NotNull
     private String FG_fri_aid;
 
     public FGRow() {

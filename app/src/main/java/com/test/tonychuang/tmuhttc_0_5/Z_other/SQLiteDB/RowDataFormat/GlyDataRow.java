@@ -1,44 +1,59 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * 個人血糖流水資料表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class GlyDataRow {
-    private String GData_table_id;
+@Table("GlycemiaDataTable")
+public class GlyDataRow extends BaseModel {
+    public static final String GDATA_SID = "GData_sid";
+    public static final String GDATA_TABLE_ID = "GData_table_id";
+    public static final String GDATA_DATETIME = "GData_datetime";
+    public static final String GDATA_VALUE = "GData_value";
+    public static final String GDATA_MEAL_FLAG = "GData_meal_flag";
+
+    @NotNull
+    private String GData_sid;
+    @NotNull
+    private long GData_table_id;
+    @NotNull
     private String GData_datetime;
-    private String GData_value;
+    @NotNull
+    private int GData_value;
+    @NotNull
     private String GData_meal_flag;
-    private String GData_thumb_count;
-    private String GData_thumb_aids;
+
 
     public GlyDataRow() {
-        this.GData_table_id = null;
-        this.GData_datetime = null;
-        this.GData_value = null;
-        this.GData_meal_flag = null;
-        this.GData_thumb_count = null;
-        this.GData_thumb_aids = null;
     }
 
-    public GlyDataRow(String GData_table_id, String GData_datetime, String GData_value,
-                      String GData_meal_flag, String GData_thumb_count, String GData_thumb_aids,
-                      String GData_msg_count, String GData_old_msg_coount) {
+    public GlyDataRow(String GData_sid, long GData_table_id, String GData_datetime,
+                      int GData_value, String GData_meal_flag) {
+        this.GData_sid = GData_sid;
         this.GData_table_id = GData_table_id;
         this.GData_datetime = GData_datetime;
         this.GData_value = GData_value;
         this.GData_meal_flag = GData_meal_flag;
-        this.GData_thumb_count = GData_thumb_count;
-        this.GData_thumb_aids = GData_thumb_aids;
     }
 
-    public String getGData_table_id() {
+    public String getGData_sid() {
+        return GData_sid;
+    }
+
+    public void setGData_sid(String GData_sid) {
+        this.GData_sid = GData_sid;
+    }
+
+    public long getGData_table_id() {
         return GData_table_id;
     }
 
-    public void setGData_table_id(String GData_table_id) {
+    public void setGData_table_id(long GData_table_id) {
         this.GData_table_id = GData_table_id;
     }
 
@@ -50,11 +65,11 @@ public class GlyDataRow {
         this.GData_datetime = GData_datetime;
     }
 
-    public String getGData_value() {
+    public int getGData_value() {
         return GData_value;
     }
 
-    public void setGData_value(String GData_value) {
+    public void setGData_value(int GData_value) {
         this.GData_value = GData_value;
     }
 
@@ -66,24 +81,9 @@ public class GlyDataRow {
         this.GData_meal_flag = GData_meal_flag;
     }
 
-    public String getGData_thumb_count() {
-        return GData_thumb_count;
-    }
-
-    public void setGData_thumb_count(String GData_thumb_count) {
-        this.GData_thumb_count = GData_thumb_count;
-    }
-
-    public String getGData_thumb_aids() {
-        return GData_thumb_aids;
-    }
-
-    public void setGData_thumb_aids(String GData_thumb_aids) {
-        this.GData_thumb_aids = GData_thumb_aids;
-    }
-
     public ArrayList<String> getColumnNameAry(){
         ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("GData_sid");
         arrayList.add("GData_table_id");
         arrayList.add("GData_datetime");
         arrayList.add("GData_value");
@@ -95,6 +95,7 @@ public class GlyDataRow {
 
     public ArrayList<String> getColumnTypeAry(){
         ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("TEXT");
         arrayList.add("INTEGER");
         arrayList.add("TEXT");
         arrayList.add("INTEGER");

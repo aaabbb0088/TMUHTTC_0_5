@@ -1,17 +1,40 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.Default;
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者好友訊息接受設定表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FRecvNotSetRow {
+@Table("FriendReceiveNoticeSettingTable")
+public class FRecvNotSetRow extends BaseModel {
+    public static final String FRECVNOTSET_FRI_AID = "FRecvNotSet_fri_aid";
+    public static final String FRECVNOTSET_DATA_FLAG = "FRecvNotSet_data_flag";
+    public static final String FRECVNOTSET_MEDINE_FLAG = "FRecvNotSet_medine_flag";
+    public static final String FRECVNOTSET_PAY_FLAG = "FRecvNotSet_pay_flag";
+    public static final String FRECVNOTSET_REPORT_FLAG = "FRecvNotSet_report_flag";
+    public static final String FRECVNOTSET_RECORD_FLAG = "FRecvNotSet_record_flag";
+
+    @NotNull
     private String FRecvNotSet_fri_aid;
+    @NotNull
+    @Default("N")
     private String FRecvNotSet_data_flag;
+    @NotNull
+    @Default("N")
     private String FRecvNotSet_medine_flag;
+    @NotNull
+    @Default("N")
     private String FRecvNotSet_pay_flag;
+    @NotNull
+    @Default("N")
     private String FRecvNotSet_report_flag;
+    @NotNull
+    @Default("N")
     private String FRecvNotSet_record_flag;
 
     public FRecvNotSetRow() {

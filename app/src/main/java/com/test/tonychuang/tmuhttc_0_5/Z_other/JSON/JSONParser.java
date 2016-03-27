@@ -2,6 +2,7 @@ package com.test.tonychuang.tmuhttc_0_5.Z_other.JSON;
 
 import android.util.Log;
 
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
@@ -139,6 +140,30 @@ public class JSONParser {
                         jsonObj.getInt("BG_AM_Min"),
                         jsonObj.getInt("BG_AM_MaxDang"),
                         jsonObj.getInt("BG_AM_MinDang")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PreDataRow> parsePreDataRow(JSONObject object) {
+        ArrayList<PreDataRow> arrayList = new ArrayList<PreDataRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PreDataRow(
+                        jsonObj.getString("PData_sid"),
+                        jsonObj.getInt("PData_table_id"),
+                        jsonObj.getString("PData_datetime"),
+                        jsonObj.getInt("PData_sys"),
+                        jsonObj.getInt("PData_dia"),
+                        jsonObj.getInt("PData_hr")
                 ));
             }
 

@@ -1,18 +1,44 @@
 package com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat;
 
+import com.litesuits.orm.db.annotation.Default;
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.Table;
+
 import java.util.ArrayList;
 
 /**
  * APP使用者個人資料分享好友設定表 資料格式
  * Created by TonyChuang on 2016/3/17.
  */
-public class FShrSetRow {
+@Table("FriendShareSettingTable")
+public class FShrSetRow extends BaseModel {
+    public static final String FSHRSET_FRI_AID = "FShrSet_fri_aid";
+    public static final String FSHRSET_DATA_FLAG = "FShrSet_data_flag";
+    public static final String FSHRSET_MEDINE_FLAG = "FShrSet_medine_flag";
+    public static final String FSHRSET_PAY_FLAG = "FShrSet_pay_flag";
+    public static final String FSHRSET_REPORT_FLAG = "FShrSet_report_flag";
+    public static final String FSHRSET_RECORD_FLAG = "FShrSet_record_flag";
+    public static final String FSHRSET_LOCTION_FLAG = "FShrSet_loction_flag";
+
+    @NotNull
     private String FShrSet_fri_aid;
+    @NotNull
+    @Default("N")
     private String FShrSet_data_flag;
+    @NotNull
+    @Default("N")
     private String FShrSet_medine_flag;
+    @NotNull
+    @Default("N")
     private String FShrSet_pay_flag;
+    @NotNull
+    @Default("N")
     private String FShrSet_report_flag;
+    @NotNull
+    @Default("N")
     private String FShrSet_record_flag;
+    @NotNull
+    @Default("Y")
     private String FShrSet_loction_flag;
 
     public FShrSetRow() {
