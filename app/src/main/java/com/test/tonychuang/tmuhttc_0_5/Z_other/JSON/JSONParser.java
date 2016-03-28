@@ -2,7 +2,10 @@ package com.test.tonychuang.tmuhttc_0_5.Z_other.JSON;
 
 import android.util.Log;
 
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
@@ -159,11 +162,81 @@ public class JSONParser {
                 jsonObj = jsonArray.getJSONObject(i);
                 arrayList.add(new PreDataRow(
                         jsonObj.getString("PData_sid"),
-                        jsonObj.getInt("PData_table_id"),
+                        jsonObj.getLong("PData_table_id"),
                         jsonObj.getString("PData_datetime"),
                         jsonObj.getInt("PData_sys"),
                         jsonObj.getInt("PData_dia"),
                         jsonObj.getInt("PData_hr")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PreThumbRow> parsePreThumbRow(JSONObject object) {
+        ArrayList<PreThumbRow> arrayList = new ArrayList<PreThumbRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PreThumbRow(
+                        jsonObj.getLong("PData_thumb_table_id"),
+                        jsonObj.getString("PData_thumb_sid"),
+                        jsonObj.getString("PData_thumb_datetime"),
+                        jsonObj.getInt("PData_thumb_count"),
+                        jsonObj.getString("PData_thumb_aids")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PreMsgRow> parsePreMsgRow(JSONObject object) {
+        ArrayList<PreMsgRow> arrayList = new ArrayList<PreMsgRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PreMsgRow(
+                        jsonObj.getString("PMsg_sid"),
+                        jsonObj.getLong("PMsg_table_id"),
+                        jsonObj.getString("PMsg_writer_aid"),
+                        jsonObj.getString("PMsg_datetime"),
+                        jsonObj.getString("PMsg_content"),
+                        jsonObj.getInt("PMsg_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PreAvgRow> parsePreAvgRow(JSONObject object) {
+        ArrayList<PreAvgRow> arrayList = new ArrayList<PreAvgRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PreAvgRow(
+                        jsonObj.getString("PAvg_sid"),
+                        jsonObj.getString("PAvg_datetime"),
+                        jsonObj.getInt("PAvg_sys"),
+                        jsonObj.getInt("PAvg_dia"),
+                        jsonObj.getInt("PAvg_hr")
                 ));
             }
 

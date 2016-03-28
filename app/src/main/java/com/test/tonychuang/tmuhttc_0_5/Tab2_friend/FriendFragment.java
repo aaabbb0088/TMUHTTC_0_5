@@ -38,6 +38,7 @@ import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft1_board.FriendBoardActivity;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.QRCode.MyQRCodeCreate;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,6 +60,7 @@ public class FriendFragment extends Fragment {
 
     private View view;  //Fragment的佈局
     private ActionBar actionBar;
+    private SignInShrPref signInShrPref;
 
 
     public FriendFragment() {
@@ -471,6 +473,11 @@ public class FriendFragment extends Fragment {
      */
 
     private void initData() {
+        signInShrPref = new SignInShrPref(getActivity());
+        if(signInShrPref.getMemberFlag()){
+           //更新Tab1頁面
+        }
+
         lists = initList();
         adapter = new FriendAdapter(getActivity(), lists);
         expandableListView.setAdapter(adapter);

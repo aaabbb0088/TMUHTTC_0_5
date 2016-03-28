@@ -8,13 +8,16 @@ import com.litesuits.orm.db.annotation.Table;
  */
 @Table("GlycemiaThumbTable")
 public class GlyThumbRow extends BaseModel {
-    public static final String GDATA_TABLE_ID = "GData_table_id";
+    public static final String GDATA_THUMB_TABLE_ID = "GData_thumb_table_id";
+    public static final String GDATA_THUMB_SID = "GData_thumb_sid";
     public static final String GDATA_THUMB_DATETIME = "GData_thumb_datetime";
     public static final String GDATA_THUMB_COUNT = "GData_thumb_count";
     public static final String GDATA_THUMB_AIDS = "GData_thumb_aids";
 
     @NotNull
-    private long GData_table_id;
+    private long GData_thumb_table_id;
+    @NotNull
+    private String GData_thumb_sid;
     @NotNull
     private String GData_thumb_datetime;
     @NotNull
@@ -26,19 +29,29 @@ public class GlyThumbRow extends BaseModel {
     public GlyThumbRow() {
     }
 
-    public GlyThumbRow(long GData_table_id, String GData_thumb_datetime, int GData_thumb_count, String GData_thumb_aids) {
-        this.GData_table_id = GData_table_id;
+    public GlyThumbRow(long GData_thumb_table_id, String GData_thumb_sid,
+                       String GData_thumb_datetime, int GData_thumb_count, String GData_thumb_aids) {
+        this.GData_thumb_table_id = GData_thumb_table_id;
+        this.GData_thumb_sid = GData_thumb_sid;
         this.GData_thumb_datetime = GData_thumb_datetime;
         this.GData_thumb_count = GData_thumb_count;
         this.GData_thumb_aids = GData_thumb_aids;
     }
 
-    public long getGData_table_id() {
-        return GData_table_id;
+    public long getGData_thumb_table_id() {
+        return GData_thumb_table_id;
     }
 
-    public void setGData_table_id(long GData_table_id) {
-        this.GData_table_id = GData_table_id;
+    public void setGData_thumb_table_id(long GData_thumb_table_id) {
+        this.GData_thumb_table_id = GData_thumb_table_id;
+    }
+
+    public String getGData_thumb_sid() {
+        return GData_thumb_sid;
+    }
+
+    public void setGData_thumb_sid(String GData_thumb_sid) {
+        this.GData_thumb_sid = GData_thumb_sid;
     }
 
     public String getGData_thumb_datetime() {

@@ -22,4 +22,12 @@ public class MyDateSFormat {
     public SimpleDateFormat getM2CFrmt_yMdHm() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN);
     }
+
+    public SimpleDateFormat getFrmt_yMd() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
+    }
+
+    public SimpleDateFormat getFrmt_yMdHm() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.TAIWAN);
+    }
 }

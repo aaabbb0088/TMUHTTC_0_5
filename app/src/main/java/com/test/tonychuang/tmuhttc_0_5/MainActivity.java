@@ -27,7 +27,10 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
@@ -374,8 +377,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateData() {
         int allUpdateAsycFlag = 0;
-        for (int i = 0; i<updateEndflag.length; i++){
-            if (updateEndflag[i]){
+        for (int i = 0; i < updateEndflag.length; i++) {
+            if (updateEndflag[i]) {
                 allUpdateAsycFlag = 1;
                 break;
             }
@@ -534,7 +537,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mainDB = LiteOrm.newSingleInstance(MainActivity.this, signInShrPref.getAID());
             final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
             calendar.add(Calendar.MONTH, -1);
-            String lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+            final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+            clr.add(Calendar.DAY_OF_MONTH, -1);
+            String lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
             Date lastTime;
 
             //更新動作
@@ -576,24 +581,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.execute(signInShrPref.getSID());
 
 
-            //2-1.個人血壓流水資料PressDataTable (僅登入者資料) end[3]
-            ArrayList<PreDataRow> list = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
+            //2.個人血壓流水資料PressDataTable (僅登入者資料) end[3]
+            ArrayList<PreDataRow> preDataRowArrayList = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
                     .whereEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
                     .appendOrderDescBy(PreDataRow.ID)
                     .limit(1, 1));
-            if (list.size() != 0) {
+            if (preDataRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getC2MFrmt_yMdahm().parse(list.get(0).getPData_datetime());
-                    if (lastTime.after(calendar.getTime())){
-                        lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(lastTime);
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preDataRowArrayList.get(0).getPData_datetime());
+                    if (lastTime.after(calendar.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<PreDataRow>>() {
                 @Override
@@ -602,7 +607,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     JSONParser jsonParser = new JSONParser();
                     ArrayList<PreDataRow> preDataRows = null;
 
-                    JSONObject jsonObject = null;
+                    JSONObject jsonObject;
                     try {
                         jsonObject = httcjsonapi.UpdatePressDataTable(params[0], params[1]);
                         preDataRows = jsonParser.parsePreDataRow(jsonObject);
@@ -619,16 +624,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < preDataRows.size(); i++) {
                             mainDB.save(preDataRows.get(i));
                         }
-                        long count = mainDB.queryCount(PreDataRow.class);
 
 //                        //test
+//                        long count = mainDB.queryCount(PreDataRow.class);
 //                        ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
 //                        String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
 //                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
 //                        //test
 
                         mainDB.delete(new WhereBuilder(PreDataRow.class)
-                                .lessThan(PreDataRow.PDATA_DATETIME, calendar.getTime()));
+                                .lessThan(PreDataRow.PDATA_DATETIME,
+                                        new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
                         LiteOrm.releaseMemory();
                     } else {
                         Toast.makeText(MainActivity.this, "個人血壓量測資料更新失敗", Toast.LENGTH_SHORT).show();
@@ -637,10 +643,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
 
-            //2-2.個人血壓按讚PressThumbTable (僅登入者資料)
+            //3.個人血壓按讚PressThumbTable (僅登入者資料) end[4] //只更新一天資料
+            ArrayList<PreThumbRow> preThumbRowArrayList = mainDB.query(new QueryBuilder<PreThumbRow>(PreThumbRow.class)
+                    .whereEquals(PreThumbRow.PDATA_THUMB_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(PreThumbRow.ID)
+                    .limit(1, 1));
+            if (preThumbRowArrayList.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preThumbRowArrayList.get(0).getPData_thumb_datetime());
+                    if (lastTime.after(clr.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
+                @Override
+                protected ArrayList<PreThumbRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PreThumbRow> preThumbRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdatePressThumbTable(params[0], params[1]);
+                        preThumbRows = jsonParser.parsePreThumbRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return preThumbRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreThumbRow> preThumbRows) {
+                    super.onPostExecute(preThumbRows);
+                    if (preThumbRows != null) {
+                        for (int i = 0; i < preThumbRows.size(); i++) {
+                            mainDB.save(preThumbRows.get(i));
+                        }
+                        mainDB.delete(new WhereBuilder(PreThumbRow.class)
+                                .lessThan(PreThumbRow.PDATA_THUMB_DATETIME,
+                                        new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime())));
+                        LiteOrm.releaseMemory();
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人按讚資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+                    updateRnEndflagSetting(4);
+
+//                    //test
+//                    long count = mainDB.queryCount(PreThumbRow.class);
+//                    ArrayList<PreThumbRow> list1 = mainDB.query(PreThumbRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPData_thumb_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
 
 
-            //3-1.個人血壓留言PressMsgTable (僅登入者資料)
+            //4.個人血壓留言PressMsgTable (僅登入者資料) end[5]
             /**
              * 創或開Table 使用LiteOrm
              *
@@ -649,60 +715,145 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              * 回傳:DataTable
              * 後動作:資料為空，不動作;資料非空，全部寫入;刪除舊的資料
              */
-//            ArrayList<PreMsgRow> list = mainDB.query(new QueryBuilder<PreMsgRow>(PreMsgRow.class)
-//                    .whereEquals(PreMsgRow.PMSG_SID, signInShrPref.getSID())
-//                    .appendOrderDescBy(PreMsgRow.PMSG_DATETIME)
-//                    .limit(1, 1));
-//            String lastDataTime;
-//            final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
-//            calendar.add(Calendar.MONTH, -1);
-//            if (list.size() != 0) {
-//                lastDataTime = new MyDateSFormat().getC2MFrmt_yMdahm().format(list.get(0).getPMsg_datetime());
-//            } else {
-//                lastDataTime = new MyDateSFormat().getM2CFrmt_yMdHm().format(calendar.getTime());
-//            }
-//            new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
-//                @Override
-//                protected ArrayList<PreMsgRow> doInBackground(String... params) {
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(ArrayList<PreMsgRow> preMsgRows) {
-//                    super.onPostExecute(preMsgRows);
-//                    if (preMsgRows != null) {
-//                        for (int i = 0; i < preMsgRows.size(); i++) {
-//                            mainDB.save(preMsgRows.get(i));
-//                            mainDB.delete(new WhereBuilder(PreMsgRow.class)
-//                                    .lessThan(PreMsgRow.PMSG_DATETIME, calendar.getTime()));
-//                        }
-//                        updateRnEndflagSetting(2);
-//                    } else {
-//                        updateRnEndflagSetting(2);
-//                    }
-//                }
-//            }.execute(signInShrPref.getSID(), lastDataTime);
+            ArrayList<PreMsgRow> preMsgRowArrayList = mainDB.query(new QueryBuilder<PreMsgRow>(PreMsgRow.class)
+                    .whereEquals(PreMsgRow.PMSG_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(PreMsgRow.ID)
+                    .limit(0, 1));
+            if (preMsgRowArrayList.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preMsgRowArrayList.get(0).getPMsg_datetime());
+                    if (lastTime.after(clr.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
+                @Override
+                protected ArrayList<PreMsgRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PreMsgRow> preMsgRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdatePressMsgTable(params[0], params[1]);
+                        preMsgRows = jsonParser.parsePreMsgRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return preMsgRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreMsgRow> preMsgRows) {
+                    super.onPostExecute(preMsgRows);
+                    if (preMsgRows != null) {
+                        for (int i = 0; i < preMsgRows.size(); i++) {
+                            mainDB.save(preMsgRows.get(i));
+                        }
+
+//                        //test
+//                        long count = mainDB.queryCount(PreMsgRow.class);
+//                        ArrayList<PreMsgRow> list1 = mainDB.query(PreMsgRow.class);
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPMsg_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        //test
+
+                        mainDB.delete(new WhereBuilder(PreMsgRow.class)
+                                .lessThan(PreMsgRow.PMSG_DATETIME,
+                                        new MyDateSFormat().getFrmt_yMdHm().format(clr.getTime())));
+                        LiteOrm.releaseMemory();
+                    }
+                    updateRnEndflagSetting(5);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
 
 
-            //3-2.個人血糖按讚GlycemiaThumbTable (僅登入者資料)
+            //5.個人每日平均血壓PressAvgTable (僅登入者資料) end[6]
+            ArrayList<PreAvgRow> preAvgRowArrayList = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
+                    .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(PreAvgRow.ID)
+                    .limit(1, 1));
+            if (preAvgRowArrayList.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMd().parse(preAvgRowArrayList.get(0).getPAvg_datetime());
+                    if (lastTime.after(calendar.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<PreAvgRow>>() {
+                @Override
+                protected ArrayList<PreAvgRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PreAvgRow> preAvgRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdatePressAvgTable(params[0], params[1]);
+                        preAvgRows = jsonParser.parsePreAvgRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return preAvgRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreAvgRow> preAvgRows) {
+                    super.onPostExecute(preAvgRows);
+                    if (preAvgRows != null) {
+                        for (int i = 0; i < preAvgRows.size(); i++) {
+                            mainDB.save(preAvgRows.get(i));
+                        }
+
+                        //test
+                        long count = mainDB.queryCount(PreAvgRow.class);
+                        ArrayList<PreAvgRow> list1 = mainDB.query(PreAvgRow.class);
+                        String str = String.valueOf(count) + "\n" + list1.get(0).getPAvg_datetime();
+                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+                        //test
+
+                        mainDB.delete(new WhereBuilder(PreAvgRow.class)
+                                .lessThan(PreAvgRow.PAVG_DATETIME,
+                                        new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                        LiteOrm.releaseMemory();
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人按讚資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+                    updateRnEndflagSetting(6);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
 
 
-            //4.個人每日平均血壓PressAvgTable (僅登入者資料)
+            //6.個人血糖流水資料GlycemiaDataTable (僅登入者資料) end[7]
 
 
-            //5.個人血糖流水資料GlycemiaDataTable (僅登入者資料)
+            //7.個人血糖按讚GlycemiaThumbTable (僅登入者資料) end[8]
 
 
-            //6.個人血糖留言GlycemiaMsgTable (僅登入者資料)
+            //8.個人血糖留言GlycemiaMsgTable (僅登入者資料) end[9]
 
 
-            //7.個人每日平均血壓GlycemiaAvgTable (僅登入者資料)
+            //9.個人每日平均血壓GlycemiaAvgTable (僅登入者資料) end[10]
 
 
-            //8.APP使用者個人訊息表PersonalNoticeTable
+            //10.APP使用者個人訊息表PersonalNoticeTable end[11]
 
 
-            //9.APP使用者中心訊息表CenterNoticeTable
+            //11.APP使用者中心訊息表CenterNoticeTable end[12]
 
 
             //更新結束，若成功執行
@@ -712,9 +863,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              * 3.將資料寫入SQLite
              */
             //更新結束，不論結果都要執行
-            updateRnEndflagSetting(4);
-            updateRnEndflagSetting(5);
-            updateRnEndflagSetting(6);
             updateRnEndflagSetting(7);
             updateRnEndflagSetting(8);
             updateRnEndflagSetting(9);
@@ -806,8 +954,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (endFlagCount >= updateEndflag.length) {
             mySyncingDialog.dismiss();
-            if(mainDB != null){
+            if (mainDB != null) {
                 mainDB.close();
+            }
+            if (signInShrPref.getMemberFlag()) {
+                //更新Tab0頁面資料
+            } else {
+                //更新Tab1頁面資料
             }
         }
     }

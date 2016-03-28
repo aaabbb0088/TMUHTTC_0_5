@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class HTTCJSONAPI {
 //    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
-//    private final String urlString = "http://10.15.2.113/HTTCJSONAPI/Handler.ashx";
-    private final String urlString = "http://192.168.0.12/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://10.15.2.113/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.0.12/HTTCJSONAPI/Handler.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
 	    String result = "";
@@ -289,6 +289,51 @@ public class HTTCJSONAPI {
         JSONObject p = new JSONObject();
         o.put("interface","HTTCJSONAPI");
         o.put("method", "UpdatePressDataTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdatePressThumbTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePressThumbTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdatePressMsgTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePressMsgTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdatePressAvgTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdatePressAvgTable");
         p.put("sid",mapObject(sid));
         p.put("lastDataTime",mapObject(lastDataTime));
         o.put("parameters", p);
