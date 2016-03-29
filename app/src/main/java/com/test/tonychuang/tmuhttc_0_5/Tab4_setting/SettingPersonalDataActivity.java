@@ -224,7 +224,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 .colorCancel(Color.parseColor("#999999")) //color of cancel button
                 .colorConfirm(Color.parseColor("#D7A500"))//color of confirm button
                 .minYear(1900) //min year in loop
-                .maxYear(Calendar.getInstance().get(Calendar.YEAR)) // max year in loop
+                .maxYear(Calendar.getInstance().get(Calendar.YEAR) + 1) // max year in loop
                 .dateChose(initDate) // date chose when init popwindow
                 .build();
         datePickerPopWin.showPopWin(this);
@@ -419,7 +419,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
                     SettingPersonalDataActivity.this.finish();
-                    if(MainActivity.mainActivity != null){
+                    if (MainActivity.mainActivity != null) {
                         MainActivity.mainActivity.finish();
                     }
                 } else {

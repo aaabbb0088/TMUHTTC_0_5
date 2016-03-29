@@ -5,7 +5,10 @@ import android.util.Log;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrNotSetRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyMsgRow;
@@ -15,6 +18,9 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PsnNotRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SMedRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SPayRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SRcrdRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
@@ -466,6 +472,146 @@ public class JSONParser {
                         jsonObj.getString("CtrMsg_send_success_flag"),
                         jsonObj.getString("CtrMsg_datetime"),
                         jsonObj.getInt("CtrMsg_status_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<SMedRow> parseSMedRow(JSONObject object) {
+        ArrayList<SMedRow> arrayList = new ArrayList<SMedRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new SMedRow(
+                        jsonObj.getString("SMed_sid"),
+                        jsonObj.getLong("SMed_table_id"),
+                        jsonObj.getString("SMed_datetime"),
+                        jsonObj.getString("SMed_bm")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<SPayRow> parseSPayRow(JSONObject object) {
+        ArrayList<SPayRow> arrayList = new ArrayList<SPayRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new SPayRow(
+                        jsonObj.getString("SPay_sid"),
+                        jsonObj.getLong("SPay_table_id"),
+                        jsonObj.getString("SPay_datetime"),
+                        jsonObj.getString("SPay_money"),
+                        jsonObj.getString("SPay_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<SRcrdRow> parseSRcrdRow(JSONObject object) {
+        ArrayList<SRcrdRow> arrayList = new ArrayList<SRcrdRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new SRcrdRow(
+                        jsonObj.getString("SRcrd_sid"),
+                        jsonObj.getLong("SRcrd_table_id"),
+                        jsonObj.getString("SRcrd_datetime"),
+                        jsonObj.getInt("SRcrd_type")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FShrSetRow> parseFShrSetRow(JSONObject object) {
+        ArrayList<FShrSetRow> arrayList = new ArrayList<FShrSetRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FShrSetRow(
+                        jsonObj.getString("FShrSet_fri_aid"),
+                        jsonObj.getString("FShrSet_data_flag"),
+                        jsonObj.getString("FShrSet_medicine_flag"),
+                        jsonObj.getString("FShrSet_pay_flag"),
+                        jsonObj.getString("FShrSet_report_flag"),
+                        jsonObj.getString("FShrSet_record_flag"),
+                        jsonObj.getString("FShrSet_location_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FShrNotSetRow> parseFShrNotSetRow(JSONObject object) {
+        ArrayList<FShrNotSetRow> arrayList = new ArrayList<FShrNotSetRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FShrNotSetRow(
+                        jsonObj.getString("FShrNotSet_fri_aid"),
+                        jsonObj.getString("FShrNotSet_data_flag"),
+                        jsonObj.getString("FShrNotSet_medicine_flag"),
+                        jsonObj.getString("FShrNotSet_pay_flag"),
+                        jsonObj.getString("FShrNotSet_report_flag"),
+                        jsonObj.getString("FShrNotSet_record_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FRecvNotSetRow> parseFRecvNotSetRow(JSONObject object) {
+        ArrayList<FRecvNotSetRow> arrayList = new ArrayList<FRecvNotSetRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FRecvNotSetRow(
+                        jsonObj.getString("FRecvNotSet_fri_aid"),
+                        jsonObj.getString("FRecvNotSet_data_flag"),
+                        jsonObj.getString("FRecvNotSet_medicine_flag"),
+                        jsonObj.getString("FRecvNotSet_pay_flag"),
+                        jsonObj.getString("FRecvNotSet_report_flag"),
+                        jsonObj.getString("FRecvNotSet_record_flag")
                 ));
             }
 

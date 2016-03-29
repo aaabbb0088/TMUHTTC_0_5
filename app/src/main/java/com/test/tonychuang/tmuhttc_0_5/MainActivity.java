@@ -30,7 +30,10 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrNotSetRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyMsgRow;
@@ -40,6 +43,10 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PsnNotRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SMedRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SPayRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SRcrdRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SRprtRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
@@ -85,11 +92,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MySyncingDialog mySyncingDialog;
 
     private Boolean[] updateEndflag;
-    public static Boolean medUpdatedFlag = true;
-    public static Boolean rptUpdatedFlag = true;
-    public static Boolean payUpdatedFlag = true;
-    public static Boolean rcdUpdatedFlag = true;
-    public static Boolean friBoardUpdatedFlag = true;
 
     private DataBase mainDB;
 
@@ -381,7 +383,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData() {
         signInShrPref = new SignInShrPref(this);
         updateEndflag = new Boolean[]{false, false, false, false, false, false, false, false
-                , false, false, false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
+                , false, false, false, false, false, false, false, false, false, false, false
+                , false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
     }
 
     private void updateData() {
@@ -546,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //遠距會員 更新 11個Table 刪除舊資料
+    //遠距會員 更新 11+4個Table 刪除舊資料 end[2]~end[15] + end[16]
     private void UpdateMemberData() {
         final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
         calendar.add(Calendar.MONTH, -1);
@@ -562,8 +565,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
         Date lastTime;
 
-        if (signInShrPref.getMemberFlag()) { //遠距會員
-            //更新動作
+        //遠距會員
+        if (signInShrPref.getMemberFlag()) {
             //1.個人警戒值上下限設定檔WarningLevelSetting (僅登入者資料) end[2]
             new AsyncTask<String, Void, ArrayList<WLevelRow>>() {
                 @Override
@@ -648,14 +651,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < preDataRows.size(); i++) {
                                 mainDB.save(preDataRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(PreDataRow.class);
-//                            ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(PreDataRow.class)
                                     .lessThan(PreDataRow.PDATA_DATETIME,
                                             new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
@@ -664,6 +659,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人血壓量測資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(PreDataRow.class);
+//                    ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(3);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -715,18 +716,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(PreThumbRow.class)
                                     .lessThan(PreThumbRow.PDATA_THUMB_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
-
-//                            //test
-//                            long count = mainDB.queryCount(PreThumbRow.class);
-//                            ArrayList<PreThumbRow> list1 = mainDB.query(PreThumbRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPData_thumb_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "個人血壓按讚資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(PreThumbRow.class);
+//                    ArrayList<PreThumbRow> list1 = mainDB.query(PreThumbRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPData_thumb_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(4);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -784,14 +783,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < preMsgRows.size(); i++) {
                                 mainDB.save(preMsgRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(PreMsgRow.class);
-//                            ArrayList<PreMsgRow> list1 = mainDB.query(PreMsgRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPMsg_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(PreMsgRow.class)
                                     .lessThan(PreMsgRow.PMSG_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
@@ -799,6 +790,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人血壓留言資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(PreMsgRow.class);
+//                    ArrayList<PreMsgRow> list1 = mainDB.query(PreMsgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPMsg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(5);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -848,14 +845,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < preAvgRows.size(); i++) {
                                 mainDB.save(preAvgRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(PreAvgRow.class);
-//                            ArrayList<PreAvgRow> list1 = mainDB.query(PreAvgRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPAvg_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(PreAvgRow.class)
                                     .lessThan(PreAvgRow.PAVG_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
@@ -864,6 +853,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人平均血壓資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(PreAvgRow.class);
+//                    ArrayList<PreAvgRow> list1 = mainDB.query(PreAvgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPAvg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(6);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -913,14 +908,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < glyDataRows.size(); i++) {
                                 mainDB.save(glyDataRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(GlyDataRow.class);
-//                            ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(GlyDataRow.class)
                                     .lessThan(GlyDataRow.GDATA_DATETIME,
                                             new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
@@ -929,6 +916,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人血糖量測資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(GlyDataRow.class);
+//                    ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(7);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -981,18 +974,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(GlyThumbRow.class)
                                     .lessThan(GlyThumbRow.GDATA_THUMB_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
-
-//                            //test
-//                            long count = mainDB.queryCount(GlyThumbRow.class);
-//                            ArrayList<GlyThumbRow> list1 = mainDB.query(GlyThumbRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getGData_thumb_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "個人血糖按讚資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(GlyThumbRow.class);
+//                    ArrayList<GlyThumbRow> list1 = mainDB.query(GlyThumbRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGData_thumb_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(8);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -1042,14 +1033,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < glyMsgRows.size(); i++) {
                                 mainDB.save(glyMsgRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(GlyMsgRow.class);
-//                            ArrayList<GlyMsgRow> list1 = mainDB.query(GlyMsgRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getGMsg_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(GlyMsgRow.class)
                                     .lessThan(GlyMsgRow.GMSG_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
@@ -1057,6 +1040,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人血糖留言資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(GlyMsgRow.class);
+//                    ArrayList<GlyMsgRow> list1 = mainDB.query(GlyMsgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGMsg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(9);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
@@ -1106,14 +1095,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < glyAvgRows.size(); i++) {
                                 mainDB.save(glyAvgRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(GlyAvgRow.class);
-//                            ArrayList<GlyAvgRow> list1 = mainDB.query(GlyAvgRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getGAvg_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             mainDB.delete(new WhereBuilder(GlyAvgRow.class)
                                     .lessThan(GlyAvgRow.GAVG_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
@@ -1122,13 +1103,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         Toast.makeText(MainActivity.this, "個人平均血糖資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(GlyAvgRow.class);
+//                    ArrayList<GlyAvgRow> list1 = mainDB.query(GlyAvgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGAvg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(10);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
 
 
-            //10.APP使用者個人訊息表PersonalNoticeTable end[11]
-            //APP不主動刪除資料
+            //10.APP使用者個人訊息表PersonalNoticeTable APP不主動刪除資料 end[11]
             ArrayList<PsnNotRow> psnNotRowArrayList = mainDB.query(new QueryBuilder<PsnNotRow>(PsnNotRow.class)
                     .appendOrderDescBy(PsnNotRow.ID)
                     .limit(0, 1));
@@ -1167,26 +1153,266 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < psnNotRows.size(); i++) {
                                 mainDB.save(psnNotRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(PsnNotRow.class);
-//                            ArrayList<PsnNotRow> list1 = mainDB.query(PsnNotRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPsnNot_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             LiteOrm.releaseMemory();
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "個人推撥訊息更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(PsnNotRow.class);
+//                    ArrayList<PsnNotRow> list1 = mainDB.query(PsnNotRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPsnNot_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(11);
                 }
             }.execute(signInShrPref.getSID(), lastDataTime);
 
-            //更新結束，若成功執行
+            //11.用藥紀錄 一個月資料 end[12]
+            ArrayList<SMedRow> sMedRowArrayList = mainDB.query(new QueryBuilder<SMedRow>(SMedRow.class)
+                    .whereEquals(SMedRow.SMED_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(SMedRow.ID)
+                    .limit(0, 1));
+            if (sMedRowArrayList.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sMedRowArrayList.get(0).getSMed_datetime());
+                    if (lastTime.after(calendar.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<SMedRow>>() {
+                @Override
+                protected ArrayList<SMedRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<SMedRow> sMedRows = null;
 
-            //更新結束，不論結果都要執行
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateServiceMedicineTable(params[0], params[1]);
+                        sMedRows = jsonParser.parseSMedRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return sMedRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<SMedRow> sMedRows) {
+                    super.onPostExecute(sMedRows);
+                    if (sMedRows != null) {
+                        if (sMedRows.size() != 0) {
+                            for (int i = 0; i < sMedRows.size(); i++) {
+                                mainDB.save(sMedRows.get(i));
+                            }
+                            mainDB.delete(new WhereBuilder(SMedRow.class)
+                                    .lessThan(SMedRow.SMED_DATETIME,
+                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人用藥資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(SMedRow.class);
+//                    ArrayList<SMedRow> list1 = mainDB.query(SMedRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSMed_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(12);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
+
+
+            //12.健康報告書 不刪除 end[13] -> 1.確定下載資料方法、下載資料路徑設定(設成 Download/'sid'+'_yyyy-MM')->SRprt_path 2.完成健康報告書資料同步
+            /**
+             *
+             */
+            ArrayList<SRprtRow> sRprtRowArrayList = mainDB.query(new QueryBuilder<SRprtRow>(SRprtRow.class)
+                    .whereEquals(SRprtRow.SRPRT_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(SRprtRow.ID)
+                    .limit(0, 1));
+            if (sRprtRowArrayList.size() != 0) { //已有資料，下載新資料
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sRprtRowArrayList.get(0).getSRprt_datetime());
+                    lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else { //原本沒資料，全部下載
+                lastDataTime = "1900-01-01";
+            }
+            new AsyncTask<String, Void, ArrayList<SRprtRow>>() {
+                @Override
+                protected ArrayList<SRprtRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<SRprtRow> sRprtRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+//                        jsonObject = httcjsonapi.UpdateServiceMedicineTable(params[0], params[1]);
+//                        sRprtRows = jsonParser.parseSMedRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return sRprtRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<SRprtRow> sRprtRows) {
+                    super.onPostExecute(sRprtRows);
+                    if (sRprtRows != null) {
+                        if (sRprtRows.size() != 0) {
+                            for (int i = 0; i < sRprtRows.size(); i++) {
+                                mainDB.save(sRprtRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+//                        Toast.makeText(MainActivity.this, "個人健康報告書資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(SRprtRow.class);
+//                    ArrayList<SRprtRow> list1 = mainDB.query(SRprtRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSRprt_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(13);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
+
+
+            /**
+             *
+             */
+            //13.繳費紀錄 不刪除 end[14]
+            ArrayList<SPayRow> sPayRowArrayList = mainDB.query(new QueryBuilder<SPayRow>(SPayRow.class)
+                    .whereEquals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(SPayRow.ID)
+                    .limit(0, 1));
+            if (sPayRowArrayList.size() != 0) { //已有資料，下載新資料
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sPayRowArrayList.get(0).getSPay_datetime());
+                    lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else { //原本沒資料，全部下載
+                lastDataTime = "1900-01-01";
+            }
+            new AsyncTask<String, Void, ArrayList<SPayRow>>() {
+                @Override
+                protected ArrayList<SPayRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<SPayRow> sPayRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateServicePayTable(params[0], params[1]);
+                        sPayRows = jsonParser.parseSPayRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return sPayRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<SPayRow> sPayRows) {
+                    super.onPostExecute(sPayRows);
+                    if (sPayRows != null) {
+                        if (sPayRows.size() != 0) {
+                            for (int i = 0; i < sPayRows.size(); i++) {
+                                mainDB.save(sPayRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人繳費資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(SPayRow.class);
+//                    ArrayList<SPayRow> list1 = mainDB.query(SPayRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSPay_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(14);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
+
+
+            //服務紀錄 一個月資料 end[15]
+            ArrayList<SRcrdRow> sRcrdRowArrayList = mainDB.query(new QueryBuilder<SRcrdRow>(SRcrdRow.class)
+                    .whereEquals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                    .appendOrderDescBy(SRcrdRow.ID)
+                    .limit(0, 1));
+            if (sRcrdRowArrayList.size() != 0) {
+                try {
+                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sRcrdRowArrayList.get(0).getSRcrd_datetime());
+                    if (lastTime.after(calendar.getTime())) {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    } else {
+                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+            }
+            new AsyncTask<String, Void, ArrayList<SRcrdRow>>() {
+                @Override
+                protected ArrayList<SRcrdRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<SRcrdRow> sRcrdRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateServiceRecordTable(params[0], params[1]);
+                        sRcrdRows = jsonParser.parseSRcrdRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return sRcrdRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<SRcrdRow> sRcrdRows) {
+                    super.onPostExecute(sRcrdRows);
+                    if (sRcrdRows != null) {
+                        if (sRcrdRows.size() != 0) {
+                            for (int i = 0; i < sRcrdRows.size(); i++) {
+                                mainDB.save(sRcrdRows.get(i));
+                            }
+
+                            mainDB.delete(new WhereBuilder(SRcrdRow.class)
+                                    .lessThan(SMedRow.SMED_DATETIME,
+                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人服務歷程資料更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(SRcrdRow.class);
+//                    ArrayList<SRcrdRow> list1 = mainDB.query(SRcrdRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSRcrd_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(15);
+                }
+            }.execute(signInShrPref.getSID(), lastDataTime);
+
+
         } else { //非遠距會員
             updateRnEndflagSetting(2);
             updateRnEndflagSetting(3);
@@ -1198,10 +1424,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             updateRnEndflagSetting(9);
             updateRnEndflagSetting(10);
             updateRnEndflagSetting(11);
+            updateRnEndflagSetting(12);
+            updateRnEndflagSetting(13);
+            updateRnEndflagSetting(14);
+            updateRnEndflagSetting(15);
         }
 
-        //11.APP使用者中心訊息表CenterNoticeTable end[12]
-        //APP不主動刪除資料
+        //11.APP使用者中心訊息表CenterNoticeTable APP不主動刪除資料 end[16]
         ArrayList<CtrNotRow> ctrNotRowArrayList = mainDB.query(new QueryBuilder<CtrNotRow>(CtrNotRow.class)
                 .appendOrderDescBy(CtrNotRow.ID)
                 .limit(0, 1));
@@ -1240,20 +1469,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < ctrNotRows.size(); i++) {
                             mainDB.save(ctrNotRows.get(i));
                         }
-
-//                        //test
-//                        long count = mainDB.queryCount(CtrNotRow.class);
-//                        ArrayList<CtrNotRow> list1 = mainDB.query(CtrNotRow.class);
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getCtrNot_datetime();
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                        //test
-
                         LiteOrm.releaseMemory();
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "中心推撥訊息更新失敗", Toast.LENGTH_SHORT).show();
                 }
-                updateRnEndflagSetting(12);
+//                //test
+//                long count = mainDB.queryCount(CtrNotRow.class);
+//                ArrayList<CtrNotRow> list1 = mainDB.query(CtrNotRow.class);
+//                String str = String.valueOf(count) + "\n" + list1.get(0).getCtrNot_datetime();
+//                Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                //test
+                updateRnEndflagSetting(16);
             }
         }.execute(signInShrPref.getAID(), lastDataTime);
     }
@@ -1268,10 +1495,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //更新好友關係表、好友群組表
+    //更新好友關係表、好友群組表、好友設定三表 end[17]~end[21]
     private void UpdateFriendData() {
-        if (signInShrPref.getSameSignInMachine()) { //不同裝置
-
+        //不同裝置
+        if (!signInShrPref.getSameSignInMachine()) {
             //更新好友關係表
             new AsyncTask<String, Void, ArrayList<FRow>>() {
                 @Override
@@ -1299,23 +1526,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < fRows.size(); i++) {
                                 mainDB.save(fRows.get(i));
                             }
-
-//                        //test
-//                        long count = mainDB.queryCount(FRow.class);
-//                        ArrayList<FRow> list1 = mainDB.query(FRow.class);
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                        //test
-
                             LiteOrm.releaseMemory();
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "好友關係表更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(FRow.class);
+//                    ArrayList<FRow> list1 = mainDB.query(FRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(updateEndflag.length - 3);
                 }
             }.execute(signInShrPref.getAID());
-
 
             //更新好友群組表
             new AsyncTask<String, Void, ArrayList<FGRow>>() {
@@ -1344,31 +1568,158 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < fgRows.size(); i++) {
                                 mainDB.save(fgRows.get(i));
                             }
-
-//                        //test
-//                        long count = mainDB.queryCount(FGRow.class);
-//                        ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aid();
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                        //test
-
                             LiteOrm.releaseMemory();
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "群組表更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(FGRow.class);
+//                    ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(updateEndflag.length - 2);
                 }
             }.execute(signInShrPref.getAID());
 
+            //APP使用者個人資料分享好友設定表
+            new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
+                @Override
+                protected ArrayList<FShrSetRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<FShrSetRow> fShrSetRows = null;
 
-            //更新結束，若成功執行
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateFriendShareSettingTable(params[0]);
+                        fShrSetRows = jsonParser.parseFShrSetRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return fShrSetRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<FShrSetRow> fShrSetRows) {
+                    super.onPostExecute(fShrSetRows);
+                    if (fShrSetRows != null) {
+                        if (fShrSetRows.size() != 0) {
+                            mainDB.deleteAll(FShrSetRow.class);
+                            for (int i = 0; i < fShrSetRows.size(); i++) {
+                                mainDB.save(fShrSetRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(FShrSetRow.class);
+//                    ArrayList<FShrSetRow> list1 = mainDB.query(FShrSetRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrSet_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(updateEndflag.length - 6);
+                }
+            }.execute(signInShrPref.getAID());
+
+            //APP使用者個人訊息分享好友設定表 ---改成---> 好友資料分享設定表
+            new AsyncTask<String, Void, ArrayList<FShrNotSetRow>>() {
+                @Override
+                protected ArrayList<FShrNotSetRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<FShrNotSetRow> fShrNotSetRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateFriendShareNoticeSettingTable(params[0]);
+                        fShrNotSetRows = jsonParser.parseFShrNotSetRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return fShrNotSetRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<FShrNotSetRow> fShrNotSetRows) {
+                    super.onPostExecute(fShrNotSetRows);
+                    if (fShrNotSetRows != null) {
+                        if (fShrNotSetRows.size() != 0) {
+                            mainDB.deleteAll(FShrNotSetRow.class);
+                            for (int i = 0; i < fShrNotSetRows.size(); i++) {
+                                mainDB.save(fShrNotSetRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(FShrNotSetRow.class);
+//                    ArrayList<FShrNotSetRow> list1 = mainDB.query(FShrNotSetRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrNotSet_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(updateEndflag.length - 5);
+                }
+            }.execute(signInShrPref.getAID());
+
+            //APP使用者好友訊息接受設定表
+            new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
+                @Override
+                protected ArrayList<FRecvNotSetRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<FRecvNotSetRow> fRecvNotSetRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateFriendReceiveNoticeSettingTable(params[0]);
+                        fRecvNotSetRows = jsonParser.parseFRecvNotSetRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return fRecvNotSetRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<FRecvNotSetRow> fRecvNotSetRows) {
+                    super.onPostExecute(fRecvNotSetRows);
+                    if (fRecvNotSetRows != null) {
+                        if (fRecvNotSetRows.size() != 0) {
+                            mainDB.deleteAll(FRecvNotSetRow.class);
+                            for (int i = 0; i < fRecvNotSetRows.size(); i++) {
+                                mainDB.save(fRecvNotSetRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(FRecvNotSetRow.class);
+//                    ArrayList<FRecvNotSetRow> list1 = mainDB.query(FRecvNotSetRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFRecvNotSet_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(updateEndflag.length - 4);
+                }
+            }.execute(signInShrPref.getAID());
+
+
+            //撈取資料結束，若成功執行
             /**
              * 1.創或開Table
              * 2.取全部資料 : 有資料，全刪除後寫入 ; 無資料，不動作
              * 3.將資料寫入SQLite
              */
         } else { //同裝置 不用更新
+            updateRnEndflagSetting(updateEndflag.length - 6);
+            updateRnEndflagSetting(updateEndflag.length - 5);
+            updateRnEndflagSetting(updateEndflag.length - 4);
             updateRnEndflagSetting(updateEndflag.length - 3);
             updateRnEndflagSetting(updateEndflag.length - 2);
         }
@@ -1381,7 +1732,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //更新 APP使用者中心留言板表CenterMessageTable
+    //更新 APP使用者中心留言板表CenterMessageTable end[22]
     private void UpdateCommunityData() {
         ArrayList<CtrMsgRow> ctrMsgRowArrayList = mainDB.query(new QueryBuilder<CtrMsgRow>(CtrMsgRow.class)
                 .appendOrderDescBy(CtrMsgRow.ID)
@@ -1413,37 +1764,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < ctrMsgRows.size(); i++) {
                                 mainDB.save(ctrMsgRows.get(i));
                             }
-
-//                            //test
-//                            long count = mainDB.queryCount(CtrMsgRow.class);
-//                            ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
-//                            String str = String.valueOf(count) + "\n" + list1.get(0).getCtrMsg_datetime();
-//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                            //test
-
                             LiteOrm.releaseMemory();
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "留言板更新失敗", Toast.LENGTH_SHORT).show();
                     }
+//                    //test
+//                    long count = mainDB.queryCount(CtrMsgRow.class);
+//                    ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getCtrMsg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
                     updateRnEndflagSetting(updateEndflag.length - 1);
                 }
             }.execute(signInShrPref.getAID(), lastDataTime);
-        } else { //無資料，不更新
-            updateRnEndflagSetting(updateEndflag.length - 1);
+        } else { //無資料，從最後一筆未讀資料開始更新
+            new AsyncTask<String, Void, ArrayList<CtrMsgRow>>() {
+                @Override
+                protected ArrayList<CtrMsgRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<CtrMsgRow> ctrMsgRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateCenterMessageTable(params[0], params[1]);
+                        ctrMsgRows = jsonParser.parseCtrMsgRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return ctrMsgRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<CtrMsgRow> ctrMsgRows) {
+                    super.onPostExecute(ctrMsgRows);
+                    if (ctrMsgRows != null) {
+                        if (ctrMsgRows.size() != 0) {
+                            for (int i = 0; i < ctrMsgRows.size(); i++) {
+                                mainDB.save(ctrMsgRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "留言板更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(CtrMsgRow.class);
+//                    ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getCtrMsg_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    //test
+                    updateRnEndflagSetting(updateEndflag.length - 1);
+                }
+            }.execute(signInShrPref.getAID(), "");
         }
-
-        //更新動作
-
-
-        //更新結束，若成功執行
-        /**
-         * 1.創或開Table
-         * 2.搜尋最後一筆時間(沒資料->自定義抓取時間、有資料->使用資料時間抓取資料)
-         * 3.將資料寫入SQLite
-         */
-
-        //更新結束，不論結果都要執行
     }
 
 

@@ -21,9 +21,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HTTCJSONAPI {
-//    private final String urlString = "http://192.168.11.92/HTTCJSONAPI/Handler.ashx";
-    private final String urlString = "http://10.15.2.113/HTTCJSONAPI/Handler.ashx";
-//    private final String urlString = "http://192.168.0.12/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://10.15.2.113:9999/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.0.12:9999/HTTCJSONAPI/Handler.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
 	    String result = "";
@@ -469,6 +469,93 @@ public class HTTCJSONAPI {
         o.put("method", "UpdateCenterMessageTable");
         p.put("aid",mapObject(aid));
         p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateServiceMedicineTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateServiceMedicineTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateServicePayTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateServicePayTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateServiceRecordTable(String sid,String lastDataTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateServiceRecordTable");
+        p.put("sid",mapObject(sid));
+        p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFriendShareSettingTable(String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFriendShareSettingTable");
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFriendShareNoticeSettingTable(String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFriendShareNoticeSettingTable");
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFriendReceiveNoticeSettingTable(String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFriendReceiveNoticeSettingTable");
+        p.put("aid",mapObject(aid));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

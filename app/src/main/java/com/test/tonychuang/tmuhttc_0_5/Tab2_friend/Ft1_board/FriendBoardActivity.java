@@ -9,6 +9,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyInitReturnBa
 public class FriendBoardActivity extends AppCompatActivity {
 
     private MyInitReturnBar myInitReturnBar;
+    private Boolean[] updateEndflag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +17,11 @@ public class FriendBoardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friend_board);
 
         initBar();
+        initData();
+    }
+
+    private void initData() {
+        updateEndflag = new Boolean[]{false, false};
     }
 
 
@@ -44,16 +50,12 @@ public class FriendBoardActivity extends AppCompatActivity {
      * d1
      */
     /**
-     * 更新資料
-     * friBoardUpdatedFlag = 0;更新資料
-     * friBoardUpdatedFlag = 1;已更新資料
-     *
-     * APP使用者好友個人訊息表FriendNoticeTable
-     * APP使用者好友邀請訊息表FriendAddNoticeTable
-     */
-    /**
      *
      */
+    //好友邀請訊息表
+
+
+    //好友訊息表
 
 
 

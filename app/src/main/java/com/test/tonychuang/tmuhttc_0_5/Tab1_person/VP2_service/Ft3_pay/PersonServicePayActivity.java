@@ -44,13 +44,6 @@ public class PersonServicePayActivity extends AppCompatActivity {
      * d1
      */
     /**
-     * 更新資料
-     * payUpdatedFlag = 0;更新資料
-     * payUpdatedFlag = 1;已更新資料
-     *
-     * 個人繳費紀錄表ServicePayTable (僅登入者資料)
-     */
-    /**
      *
      */
 

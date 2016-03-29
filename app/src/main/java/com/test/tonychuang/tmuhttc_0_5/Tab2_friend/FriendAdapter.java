@@ -358,7 +358,7 @@ public class FriendAdapter extends BaseExpandableListAdapter {
         final TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
         TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
         final AlertDialog alertDialog = new AlertDialog.Builder(context)
-                .setTitle("刪除群組")
+                .setTitle("刪除好友")
                 .setView(dialogView)
                 .setOnKeyListener(getOnKeyListener())
                 .setCancelable(false).create();

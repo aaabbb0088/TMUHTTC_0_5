@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class FRecvNotSetRow extends BaseModel {
     public static final String FRECVNOTSET_FRI_AID = "FRecvNotSet_fri_aid";
     public static final String FRECVNOTSET_DATA_FLAG = "FRecvNotSet_data_flag";
-    public static final String FRECVNOTSET_MEDINE_FLAG = "FRecvNotSet_medine_flag";
+    public static final String FRECVNOTSET_MEDICINE_FLAG = "FRecvNotSet_medicine_flag";
     public static final String FRECVNOTSET_PAY_FLAG = "FRecvNotSet_pay_flag";
     public static final String FRECVNOTSET_REPORT_FLAG = "FRecvNotSet_report_flag";
     public static final String FRECVNOTSET_RECORD_FLAG = "FRecvNotSet_record_flag";
@@ -26,7 +26,7 @@ public class FRecvNotSetRow extends BaseModel {
     private String FRecvNotSet_data_flag;
     @NotNull
     @Default("N")
-    private String FRecvNotSet_medine_flag;
+    private String FRecvNotSet_medicine_flag;
     @NotNull
     @Default("N")
     private String FRecvNotSet_pay_flag;
@@ -40,18 +40,18 @@ public class FRecvNotSetRow extends BaseModel {
     public FRecvNotSetRow() {
         this.FRecvNotSet_fri_aid = null;
         this.FRecvNotSet_data_flag = null;
-        this.FRecvNotSet_medine_flag = null;
+        this.FRecvNotSet_medicine_flag = null;
         this.FRecvNotSet_pay_flag = null;
         this.FRecvNotSet_report_flag = null;
         this.FRecvNotSet_record_flag = null;
     }
 
     public FRecvNotSetRow(String FRecvNotSet_fri_aid, String FRecvNotSet_data_flag,
-                          String FRecvNotSet_medine_flag, String FRecvNotSet_pay_flag,
+                          String FRecvNotSet_medicine_flag, String FRecvNotSet_pay_flag,
                           String FRecvNotSet_report_flag, String FRecvNotSet_record_flag) {
         this.FRecvNotSet_fri_aid = FRecvNotSet_fri_aid;
         this.FRecvNotSet_data_flag = FRecvNotSet_data_flag;
-        this.FRecvNotSet_medine_flag = FRecvNotSet_medine_flag;
+        this.FRecvNotSet_medicine_flag = FRecvNotSet_medicine_flag;
         this.FRecvNotSet_pay_flag = FRecvNotSet_pay_flag;
         this.FRecvNotSet_report_flag = FRecvNotSet_report_flag;
         this.FRecvNotSet_record_flag = FRecvNotSet_record_flag;
@@ -73,12 +73,12 @@ public class FRecvNotSetRow extends BaseModel {
         this.FRecvNotSet_data_flag = FRecvNotSet_data_flag;
     }
 
-    public String getFRecvNotSet_medine_flag() {
-        return FRecvNotSet_medine_flag;
+    public String getFRecvNotSet_medicine_flag() {
+        return FRecvNotSet_medicine_flag;
     }
 
-    public void setFRecvNotSet_medine_flag(String FRecvNotSet_medine_flag) {
-        this.FRecvNotSet_medine_flag = FRecvNotSet_medine_flag;
+    public void setFRecvNotSet_medicine_flag(String FRecvNotSet_medicine_flag) {
+        this.FRecvNotSet_medicine_flag = FRecvNotSet_medicine_flag;
     }
 
     public String getFRecvNotSet_pay_flag() {
@@ -109,7 +109,7 @@ public class FRecvNotSetRow extends BaseModel {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("FRecvNotSet_fri_aid");
         arrayList.add("FRecvNotSet_data_flag");
-        arrayList.add("FRecvNotSet_medine_flag");
+        arrayList.add("FRecvNotSet_medicine_flag");
         arrayList.add("FRecvNotSet_pay_flag");
         arrayList.add("FRecvNotSet_report_flag");
         arrayList.add("FRecvNotSet_record_flag");
