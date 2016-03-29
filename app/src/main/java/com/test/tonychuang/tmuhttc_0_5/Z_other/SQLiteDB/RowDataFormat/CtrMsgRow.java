@@ -15,9 +15,10 @@ public class CtrMsgRow extends BaseModel {
     public static final String CTRMSG_TYPE = "CtrMsg_type";
     public static final String CTRMSG_STATUS = "CtrMsg_status";
     public static final String CTRMSG_CONTENT = "CtrMsg_content";
-    public static final String CTRMSG_STATUS_FLAG = "CtrMsg_status_flag";
-    public static final String CTRMSG_SEND_SUCCES_FLAG = "CtrMsg_send_succes_flag";
+    public static final String CTRMSG_ISSEND = "CtrMsg_isSend";
+    public static final String CTRMSG_SEND_SUCCES_FLAG = "CtrMsg_send_success_flag";
     public static final String CTRMSG_DATETIME = "CtrMsg_datetime";
+    public static final String CTRMSG_STATUS_FLAG = "CtrMsg_status_flag";
 
     @NotNull
     private long CtrMsg_table_id;
@@ -36,11 +37,14 @@ public class CtrMsgRow extends BaseModel {
     @NotNull
     private String CtrMsg_content;
     @NotNull
-    private int CtrMsg_status_flag;
+    private String CtrMsg_isSend;
     @NotNull
-    private String CtrMsg_send_succes_flag;
+    private String CtrMsg_send_success_flag;
     @NotNull
     private String CtrMsg_datetime;
+    @NotNull
+    private int CtrMsg_status_flag;
+
 
     public CtrMsgRow() {
     }
@@ -48,8 +52,8 @@ public class CtrMsgRow extends BaseModel {
     public CtrMsgRow(long ctrMsg_table_id, int ctrMsg_type, int ctrMsg_status,
 //                     String ctrMsg_se_name, String ctrMsg_se_avatar,
 //                     String ctrMsg_re_aid, String ctrMsg_re_avatar,
-                     String ctrMsg_content, int ctrMsg_status_flag,
-                     String ctrMsg_send_succes_flag, String ctrMsg_datetime) {
+                     String ctrMsg_content, String ctrMsg_isSend, String ctrMsg_send_success_flag,
+                      String ctrMsg_datetime, int ctrMsg_status_flag) {
         CtrMsg_table_id = ctrMsg_table_id;
         CtrMsg_type = ctrMsg_type;
         CtrMsg_status = ctrMsg_status;
@@ -58,8 +62,9 @@ public class CtrMsgRow extends BaseModel {
 //        CtrMsg_re_aid = ctrMsg_re_aid;
 //        CtrMsg_re_avatar = ctrMsg_re_avatar;
         CtrMsg_content = ctrMsg_content;
+        CtrMsg_isSend = ctrMsg_isSend;
         CtrMsg_status_flag = ctrMsg_status_flag;
-        CtrMsg_send_succes_flag = ctrMsg_send_succes_flag;
+        CtrMsg_send_success_flag = ctrMsg_send_success_flag;
         CtrMsg_datetime = ctrMsg_datetime;
     }
 
@@ -127,6 +132,14 @@ public class CtrMsgRow extends BaseModel {
         CtrMsg_content = ctrMsg_content;
     }
 
+    public String getCtrMsg_isSend() {
+        return CtrMsg_isSend;
+    }
+
+    public void setCtrMsg_isSend(String ctrMsg_isSend) {
+        CtrMsg_isSend = ctrMsg_isSend;
+    }
+
     public int getCtrMsg_status_flag() {
         return CtrMsg_status_flag;
     }
@@ -135,12 +148,12 @@ public class CtrMsgRow extends BaseModel {
         CtrMsg_status_flag = ctrMsg_status_flag;
     }
 
-    public String getCtrMsg_send_succes_flag() {
-        return CtrMsg_send_succes_flag;
+    public String getCtrMsg_send_success_flag() {
+        return CtrMsg_send_success_flag;
     }
 
-    public void setCtrMsg_send_succes_flag(String ctrMsg_send_succes_flag) {
-        CtrMsg_send_succes_flag = ctrMsg_send_succes_flag;
+    public void setCtrMsg_send_success_flag(String ctrMsg_send_success_flag) {
+        CtrMsg_send_success_flag = ctrMsg_send_success_flag;
     }
 
     public String getCtrMsg_datetime() {
@@ -161,9 +174,10 @@ public class CtrMsgRow extends BaseModel {
 //        arrayList.add("CtrMsg_re_aid");
 //        arrayList.add("CtrMsg_re_avatar");
         arrayList.add("CtrMsg_content");
-        arrayList.add("CtrMsg_status_flag");
-        arrayList.add("CtrMsg_send_succes_flag");
+        arrayList.add("CtrMsg_isSend");
+        arrayList.add("CtrMsg_send_success_flag");
         arrayList.add("CtrMsg_datetime");
+        arrayList.add("CtrMsg_status_flag");
         return arrayList;
     }
 
@@ -177,9 +191,10 @@ public class CtrMsgRow extends BaseModel {
 //        arrayList.add("TEXT");
 //        arrayList.add("TEXT");
         arrayList.add("TEXT");
+        arrayList.add("TEXT");
+        arrayList.add("TEXT");
+        arrayList.add("TEXT");
         arrayList.add("INTEGER");
-        arrayList.add("TEXT");
-        arrayList.add("TEXT");
         return arrayList;
     }
 }

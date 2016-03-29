@@ -2,10 +2,19 @@ package com.test.tonychuang.tmuhttc_0_5.Z_other.JSON;
 
 import android.util.Log;
 
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrNotRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyMsgRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PsnNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
@@ -237,6 +246,226 @@ public class JSONParser {
                         jsonObj.getInt("PAvg_sys"),
                         jsonObj.getInt("PAvg_dia"),
                         jsonObj.getInt("PAvg_hr")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<GlyDataRow> parseGlyDataRow(JSONObject object) {
+        ArrayList<GlyDataRow> arrayList = new ArrayList<GlyDataRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new GlyDataRow(
+                        jsonObj.getString("GData_sid"),
+                        jsonObj.getLong("GData_table_id"),
+                        jsonObj.getString("GData_datetime"),
+                        jsonObj.getInt("GData_value"),
+                        jsonObj.getString("GData_meal_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<GlyThumbRow> parseGlyThumbRow(JSONObject object) {
+        ArrayList<GlyThumbRow> arrayList = new ArrayList<GlyThumbRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new GlyThumbRow(
+                        jsonObj.getLong("GData_thumb_table_id"),
+                        jsonObj.getString("GData_thumb_sid"),
+                        jsonObj.getString("GData_thumb_datetime"),
+                        jsonObj.getInt("GData_thumb_count"),
+                        jsonObj.getString("GData_thumb_aids")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<GlyMsgRow> parseGlyMsgRow(JSONObject object) {
+        ArrayList<GlyMsgRow> arrayList = new ArrayList<GlyMsgRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new GlyMsgRow(
+                        jsonObj.getString("GMsg_sid"),
+                        jsonObj.getLong("GMsg_table_id"),
+                        jsonObj.getString("GMsg_writer_aid"),
+                        jsonObj.getString("GMsg_datetime"),
+                        jsonObj.getString("GMsg_content"),
+                        jsonObj.getInt("GMsg_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<GlyAvgRow> parseGlyAvgRow(JSONObject object) {
+        ArrayList<GlyAvgRow> arrayList = new ArrayList<GlyAvgRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new GlyAvgRow(
+                        jsonObj.getString("GAvg_sid"),
+                        jsonObj.getString("GAvg_datetime"),
+                        jsonObj.getInt("GAvg_bm"),
+                        jsonObj.getInt("GAvg_am")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PsnNotRow> parsePsnNotRow(JSONObject object) {
+        ArrayList<PsnNotRow> arrayList = new ArrayList<PsnNotRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PsnNotRow(
+                        jsonObj.getLong("PsnNot_table_id"),
+                        jsonObj.getInt("PsnNot_type"),
+                        jsonObj.getString("PsnNot_title"),
+                        jsonObj.getString("PsnNot_content"),
+                        jsonObj.getString("PsnNot_sendr_name"),
+                        jsonObj.getString("PsnNot_datetime"),
+                        jsonObj.getInt("PsnNot_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<CtrNotRow> parseCtrNotRow(JSONObject object) {
+        ArrayList<CtrNotRow> arrayList = new ArrayList<CtrNotRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new CtrNotRow(
+                        jsonObj.getLong("CtrNot_table_id"),
+                        jsonObj.getInt("CtrNot_type"),
+                        jsonObj.getString("CtrNot_title"),
+                        jsonObj.getString("CtrNot_content"),
+                        jsonObj.getString("CtrNot_sendr_name"),
+                        jsonObj.getString("CtrNot_datetime"),
+                        jsonObj.getInt("CtrNot_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FRow> parseFRow(JSONObject object) {
+        ArrayList<FRow> arrayList = new ArrayList<FRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FRow(
+                        jsonObj.getLong("F_table_id"),
+                        jsonObj.getString("F_fri_aid"),
+                        jsonObj.getString("F_fri_sid"),
+                        jsonObj.getInt("F_relation_flag"),
+                        jsonObj.getString("F_active_datetime"),
+                        jsonObj.getString("F_member_flag"),
+                        jsonObj.getString("F_avatar"),
+                        jsonObj.getString("F_name"),
+                        jsonObj.getString("F_nickname"),
+                        jsonObj.getString("F_nickname_flag"),
+                        jsonObj.getInt("F_sex"),
+                        jsonObj.getString("F_birthday"),
+                        jsonObj.getString("F_phone"),
+                        jsonObj.getString("F_email")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FGRow> parseFGRow(JSONObject object) {
+        ArrayList<FGRow> arrayList = new ArrayList<FGRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FGRow(
+                        jsonObj.getString("FG_group_name"),
+                        jsonObj.getString("FG_fri_aid")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<CtrMsgRow> parseCtrMsgRow(JSONObject object) {
+        ArrayList<CtrMsgRow> arrayList = new ArrayList<CtrMsgRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new CtrMsgRow(
+                        jsonObj.getLong("CtrMsg_table_id"),
+                        jsonObj.getInt("CtrMsg_type"),
+                        jsonObj.getInt("CtrMsg_status"),
+                        jsonObj.getString("CtrMsg_content"),
+                        jsonObj.getString("CtrMsg_isSend"),
+                        jsonObj.getString("CtrMsg_send_success_flag"),
+                        jsonObj.getString("CtrMsg_datetime"),
+                        jsonObj.getInt("CtrMsg_status_flag")
                 ));
             }
 
