@@ -29,10 +29,12 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialo
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrNotRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FAddNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
-import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrNotSetRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrDataFlagRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
@@ -384,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signInShrPref = new SignInShrPref(this);
         updateEndflag = new Boolean[]{false, false, false, false, false, false, false, false
                 , false, false, false, false, false, false, false, false, false, false, false
-                , false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
+                , false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
     }
 
     private void updateData() {
@@ -662,8 +664,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(PreDataRow.class);
 //                    ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(3);
                 }
@@ -723,8 +730,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(PreThumbRow.class);
 //                    ArrayList<PreThumbRow> list1 = mainDB.query(PreThumbRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPData_thumb_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPData_thumb_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(4);
                 }
@@ -793,8 +805,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(PreMsgRow.class);
 //                    ArrayList<PreMsgRow> list1 = mainDB.query(PreMsgRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPMsg_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPMsg_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(5);
                 }
@@ -856,8 +873,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(PreAvgRow.class);
 //                    ArrayList<PreAvgRow> list1 = mainDB.query(PreAvgRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPAvg_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPAvg_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(6);
                 }
@@ -919,8 +941,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(GlyDataRow.class);
 //                    ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(7);
                 }
@@ -981,8 +1008,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(GlyThumbRow.class);
 //                    ArrayList<GlyThumbRow> list1 = mainDB.query(GlyThumbRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGData_thumb_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getGData_thumb_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(8);
                 }
@@ -1043,8 +1075,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(GlyMsgRow.class);
 //                    ArrayList<GlyMsgRow> list1 = mainDB.query(GlyMsgRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGMsg_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getGMsg_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(9);
                 }
@@ -1106,8 +1143,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(GlyAvgRow.class);
 //                    ArrayList<GlyAvgRow> list1 = mainDB.query(GlyAvgRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getGAvg_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getGAvg_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(10);
                 }
@@ -1161,8 +1203,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(PsnNotRow.class);
 //                    ArrayList<PsnNotRow> list1 = mainDB.query(PsnNotRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getPsnNot_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getPsnNot_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(11);
                 }
@@ -1223,8 +1270,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(SMedRow.class);
 //                    ArrayList<SMedRow> list1 = mainDB.query(SMedRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSMed_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getSMed_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(12);
                 }
@@ -1282,8 +1334,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(SRprtRow.class);
 //                    ArrayList<SRprtRow> list1 = mainDB.query(SRprtRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSRprt_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getSRprt_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(13);
                 }
@@ -1341,8 +1398,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(SPayRow.class);
 //                    ArrayList<SPayRow> list1 = mainDB.query(SPayRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSPay_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getSPay_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(14);
                 }
@@ -1405,8 +1467,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(SRcrdRow.class);
 //                    ArrayList<SRcrdRow> list1 = mainDB.query(SRcrdRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getSRcrd_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getSRcrd_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(15);
                 }
@@ -1477,8 +1544,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                //test
 //                long count = mainDB.queryCount(CtrNotRow.class);
 //                ArrayList<CtrNotRow> list1 = mainDB.query(CtrNotRow.class);
-//                String str = String.valueOf(count) + "\n" + list1.get(0).getCtrNot_datetime();
-//                Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                if (list1.size() != 0){
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getCtrNot_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
 //                //test
                 updateRnEndflagSetting(16);
             }
@@ -1499,7 +1571,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void UpdateFriendData() {
         //不同裝置
         if (!signInShrPref.getSameSignInMachine()) {
-            //更新好友關係表
+            //更新好友關係表 end[17]
             new AsyncTask<String, Void, ArrayList<FRow>>() {
                 @Override
                 protected ArrayList<FRow> doInBackground(String... params) {
@@ -1534,14 +1606,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(FRow.class);
 //                    ArrayList<FRow> list1 = mainDB.query(FRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(updateEndflag.length - 3);
                 }
             }.execute(signInShrPref.getAID());
 
-            //更新好友群組表
+            //更新好友群組表 end[18]
             new AsyncTask<String, Void, ArrayList<FGRow>>() {
                 @Override
                 protected ArrayList<FGRow> doInBackground(String... params) {
@@ -1576,14 +1653,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(FGRow.class);
 //                    ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aid();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(updateEndflag.length - 2);
                 }
             }.execute(signInShrPref.getAID());
 
-            //APP使用者個人資料分享好友設定表
+            //APP使用者個人資料分享好友設定表 end[19]
             new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
                 @Override
                 protected ArrayList<FShrSetRow> doInBackground(String... params) {
@@ -1618,56 +1700,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(FShrSetRow.class);
 //                    ArrayList<FShrSetRow> list1 = mainDB.query(FShrSetRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrSet_fri_aid();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 6);
-                }
-            }.execute(signInShrPref.getAID());
-
-            //APP使用者個人訊息分享好友設定表 ---改成---> 好友資料分享設定表
-            new AsyncTask<String, Void, ArrayList<FShrNotSetRow>>() {
-                @Override
-                protected ArrayList<FShrNotSetRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<FShrNotSetRow> fShrNotSetRows = null;
-
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateFriendShareNoticeSettingTable(params[0]);
-                        fShrNotSetRows = jsonParser.parseFShrNotSetRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return fShrNotSetRows;
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<FShrNotSetRow> fShrNotSetRows) {
-                    super.onPostExecute(fShrNotSetRows);
-                    if (fShrNotSetRows != null) {
-                        if (fShrNotSetRows.size() != 0) {
-                            mainDB.deleteAll(FShrNotSetRow.class);
-                            for (int i = 0; i < fShrNotSetRows.size(); i++) {
-                                mainDB.save(fShrNotSetRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
-                    }
-//                    //test
-//                    long count = mainDB.queryCount(FShrNotSetRow.class);
-//                    ArrayList<FShrNotSetRow> list1 = mainDB.query(FShrNotSetRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrNotSet_fri_aid();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFShrSet_fri_aid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(updateEndflag.length - 5);
                 }
             }.execute(signInShrPref.getAID());
 
-            //APP使用者好友訊息接受設定表
+//            //APP使用者個人訊息分享好友設定表 ---改成---> 好友資料分享設定表
+//            new AsyncTask<String, Void, ArrayList<FShrNotSetRow>>() {
+//                @Override
+//                protected ArrayList<FShrNotSetRow> doInBackground(String... params) {
+//                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+//                    JSONParser jsonParser = new JSONParser();
+//                    ArrayList<FShrNotSetRow> fShrNotSetRows = null;
+//
+//                    JSONObject jsonObject;
+//                    try {
+//                        jsonObject = httcjsonapi.UpdateFriendShareNoticeSettingTable(params[0]);
+//                        fShrNotSetRows = jsonParser.parseFShrNotSetRow(jsonObject);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    return fShrNotSetRows;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(ArrayList<FShrNotSetRow> fShrNotSetRows) {
+//                    super.onPostExecute(fShrNotSetRows);
+//                    if (fShrNotSetRows != null) {
+//                        if (fShrNotSetRows.size() != 0) {
+//                            mainDB.deleteAll(FShrNotSetRow.class);
+//                            for (int i = 0; i < fShrNotSetRows.size(); i++) {
+//                                mainDB.save(fShrNotSetRows.get(i));
+//                            }
+//                            LiteOrm.releaseMemory();
+//                        }
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+//                    }
+////                    //test
+////                    long count = mainDB.queryCount(FShrNotSetRow.class);
+////                    ArrayList<FShrNotSetRow> list1 = mainDB.query(FShrNotSetRow.class);
+////                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrNotSet_fri_aid();
+////                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+////                    //test
+//                    updateRnEndflagSetting(updateEndflag.length - 6);
+//                }
+//            }.execute(signInShrPref.getAID());
+
+            /**
+             *
+             */
+            //APP使用者好友訊息接受設定表 end[20]
             new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
                 @Override
                 protected ArrayList<FRecvNotSetRow> doInBackground(String... params) {
@@ -1702,8 +1792,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    //test
 //                    long count = mainDB.queryCount(FRecvNotSetRow.class);
 //                    ArrayList<FRecvNotSetRow> list1 = mainDB.query(FRecvNotSetRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFRecvNotSet_fri_aid();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFRecvNotSet_fri_aid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
 //                    //test
                     updateRnEndflagSetting(updateEndflag.length - 4);
                 }
@@ -1717,12 +1812,170 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
              * 3.將資料寫入SQLite
              */
         } else { //同裝置 不用更新
-            updateRnEndflagSetting(updateEndflag.length - 6);
             updateRnEndflagSetting(updateEndflag.length - 5);
             updateRnEndflagSetting(updateEndflag.length - 4);
             updateRnEndflagSetting(updateEndflag.length - 3);
             updateRnEndflagSetting(updateEndflag.length - 2);
         }
+
+        //APP使用者好友資料分享設定表(別人願意分享哪些給此APP使用者) end[21]
+        new AsyncTask<String, Void, ArrayList<FShrDataFlagRow>>() {
+            @Override
+            protected ArrayList<FShrDataFlagRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FShrDataFlagRow> fShrDataFlagRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendShareDataFlagTable(params[0]);
+                    fShrDataFlagRows = jsonParser.parseFShrDataFlagRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fShrDataFlagRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FShrDataFlagRow> fShrDataFlagRows) {
+                super.onPostExecute(fShrDataFlagRows);
+                if (fShrDataFlagRows != null) {
+                    if (fShrDataFlagRows.size() != 0) {
+                        mainDB.deleteAll(FShrDataFlagRow.class);
+                        for (int i = 0; i < fShrDataFlagRows.size(); i++) {
+                            mainDB.save(fShrDataFlagRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "好友資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                //test
+//                long count = mainDB.queryCount(FShrDataFlagRow.class);
+//                ArrayList<FShrDataFlagRow> list1 = mainDB.query(FShrDataFlagRow.class);
+//                if (list1.size() != 0){
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrData_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
+//                //test
+                updateRnEndflagSetting(updateEndflag.length - 6);
+            }
+        }.execute(signInShrPref.getAID());
+
+        //好友邀請訊息表 end[22]
+        ArrayList<FAddNotRow> fAddNotRowArrayList = mainDB.query(new QueryBuilder<FAddNotRow>(FAddNotRow.class)
+                .appendOrderDescBy(FAddNotRow.ID)
+                .limit(0, 1));
+        String fAddNotRowlastDataTime;
+        if (fAddNotRowArrayList.size() != 0) { //有資料，更新
+            fAddNotRowlastDataTime = fAddNotRowArrayList.get(0).getFAddNot_datetime();
+        } else { //無資料，從最後一筆未讀資料開始更新
+            fAddNotRowlastDataTime = "";
+        }
+        new AsyncTask<String, Void, ArrayList<FAddNotRow>>() {
+            @Override
+            protected ArrayList<FAddNotRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FAddNotRow> fAddNotRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendAddNoticeTable(params[0], params[1]);
+                    fAddNotRows = jsonParser.parseFAddNotRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fAddNotRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FAddNotRow> fAddNotRows) {
+                super.onPostExecute(fAddNotRows);
+                if (fAddNotRows != null) {
+                    if (fAddNotRows.size() != 0) {
+                        for (int i = 0; i < fAddNotRows.size(); i++) {
+                            mainDB.save(fAddNotRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "好友邀請訊息更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                //test
+//                long count = mainDB.queryCount(FAddNotRow.class);
+//                ArrayList<FAddNotRow> list1 = mainDB.query(FAddNotRow.class);
+//                if (list1.size() != 0){
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFAddNot_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
+//                //test
+                updateRnEndflagSetting(updateEndflag.length - 7);
+            }
+        }.execute(signInShrPref.getAID(), fAddNotRowlastDataTime);
+
+
+        //好友訊息表 end[23]
+        ArrayList<FNotRow> fNotRowArrayList = mainDB.query(new QueryBuilder<FNotRow>(FNotRow.class)
+                .appendOrderDescBy(FNotRow.ID)
+                .limit(0, 1));
+        String fNotRowlastDataTime;
+        if (fNotRowArrayList.size() != 0) { //有資料，更新
+            fNotRowlastDataTime = fNotRowArrayList.get(0).getFNot_datetime();
+        } else { //無資料，從最後一筆未讀資料開始更新
+            fNotRowlastDataTime = "";
+        }
+        new AsyncTask<String, Void, ArrayList<FNotRow>>() {
+            @Override
+            protected ArrayList<FNotRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FNotRow> fNotRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendNoticeTable(params[0], params[1]);
+                    fNotRows = jsonParser.parseFNotRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fNotRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FNotRow> fNotRows) {
+                super.onPostExecute(fNotRows);
+                if (fNotRows != null) {
+                    if (fNotRows.size() != 0) {
+                        for (int i = 0; i < fNotRows.size(); i++) {
+                            mainDB.save(fNotRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "好友訊息更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                //test
+//                long count = mainDB.queryCount(FNotRow.class);
+//                ArrayList<FNotRow> list1 = mainDB.query(FNotRow.class);
+//                if (list1.size() != 0){
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFNot_datetime();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
+//                //test
+                updateRnEndflagSetting(updateEndflag.length - 8);
+            }
+        }.execute(signInShrPref.getAID(), fNotRowlastDataTime);
+
     }
 
     /**
@@ -1732,93 +1985,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //更新 APP使用者中心留言板表CenterMessageTable end[22]
+    //更新 APP使用者中心留言板表CenterMessageTable end[24]
     private void UpdateCommunityData() {
         ArrayList<CtrMsgRow> ctrMsgRowArrayList = mainDB.query(new QueryBuilder<CtrMsgRow>(CtrMsgRow.class)
                 .appendOrderDescBy(CtrMsgRow.ID)
                 .limit(0, 1));
+        String lastDataTime;
         if (ctrMsgRowArrayList.size() != 0) { //有資料，更新
-            String lastDataTime = ctrMsgRowArrayList.get(0).getCtrMsg_datetime();
-            new AsyncTask<String, Void, ArrayList<CtrMsgRow>>() {
-                @Override
-                protected ArrayList<CtrMsgRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<CtrMsgRow> ctrMsgRows = null;
-
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateCenterMessageTable(params[0], params[1]);
-                        ctrMsgRows = jsonParser.parseCtrMsgRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return ctrMsgRows;
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<CtrMsgRow> ctrMsgRows) {
-                    super.onPostExecute(ctrMsgRows);
-                    if (ctrMsgRows != null) {
-                        if (ctrMsgRows.size() != 0) {
-                            for (int i = 0; i < ctrMsgRows.size(); i++) {
-                                mainDB.save(ctrMsgRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "留言板更新失敗", Toast.LENGTH_SHORT).show();
-                    }
-//                    //test
-//                    long count = mainDB.queryCount(CtrMsgRow.class);
-//                    ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
-//                    String str = String.valueOf(count) + "\n" + list1.get(0).getCtrMsg_datetime();
-//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 1);
-                }
-            }.execute(signInShrPref.getAID(), lastDataTime);
+            lastDataTime = ctrMsgRowArrayList.get(0).getCtrMsg_datetime();
         } else { //無資料，從最後一筆未讀資料開始更新
-            new AsyncTask<String, Void, ArrayList<CtrMsgRow>>() {
-                @Override
-                protected ArrayList<CtrMsgRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<CtrMsgRow> ctrMsgRows = null;
+            lastDataTime = "";
+        }
+        new AsyncTask<String, Void, ArrayList<CtrMsgRow>>() {
+            @Override
+            protected ArrayList<CtrMsgRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<CtrMsgRow> ctrMsgRows = null;
 
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateCenterMessageTable(params[0], params[1]);
-                        ctrMsgRows = jsonParser.parseCtrMsgRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return ctrMsgRows;
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateCenterMessageTable(params[0], params[1]);
+                    ctrMsgRows = jsonParser.parseCtrMsgRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                return ctrMsgRows;
+            }
 
-                @Override
-                protected void onPostExecute(ArrayList<CtrMsgRow> ctrMsgRows) {
-                    super.onPostExecute(ctrMsgRows);
-                    if (ctrMsgRows != null) {
-                        if (ctrMsgRows.size() != 0) {
-                            for (int i = 0; i < ctrMsgRows.size(); i++) {
-                                mainDB.save(ctrMsgRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
+            @Override
+            protected void onPostExecute(ArrayList<CtrMsgRow> ctrMsgRows) {
+                super.onPostExecute(ctrMsgRows);
+                if (ctrMsgRows != null) {
+                    if (ctrMsgRows.size() != 0) {
+                        for (int i = 0; i < ctrMsgRows.size(); i++) {
+                            mainDB.save(ctrMsgRows.get(i));
                         }
-                    } else {
-                        Toast.makeText(MainActivity.this, "留言板更新失敗", Toast.LENGTH_SHORT).show();
+                        LiteOrm.releaseMemory();
                     }
-//                    //test
-//                    long count = mainDB.queryCount(CtrMsgRow.class);
-//                    ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
+                } else {
+                    Toast.makeText(MainActivity.this, "留言板更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                //test
+//                long count = mainDB.queryCount(CtrMsgRow.class);
+//                ArrayList<CtrMsgRow> list1 = mainDB.query(CtrMsgRow.class);
+//                if (list1.size() != 0){
 //                    String str = String.valueOf(count) + "\n" + list1.get(0).getCtrMsg_datetime();
 //                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 1);
-                }
-            }.execute(signInShrPref.getAID(), "");
-        }
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
+//                //test
+                updateRnEndflagSetting(updateEndflag.length - 1);
+            }
+        }.execute(signInShrPref.getAID(), lastDataTime);
     }
 
 

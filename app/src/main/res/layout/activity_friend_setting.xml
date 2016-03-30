@@ -241,7 +241,8 @@
             android:background="@drawable/background_friend_setting"
             android:divider="@drawable/background_friend_setting_divider"
             android:orientation="vertical"
-            android:showDividers="middle">
+            android:showDividers="middle"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView57"

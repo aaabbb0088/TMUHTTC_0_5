@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @Table("FriendAddNoticeTable")
 public class FAddNotRow extends BaseModel {
     public static final String FADDNOT_TABLE_ID = "FAddNot_table_id";
-    public static final String FADDNOT_FRI_AID = "FAddNot_fri_aid";
+    public static final String FADDNOT_SEND_AID = "FAddNot_send_aid";
     public static final String FADDNOT_TYPE = "FAddNot_type";
     public static final String FADDNOT_SENDER_NAME = "FAddNot_sender_name";
     public static final String FADDNOT_DATETIME = "FAddNot_datetime";
@@ -21,7 +21,7 @@ public class FAddNotRow extends BaseModel {
     @NotNull
     private long FAddNot_table_id;
     @NotNull
-    private String FAddNot_fri_aid;
+    private String FAddNot_send_aid;
     @NotNull
     private int FAddNot_type;
     @NotNull
@@ -34,10 +34,10 @@ public class FAddNotRow extends BaseModel {
     public FAddNotRow() {
     }
 
-    public FAddNotRow(long FAddNot_table_id, String FAddNot_fri_aid, int FAddNot_type,
+    public FAddNotRow(long FAddNot_table_id, String FAddNot_send_aid, int FAddNot_type,
                       String FAddNot_sender_name, String FAddNot_datetime, int FAddNot_status_flag) {
         this.FAddNot_table_id = FAddNot_table_id;
-        this.FAddNot_fri_aid = FAddNot_fri_aid;
+        this.FAddNot_send_aid = FAddNot_send_aid;
         this.FAddNot_type = FAddNot_type;
         this.FAddNot_sender_name = FAddNot_sender_name;
         this.FAddNot_datetime = FAddNot_datetime;
@@ -52,12 +52,12 @@ public class FAddNotRow extends BaseModel {
         this.FAddNot_table_id = FAddNot_table_id;
     }
 
-    public String getFAddNot_fri_aid() {
-        return FAddNot_fri_aid;
+    public String getFAddNot_send_aid() {
+        return FAddNot_send_aid;
     }
 
-    public void setFAddNot_fri_aid(String FAddNot_fri_aid) {
-        this.FAddNot_fri_aid = FAddNot_fri_aid;
+    public void setFAddNot_send_aid(String FAddNot_send_aid) {
+        this.FAddNot_send_aid = FAddNot_send_aid;
     }
 
     public int getFAddNot_type() {
@@ -95,7 +95,7 @@ public class FAddNotRow extends BaseModel {
     public ArrayList<String> getColumnNameAry(){
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("FAddNot_table_id");
-        arrayList.add("FAddNot_fri_aid");
+        arrayList.add("FAddNot_send_aid");
         arrayList.add("FAddNot_type");
         arrayList.add("FAddNot_sender_name");
         arrayList.add("FAddNot_datetime");

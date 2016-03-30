@@ -4,9 +4,12 @@ import android.util.Log;
 
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.CtrNotRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FAddNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrDataFlagRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
@@ -612,6 +615,82 @@ public class JSONParser {
                         jsonObj.getString("FRecvNotSet_pay_flag"),
                         jsonObj.getString("FRecvNotSet_report_flag"),
                         jsonObj.getString("FRecvNotSet_record_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FShrDataFlagRow> parseFShrDataFlagRow(JSONObject object) {
+        ArrayList<FShrDataFlagRow> arrayList = new ArrayList<FShrDataFlagRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FShrDataFlagRow(
+                        jsonObj.getString("FShrData_fri_aid"),
+                        jsonObj.getString("FShrData_fri_sid"),
+                        jsonObj.getString("FShrData_data_flag"),
+                        jsonObj.getString("FShrData_medicine_flag"),
+                        jsonObj.getString("FShrData_pay_flag"),
+                        jsonObj.getString("FShrData_report_flag"),
+                        jsonObj.getString("FShrData_record_flag"),
+                        jsonObj.getString("FShrData_location_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FAddNotRow> parseFAddNotRow(JSONObject object) {
+        ArrayList<FAddNotRow> arrayList = new ArrayList<FAddNotRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FAddNotRow(
+                        jsonObj.getLong("FAddNot_table_id"),
+                        jsonObj.getString("FAddNot_send_aid"),
+                        jsonObj.getInt("FAddNot_type"),
+                        jsonObj.getString("FAddNot_sender_name"),
+                        jsonObj.getString("FAddNot_datetime"),
+                        jsonObj.getInt("FAddNot_status_flag")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FNotRow> parseFNotRow(JSONObject object) {
+        ArrayList<FNotRow> arrayList = new ArrayList<FNotRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FNotRow(
+                        jsonObj.getLong("FNot_table_id"),
+                        jsonObj.getString("FNot_fri_sid"),
+                        jsonObj.getInt("FNot_type"),
+                        jsonObj.getString("FNot_title"),
+                        jsonObj.getString("FNot_content"),
+                        jsonObj.getString("FNot_sendr_name"),
+                        jsonObj.getString("FNot_datetime"),
+                        jsonObj.getInt("FNot_status")
                 ));
             }
 

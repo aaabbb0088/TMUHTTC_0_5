@@ -23,7 +23,7 @@ public class FShrSetRow extends BaseModel {
     @NotNull
     private String FShrSet_fri_aid;
     @NotNull
-    @Default("N")
+    @Default("Y")
     private String FShrSet_data_flag;
     @NotNull
     @Default("N")
