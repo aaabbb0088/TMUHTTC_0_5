@@ -111,11 +111,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initBar();
         initViews();
-        initFragmentManager();
-        initTabSetting();
         initData();
-
         updateData();
+
+
+        //放到非同步更新完成後再載入Fragment
+//        initFragmentManager();
+//        initTabSetting();
 
         //test code 同步中的表示Dialog
 //        final MySyncingDialog mySyncDialog = new MySyncingDialog(false, MainActivity.this, "資料同步中,請稍後");
@@ -212,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        signInShrPref.setMemberFlag(true);
 //        //test code
 
-        if (new SignInShrPref(this).getMemberFlag()) {   //如果是遠距會員->if,如果是非遠距會員->else
+        if (signInShrPref.getMemberFlag()) {   //如果是遠距會員->if,如果是非遠距會員->else
             setTabSelection(0);// 第一次啟動時選中第0個tab
         } else {
             setTabSelection(1);
@@ -601,8 +603,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     super.onPostExecute(wLevelRows);
                     if (wLevelRows != null) {
                         if (wLevelRows.size() != 0) {
-                            WLevelShrPref wLevelShrPref = new WLevelShrPref(MainActivity.this,
-                                    signInShrPref.getAID(), wLevelRows.get(0));
+                            WLevelShrPref wLevelShrPref = new WLevelShrPref(MainActivity.this, wLevelRows.get(0));
 
 //                            //test
 //                            Toast.makeText(MainActivity.this,
@@ -2002,15 +2003,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         calendar.add(Calendar.MONTH, -1);
         final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.DAY_OF_MONTH, -1);
-        Date todayDate = clr.getTime();
-        final String todayStr = new MyDateSFormat().getFrmt_yMd().format(new Date());
-        try {
-            todayDate = new MyDateSFormat().getFrmt_yMd().parse(todayStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
-        Date lastTime;
         /**
          * end[-9~-21]
          * 1.取得是遠距會員的好友sid
@@ -2205,17 +2197,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             Toast.makeText(MainActivity.this, "好友血糖量測資料更新失敗", Toast.LENGTH_SHORT).show();
                         }
-                        //test
-                        long count = mainDB.queryCount(GlyDataRow.class);
-                        ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
-                        if (list1.size() != 0) {
-                            String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
-                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-                        } else {
-                            String str = String.valueOf(count);
-                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-                        }
-                        //test
+//                        //test
+//                        long count = mainDB.queryCount(GlyDataRow.class);
+//                        ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
+//                        if (list1.size() != 0) {
+//                            String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
+//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        } else {
+//                            String str = String.valueOf(count);
+//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        }
+//                        //test
                         updateRnEndflagSetting(updateEndflag.length - 11);
                     }
                 }.execute(fGlyDataSids, fGlyDataLastTime);
@@ -2310,11 +2302,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (mainDB != null) {
                 mainDB.close();
             }
-            if (signInShrPref.getMemberFlag()) {
-                //更新Tab0頁面資料 : 更新函式寫在對應的Fragment
-            } else {
-                //更新Tab1頁面資料 : 更新函式寫在對應的Fragment
-            }
+
+            //更新完資料，載入Fragment
+            initFragmentManager();
+            initTabSetting();
         }
     }
 }

@@ -473,11 +473,6 @@ public class FriendFragment extends Fragment {
      */
 
     private void initData() {
-        signInShrPref = new SignInShrPref(getActivity());
-        if(signInShrPref.getMemberFlag()){
-           //更新Tab1頁面
-        }
-
         lists = initList();
         adapter = new FriendAdapter(getActivity(), lists);
         expandableListView.setAdapter(adapter);

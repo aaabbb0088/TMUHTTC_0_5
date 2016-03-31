@@ -303,7 +303,7 @@ public class SignInActivity extends AppCompatActivity {
                 editPassword.getText().toString(),
                 aid,
                 sid,
-                new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()),
+                new MyDateSFormat().getFrmt_yMdHm().format(new Date()),
                 true,
                 memBerFlag,
                 sameMachineFlag);

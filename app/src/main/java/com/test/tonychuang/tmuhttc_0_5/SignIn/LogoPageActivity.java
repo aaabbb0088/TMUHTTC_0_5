@@ -208,7 +208,7 @@ public class LogoPageActivity extends AppCompatActivity {
     private void getSignInSuccessResult(String aid, String sid, Boolean memBerFlag, Boolean sameMachineFlag) {
         signInShrPref.setAID(aid);
         signInShrPref.setSID(sid);
-        signInShrPref.setSignInDatetime(new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()));
+        signInShrPref.setSignInDatetime(new MyDateSFormat().getFrmt_yMdHm().format(new Date()));
         signInShrPref.setSignInStatus(true);
         signInShrPref.setMemberFlag(memBerFlag);
         signInShrPref.setSameSignInMachine(sameMachineFlag);

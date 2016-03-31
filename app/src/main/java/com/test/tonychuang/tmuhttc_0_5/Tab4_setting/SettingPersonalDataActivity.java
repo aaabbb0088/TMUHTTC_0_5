@@ -414,7 +414,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 mySyncingDialog.dismiss();
                 if (aBoolean) {
                     signInShrPref.setSignInStatus(false);
-                    signInShrPref.setSignInDatetime(new MyDateSFormat().getM2CFrmt_yMdHm().format(new Date()));
+                    signInShrPref.setSignInDatetime(new MyDateSFormat().getFrmt_yMdHm().format(new Date()));
                     Intent intent = new Intent(SettingPersonalDataActivity.this, SignInActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);

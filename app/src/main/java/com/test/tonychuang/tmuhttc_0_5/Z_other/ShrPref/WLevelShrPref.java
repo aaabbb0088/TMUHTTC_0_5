@@ -35,12 +35,12 @@ public class WLevelShrPref {
     private String BG_AM_MaxDang = "BG_AM_MaxDang";
     private String BG_AM_MinDang = "BG_AM_MinDang";
 
-    public WLevelShrPref(Context context, String aid) {
-        levels = context.getSharedPreferences(aid + SHARE_PREFERENCE_NAME, 0);
+    public WLevelShrPref(Context context) {
+        levels = context.getSharedPreferences(SHARE_PREFERENCE_NAME, 0);
     }
 
-    public WLevelShrPref(Context context, String aid, WLevelRow wLevelRow) {
-        levels = context.getSharedPreferences(aid + SHARE_PREFERENCE_NAME, 0);
+    public WLevelShrPref(Context context, WLevelRow wLevelRow) {
+        levels = context.getSharedPreferences(SHARE_PREFERENCE_NAME, 0);
         levels.edit()
                 .putInt(this.BP_SY_Max, wLevelRow.getBP_SY_Max())
                 .putInt(this.BP_SY_Min, wLevelRow.getBP_SY_Min())
