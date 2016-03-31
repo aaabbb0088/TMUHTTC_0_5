@@ -1,5 +1,6 @@
 package com.test.tonychuang.tmuhttc_0_5;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSe
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrDataFlagRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FWLevelRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyMsgRow;
@@ -55,6 +57,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnDataSett
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.PsnSettingRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.RowDataFormat.WLevelRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.UsersRecordShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
 
 import org.json.JSONObject;
@@ -384,9 +387,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initData() {
         signInShrPref = new SignInShrPref(this);
+        UsersRecordShrPref usersRecordShrPref = new UsersRecordShrPref(this);
+        SharedPreferences firstUse = MainActivity.this.getSharedPreferences("firstUse", 0);
+        if (firstUse.getString("firstUseFlag", "Y").equals("Y") || !usersRecordShrPref.isRecroded(signInShrPref.getPID())){
+            signInShrPref.setSameSignInMachine(false);
+            firstUse.edit().putString("firstUseFlag", "N").apply();
+            usersRecordShrPref.saveUser(signInShrPref.getPID(), signInShrPref.getPWD());
+        }
         updateEndflag = new Boolean[]{false, false, false, false, false, false, false, false
                 , false, false, false, false, false, false, false, false, false, false, false
-                , false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標
+                , false, false, false, false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標 共38個
     }
 
     private void updateData() {
@@ -654,6 +664,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(preDataRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(PreDataRow.class)
+                                    .equals(PreDataRow.PDATA_SID, signInShrPref.getSID())
                                     .lessThan(PreDataRow.PDATA_DATETIME,
                                             new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -716,12 +727,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 protected void onPostExecute(ArrayList<PreThumbRow> preThumbRows) {
                     super.onPostExecute(preThumbRows);
                     if (preThumbRows != null) {
+                        mainDB.delete(new WhereBuilder(PreThumbRow.class)
+                                .equals(PreThumbRow.PDATA_THUMB_SID, signInShrPref.getSID()));
                         if (preThumbRows.size() != 0) {
                             for (int i = 0; i < preThumbRows.size(); i++) {
                                 mainDB.save(preThumbRows.get(i));
                             }
-                            mainDB.delete(new WhereBuilder(PreThumbRow.class)
-                                    .lessThan(PreThumbRow.PDATA_THUMB_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -796,6 +807,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(preMsgRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(PreMsgRow.class)
+                                    .equals(PreMsgRow.PMSG_SID, signInShrPref.getSID())
                                     .lessThan(PreMsgRow.PMSG_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
                         }
@@ -863,6 +875,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(preAvgRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(PreAvgRow.class)
+                                    .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
                                     .lessThan(PreAvgRow.PAVG_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -931,6 +944,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(glyDataRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(GlyDataRow.class)
+                                    .equals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                                     .lessThan(GlyDataRow.GDATA_DATETIME,
                                             new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -994,12 +1008,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 protected void onPostExecute(ArrayList<GlyThumbRow> glyThumbRows) {
                     super.onPostExecute(glyThumbRows);
                     if (glyThumbRows != null) {
+                        mainDB.delete(new WhereBuilder(GlyThumbRow.class)
+                                .equals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
+                                .equals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID()));
                         if (glyThumbRows.size() != 0) {
                             for (int i = 0; i < glyThumbRows.size(); i++) {
                                 mainDB.save(glyThumbRows.get(i));
                             }
-                            mainDB.delete(new WhereBuilder(GlyThumbRow.class)
-                                    .lessThan(GlyThumbRow.GDATA_THUMB_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -1066,6 +1081,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(glyMsgRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(GlyMsgRow.class)
+                                    .equals(GlyMsgRow.GMSG_SID, signInShrPref.getSID())
                                     .lessThan(GlyMsgRow.GMSG_DATETIME, todayStr));
                             LiteOrm.releaseMemory();
                         }
@@ -1133,6 +1149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(glyAvgRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(GlyAvgRow.class)
+                                    .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
                                     .lessThan(GlyAvgRow.GAVG_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -1260,6 +1277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mainDB.save(sMedRows.get(i));
                             }
                             mainDB.delete(new WhereBuilder(SMedRow.class)
+                                    .equals(SMedRow.SMED_SID, signInShrPref.getSID())
                                     .lessThan(SMedRow.SMED_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -1457,6 +1475,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
 
                             mainDB.delete(new WhereBuilder(SRcrdRow.class)
+                                    .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
                                     .lessThan(SMedRow.SMED_DATETIME,
                                             new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
@@ -1569,8 +1588,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     //更新好友關係表、好友群組表、好友設定三表 end[17]~end[21]
     private void UpdateFriendData() {
-        //不同裝置
-        if (!signInShrPref.getSameSignInMachine()) {
+        if (!signInShrPref.getSameSignInMachine()){
             //更新好友關係表 end[17]
             new AsyncTask<String, Void, ArrayList<FRow>>() {
                 @Override
@@ -1614,6 +1632,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
 //                    }
 //                    //test
+                    UpdateFriendPsnData(); //更新好友個人警戒值、血壓流水資料、血糖流水資料
                     updateRnEndflagSetting(updateEndflag.length - 3);
                 }
             }.execute(signInShrPref.getAID());
@@ -1803,19 +1822,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     updateRnEndflagSetting(updateEndflag.length - 4);
                 }
             }.execute(signInShrPref.getAID());
-
-
-            //撈取資料結束，若成功執行
-            /**
-             * 1.創或開Table
-             * 2.取全部資料 : 有資料，全刪除後寫入 ; 無資料，不動作
-             * 3.將資料寫入SQLite
-             */
-        } else { //同裝置 不用更新
-            updateRnEndflagSetting(updateEndflag.length - 5);
-            updateRnEndflagSetting(updateEndflag.length - 4);
-            updateRnEndflagSetting(updateEndflag.length - 3);
+        } else {
+            UpdateFriendPsnData(); //更新好友個人警戒值、血壓流水資料、血糖流水資料
             updateRnEndflagSetting(updateEndflag.length - 2);
+            updateRnEndflagSetting(updateEndflag.length - 3);
+            updateRnEndflagSetting(updateEndflag.length - 4);
+            updateRnEndflagSetting(updateEndflag.length - 5);
         }
 
         //APP使用者好友資料分享設定表(別人願意分享哪些給此APP使用者) end[21]
@@ -1978,6 +1990,246 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    /**
+     * 更新好友個人警戒值、血壓流水資料、血糖流水資料
+     */
+    /**
+     *
+     */
+    private void UpdateFriendPsnData() {
+        final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
+        calendar.add(Calendar.MONTH, -1);
+        final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        clr.add(Calendar.DAY_OF_MONTH, -1);
+        Date todayDate = clr.getTime();
+        final String todayStr = new MyDateSFormat().getFrmt_yMd().format(new Date());
+        try {
+            todayDate = new MyDateSFormat().getFrmt_yMd().parse(todayStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+        Date lastTime;
+        /**
+         * end[-9~-21]
+         * 1.取得是遠距會員的好友sid
+         * 2.更新資料
+         *   警戒值
+         *   血壓4表
+         *   血糖4表
+         *   服務4表
+         */
+
+        /**
+         * 取得是遠距會員的好友sid
+         */
+        ArrayList<FRow> fRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                .whereEquals(FRow.F_RELATION_FLAG, 1)
+                .whereAppendAnd()
+                .whereEquals(FRow.F_MEMBER_FLAG, "Y"));
+        if (fRows.size() != 0) {  //有遠距會員好友
+            ArrayList<String> friMemberSIDs = new ArrayList<>();
+            for (int i = 0; i < fRows.size(); i++) {
+                friMemberSIDs.add(i, fRows.get(i).getF_fri_sid());
+            }
+
+            //更新好友警戒值上下界
+            new AsyncTask<ArrayList<?>, Void, ArrayList<FWLevelRow>>() {
+                @Override
+                protected ArrayList<FWLevelRow> doInBackground(ArrayList<?>... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<FWLevelRow> fwLevelRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.UpdateFWLevelShrPref((ArrayList<String>) params[0]);
+                        fwLevelRows = jsonParser.parseFWLevelRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return fwLevelRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<FWLevelRow> fwLevelRows) {
+                    super.onPostExecute(fwLevelRows);
+                    if (fwLevelRows != null) {
+                        if (fwLevelRows.size() != 0) {
+                            mainDB.deleteAll(FWLevelRow.class);
+                            for (int i = 0; i < fwLevelRows.size(); i++) {
+                                mainDB.save(fwLevelRows.get(i));
+                            }
+                            LiteOrm.releaseMemory();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "好友警戒值更新失敗", Toast.LENGTH_SHORT).show();
+                    }
+//                    //test
+//                    long count = mainDB.queryCount(FWLevelRow.class);
+//                    ArrayList<FWLevelRow> list1 = mainDB.query(FWLevelRow.class);
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFWLevel_Sid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
+//                    //test
+                    updateRnEndflagSetting(updateEndflag.length - 9);
+                }
+            }.execute(friMemberSIDs);
+
+
+            //好友血壓流水資料
+            ArrayList<PreDataRow> preDataRowArrayList = mainDB.query(
+                    new QueryBuilder<PreDataRow>(PreDataRow.class).groupBy(PreDataRow.PDATA_SID)
+                            .whereNoEquals(PreDataRow.PDATA_SID, signInShrPref.getSID()));
+            ArrayList<String> fPreDataSids = new ArrayList<>();
+            ArrayList<String> fPreDataLastTime = new ArrayList<>();
+            if (preDataRowArrayList.size() != 0) {
+                for (int fPreDataCount = 0; fPreDataCount < preDataRowArrayList.size(); fPreDataCount++) {
+                    fPreDataSids.add(preDataRowArrayList.get(fPreDataCount).getPData_sid());
+                    fPreDataLastTime.add(preDataRowArrayList.get(fPreDataCount).getPData_datetime());
+                }
+            } else {
+                fPreDataSids = friMemberSIDs;
+                for (int fRowCount = 0; fRowCount < fRows.size(); fRowCount++) {
+                    fPreDataLastTime.add(new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime()));
+                }
+            }
+            if (fPreDataSids.size() != 0) {
+                new AsyncTask<ArrayList<?>, Void, ArrayList<PreDataRow>>() {
+                    @Override
+                    protected ArrayList<PreDataRow> doInBackground(ArrayList<?>... params) {
+                        HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                        JSONParser jsonParser = new JSONParser();
+                        ArrayList<PreDataRow> preDataRows = null;
+
+                        JSONObject jsonObject;
+                        try {
+                            jsonObject = httcjsonapi.UpdateFriPressDataTable((ArrayList<String>) params[0], (ArrayList<String>) params[1]);
+                            preDataRows = jsonParser.parsePreDataRow(jsonObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return preDataRows;
+                    }
+
+                    @Override
+                    protected void onPostExecute(ArrayList<PreDataRow> preDataRows) {
+                        super.onPostExecute(preDataRows);
+                        if (preDataRows != null) {
+                            if (preDataRows.size() != 0) {
+                                for (int i = 0; i < preDataRows.size(); i++) {
+                                    mainDB.save(preDataRows.get(i));
+                                }
+                                mainDB.delete(new WhereBuilder(PreDataRow.class)
+                                        .noEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
+                                        .lessThan(PreDataRow.PDATA_DATETIME,
+                                                new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                LiteOrm.releaseMemory();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "好友血壓量測資料更新失敗", Toast.LENGTH_SHORT).show();
+                        }
+//                        //test
+//                        long count = mainDB.queryCount(PreDataRow.class);
+//                        ArrayList<PreDataRow> list1 = mainDB.query(PreDataRow.class);
+//                        if (list1.size() != 0) {
+//                            String str = String.valueOf(count) + "\n" + list1.get(0).getPData_datetime();
+//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        } else {
+//                            String str = String.valueOf(count);
+//                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                        }
+//                        //test
+                        updateRnEndflagSetting(updateEndflag.length - 10);
+                    }
+                }.execute(fPreDataSids, fPreDataLastTime);
+            } else {
+                updateRnEndflagSetting(updateEndflag.length - 10);
+            }
+
+
+            //好友血糖流水資料
+            ArrayList<GlyDataRow> glyDataRowArrayList = mainDB.query(
+                    new QueryBuilder<GlyDataRow>(GlyDataRow.class).groupBy(GlyDataRow.GDATA_SID)
+                            .whereNoEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID()));
+            ArrayList<String> fGlyDataSids = new ArrayList<>();
+            ArrayList<String> fGlyDataLastTime = new ArrayList<>();
+            if (glyDataRowArrayList.size() != 0) {
+                for (int fGlyDataCount = 0; fGlyDataCount < glyDataRowArrayList.size(); fGlyDataCount++) {
+                    fGlyDataSids.add(glyDataRowArrayList.get(fGlyDataCount).getGData_sid());
+                    fGlyDataLastTime.add(glyDataRowArrayList.get(fGlyDataCount).getGData_datetime());
+                }
+            } else {
+                fGlyDataSids = friMemberSIDs;
+                for (int fRowCount = 0; fRowCount < fRows.size(); fRowCount++) {
+                    fGlyDataLastTime.add(new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime()));
+                }
+            }
+            if (fGlyDataSids.size() != 0) {
+                new AsyncTask<ArrayList<?>, Void, ArrayList<GlyDataRow>>() {
+                    @Override
+                    protected ArrayList<GlyDataRow> doInBackground(ArrayList<?>... params) {
+                        HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                        JSONParser jsonParser = new JSONParser();
+                        ArrayList<GlyDataRow> glyDataRows = null;
+
+                        JSONObject jsonObject;
+                        try {
+                            jsonObject = httcjsonapi.UpdateFriGlycemiaDataTable((ArrayList<String>) params[0], (ArrayList<String>) params[1]);
+                            glyDataRows = jsonParser.parseGlyDataRow(jsonObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return glyDataRows;
+                    }
+
+                    @Override
+                    protected void onPostExecute(ArrayList<GlyDataRow> glyDataRows) {
+                        super.onPostExecute(glyDataRows);
+                        if (glyDataRows != null) {
+                            if (glyDataRows.size() != 0) {
+                                for (int i = 0; i < glyDataRows.size(); i++) {
+                                    mainDB.save(glyDataRows.get(i));
+                                }
+                                mainDB.delete(new WhereBuilder(GlyDataRow.class)
+                                        .noEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
+                                        .lessThan(GlyDataRow.GDATA_DATETIME,
+                                                new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                LiteOrm.releaseMemory();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "好友血糖量測資料更新失敗", Toast.LENGTH_SHORT).show();
+                        }
+                        //test
+                        long count = mainDB.queryCount(GlyDataRow.class);
+                        ArrayList<GlyDataRow> list1 = mainDB.query(GlyDataRow.class);
+                        if (list1.size() != 0) {
+                            String str = String.valueOf(count) + "\n" + list1.get(0).getGData_datetime();
+                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+                        } else {
+                            String str = String.valueOf(count);
+                            Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+                        }
+                        //test
+                        updateRnEndflagSetting(updateEndflag.length - 11);
+                    }
+                }.execute(fGlyDataSids, fGlyDataLastTime);
+            } else {
+                updateRnEndflagSetting(updateEndflag.length - 11);
+            }
+        } else { //沒有有遠距會員好友
+            updateRnEndflagSetting(updateEndflag.length - 9);
+            updateRnEndflagSetting(updateEndflag.length - 10);
+            updateRnEndflagSetting(updateEndflag.length - 11);
+        }
+    }
+
+
     /**
      * 更新資料
      * APP使用者中心留言板表CenterMessageTable
@@ -2059,9 +2311,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mainDB.close();
             }
             if (signInShrPref.getMemberFlag()) {
-                //更新Tab0頁面資料
+                //更新Tab0頁面資料 : 更新函式寫在對應的Fragment
             } else {
-                //更新Tab1頁面資料
+                //更新Tab1頁面資料 : 更新函式寫在對應的Fragment
             }
         }
     }

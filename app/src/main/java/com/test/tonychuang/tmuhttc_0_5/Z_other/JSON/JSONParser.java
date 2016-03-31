@@ -12,6 +12,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrDataFlagRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FWLevelRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyMsgRow;
@@ -691,6 +692,45 @@ public class JSONParser {
                         jsonObj.getString("FNot_sendr_name"),
                         jsonObj.getString("FNot_datetime"),
                         jsonObj.getInt("FNot_status")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<FWLevelRow> parseFWLevelRow(JSONObject object) {
+        ArrayList<FWLevelRow> arrayList = new ArrayList<FWLevelRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new FWLevelRow(
+                        jsonObj.getString("FWLevel_Sid"),
+                        jsonObj.getInt("BP_SY_Max"),
+                        jsonObj.getInt("BP_SY_Min"),
+                        jsonObj.getInt("BP_DI_Max"),
+                        jsonObj.getInt("BP_DI_Min"),
+                        jsonObj.getInt("BP_HR_Max"),
+                        jsonObj.getInt("BP_HR_Min"),
+                        jsonObj.getInt("BP_SY_MaxDang"),
+                        jsonObj.getInt("BP_SY_MinDang"),
+                        jsonObj.getInt("BP_DI_MaxDang"),
+                        jsonObj.getInt("BP_DI_MinDang"),
+                        jsonObj.getInt("BP_HR_MaxDang"),
+                        jsonObj.getInt("BP_HR_MinDang"),
+                        jsonObj.getInt("BG_BM_Max"),
+                        jsonObj.getInt("BG_BM_Min"),
+                        jsonObj.getInt("BG_BM_MaxDang"),
+                        jsonObj.getInt("BG_BM_MinDang"),
+                        jsonObj.getInt("BG_AM_Max"),
+                        jsonObj.getInt("BG_AM_Min"),
+                        jsonObj.getInt("BG_AM_MaxDang"),
+                        jsonObj.getInt("BG_AM_MinDang")
                 ));
             }
 

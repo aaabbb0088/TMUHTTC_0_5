@@ -14,6 +14,7 @@ import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -600,6 +601,50 @@ public class HTTCJSONAPI {
         o.put("method", "UpdateFriendNoticeTable");
         p.put("aid",mapObject(aid));
         p.put("lastDataTime",mapObject(lastDataTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFWLevelShrPref(ArrayList<String> aids) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFWLevelShrPref");
+        p.put("aids",mapObject(aids));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFriPressDataTable(ArrayList<String> sids,ArrayList<String> LastTimes) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFriPressDataTable");
+        p.put("sids",mapObject(sids));
+        p.put("LastTimes",mapObject(LastTimes));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateFriGlycemiaDataTable(ArrayList<String> sids,ArrayList<String> LastTimes) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateFriGlycemiaDataTable");
+        p.put("sids",mapObject(sids));
+        p.put("LastTimes",mapObject(LastTimes));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

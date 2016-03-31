@@ -24,20 +24,20 @@ public class UsersRecordShrPref {
                 .apply();
     }
 
-    public void saveUser(String pid, String pwd){
+    public void saveUser(String pid, String pwd) {
         record.edit()
                 .putString(pid, pwd)
                 .apply();
     }
 
-    public boolean isRecroded(String pid){
+    public boolean isRecroded(String pid) {
         boolean result = true;
-        if(record.getString(pid, "null").equals("null"))
+        if (record.getString(pid, "").equals(""))
             result = false;
         return result;
     }
 
-    public int getUsersCount(){
-        return record.getAll().size()+1;
+    public int getUsersCount() {
+        return record.getAll().size();
     }
 }
