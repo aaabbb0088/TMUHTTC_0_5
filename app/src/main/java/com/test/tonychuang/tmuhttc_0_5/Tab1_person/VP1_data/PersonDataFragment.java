@@ -35,6 +35,9 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import me.grantland.widget.AutofitTextView;
 
@@ -206,22 +209,35 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
         SignInShrPref signInShrPref = new SignInShrPref(getActivity());
         if (signInShrPref.getMemberFlag()) {
 
-            //更新Tab0 數據資料
+            //更新Tab0 數據資料、警示顏色
             DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
             MyDateSFormat myDateSFormat = new MyDateSFormat();
+            WLevelShrPref wLevelShrPref = new WLevelShrPref(getActivity());
+            Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+            clr.add(Calendar.DAY_OF_MONTH, -1);
+            Date todayDate = clr.getTime();
+            String todayStr = myDateSFormat.getFrmt_yMd().format(new Date());
+            try {
+                todayDate = myDateSFormat.getFrmt_yMd().parse(todayStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            todayStr = myDateSFormat.getFrmt_yMdHm().format(todayDate);
 
             /**
              * 血壓
              */
             ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
                     .whereEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
+                    .whereAppendAnd()
+                    .whereGreaterThan(PreDataRow.PDATA_DATETIME, todayStr)
                     .appendOrderDescBy(PreDataRow.PDATA_DATETIME)
                     .limit(0, 1));
             if (preDataRows.size() != 0) {
+                //更新數據
                 String pressValue = String.valueOf(preDataRows.get(0).getPData_sys()) + " / "
                         + String.valueOf(preDataRows.get(0).getPData_dia());
                 pressValueText.setText(pressValue);
-
                 String pressTime = preDataRows.get(0).getPData_datetime();
                 try {
                     pressTime = myDateSFormat.getFrmt_Mdahm()
@@ -230,25 +246,49 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     e.printStackTrace();
                 }
                 pressDateText.setText(pressTime);
+
+                //更新顏色
+                MyPressPsnJudgment myPressPsnJudgment =
+                        new MyPressPsnJudgment(wLevelShrPref,
+                                preDataRows.get(0).getPData_sys(),
+                                preDataRows.get(0).getPData_dia());
+                switch (myPressPsnJudgment.getResult()) {
+                    case "normal":
+                        presslayout.setBackgroundResource(R.drawable.selector_presslayout);
+                        break;
+                    case "warn":
+                        presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                        break;
+                    case "dang":
+                        presslayout.setBackgroundResource(R.drawable.selector_redlayout);
+                        break;
+                }
+
+                //更新按讚數
+                ArrayList<PreThumbRow> preThumbRows = mainDB.query(new QueryBuilder<PreThumbRow>(PreThumbRow.class)
+                        .whereEquals(PreThumbRow.PDATA_THUMB_TABLE_ID, preDataRows.get(0).getPData_table_id())
+                        .appendOrderDescBy(PreThumbRow.PDATA_THUMB_DATETIME)
+                        .limit(0, 1));
+                if (preThumbRows.size() != 0) {
+                    if (preThumbRows.get(0).getPData_thumb_count() == 0) {
+                        pressThumbTv.setVisibility(View.GONE);
+                    } else {
+                        pressThumbTv.setVisibility(View.VISIBLE);
+                        pressThumbTv.setText(String.valueOf(preThumbRows.get(0).getPData_thumb_count()));
+                    }
+                } else {
+                    pressThumbTv.setVisibility(View.GONE);
+                }
+
+                //設定按鈕
+                pressDataBtnsetting(true);
             } else {
                 pressValueText.setText("沒有資料");
+                presslayout.setBackgroundResource(R.drawable.background_person_data_nodata);
                 pressDateText.setText("");
-            }
-
-
-            ArrayList<PreThumbRow> preThumbRows = mainDB.query(new QueryBuilder<PreThumbRow>(PreThumbRow.class)
-                    .whereEquals(PreThumbRow.PDATA_THUMB_SID, signInShrPref.getSID())
-                    .appendOrderDescBy(PreThumbRow.PDATA_THUMB_DATETIME)
-                    .limit(0, 1));
-            if (preThumbRows.size() != 0) {
-                if (preThumbRows.get(0).getPData_thumb_count() == 0) {
-                    pressThumbTv.setVisibility(View.GONE);
-                } else {
-                    pressThumbTv.setVisibility(View.VISIBLE);
-                    pressThumbTv.setText(String.valueOf(preThumbRows.get(0).getPData_thumb_count()));
-                }
-            } else {
                 pressThumbTv.setVisibility(View.GONE);
+
+                pressDataBtnsetting(false);
             }
 
 
@@ -257,16 +297,18 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
              */
             ArrayList<GlyDataRow> glyDataRows = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
                     .whereEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
+                    .whereAppendAnd()
+                    .whereGreaterThan(GlyDataRow.GDATA_DATETIME, todayStr)
                     .appendOrderDescBy(GlyDataRow.GDATA_DATETIME)
                     .limit(0, 1));
             if (glyDataRows.size() != 0) {
+                //更新數據
                 String glyData = glyDataRows.get(0).getGData_meal_flag();
                 if (glyData.equals("af")) {
                     glycemiaMealText.setText("飯後血糖");
                 } else {
                     glycemiaMealText.setText("飯前血糖");
                 }
-
                 String glyDataValue = String.valueOf(glyDataRows.get(0).getGData_value());
                 glycemiaValueText.setText(glyDataValue);
 
@@ -278,43 +320,54 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     e.printStackTrace();
                 }
                 glycemiaDateText.setText(glyDataTime);
+
+                //更新顏色
+                MyGlycemiaPsnJudgment myGlycemiaPsnJudgment =
+                        new MyGlycemiaPsnJudgment(wLevelShrPref,
+                                glyDataRows.get(0).getGData_value(),
+                                glyDataRows.get(0).getGData_meal_flag());
+                switch (myGlycemiaPsnJudgment.getResult()) {
+                    case "normal":
+                        glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
+                        break;
+                    case "warn":
+                        glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                        break;
+                    case "dang":
+                        glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
+                        break;
+                }
+
+                //更新按讚數
+                ArrayList<GlyThumbRow> glyThumbRows = mainDB.query(new QueryBuilder<GlyThumbRow>(GlyThumbRow.class)
+                        .whereEquals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
+                        .appendOrderDescBy(GlyThumbRow.GDATA_THUMB_DATETIME)
+                        .limit(0, 1));
+                if (glyThumbRows.size() != 0) {
+                    if (glyThumbRows.get(0).getGData_thumb_count() == 0) {
+                        glycemiaThumbTv.setVisibility(View.GONE);
+                    } else {
+                        glycemiaThumbTv.setVisibility(View.VISIBLE);
+                        glycemiaThumbTv.setText(String.valueOf(glyThumbRows.get(0).getGData_thumb_count()));
+                    }
+                } else {
+                    glycemiaThumbTv.setVisibility(View.GONE);
+                }
+
+                //更新按鈕
+                glycemiaDataBtnsetting(true);
             } else {
                 glycemiaValueText.setText("沒有資料");
+                glycemialayout.setBackgroundResource(R.drawable.background_person_data_nodata);
                 glycemiaDateText.setText("");
+                glycemiaThumbTv.setVisibility(View.GONE);
+
+                glycemiaDataBtnsetting(false);
             }
 
-            ArrayList<GlyThumbRow> glyThumbRows = mainDB.query(new QueryBuilder<GlyThumbRow>(GlyThumbRow.class)
-                    .whereEquals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
-                    .appendOrderDescBy(GlyThumbRow.GDATA_THUMB_DATETIME)
-                    .limit(0, 1));
-            if (glyThumbRows.size() != 0) {
-                if (glyThumbRows.get(0).getGData_thumb_count() == 0) {
-                    glycemiaThumbTv.setVisibility(View.GONE);
-                } else {
-                    glycemiaThumbTv.setVisibility(View.VISIBLE);
-                    glycemiaThumbTv.setText(String.valueOf(glyThumbRows.get(0).getGData_thumb_count()));
-                }
-            } else {
-                glycemiaThumbTv.setVisibility(View.GONE);
-            }
 
             //調整Tab0 警示顏色
-            WLevelShrPref wLevelShrPref = new WLevelShrPref(getActivity());
-            MyPressPsnJudgment myPressPsnJudgment =
-                    new MyPressPsnJudgment(wLevelShrPref,
-                            preDataRows.get(0).getPData_sys(),
-                            preDataRows.get(0).getPData_dia());
-            switch (myPressPsnJudgment.getResult()) {
-                case "normal":
-                    presslayout.setBackgroundResource(R.drawable.selector_presslayout);
-                    break;
-                case "warn":
-                    presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
-                    break;
-                case "dang":
-                    presslayout.setBackgroundResource(R.drawable.selector_redlayout);
-                    break;
-            }
+
 //            int BP_SY_Max = wLevelShrPref.getBP_SY_Max();
 //            int BP_SY_Min = wLevelShrPref.getBP_SY_Min();
 //            int BP_DI_Max = wLevelShrPref.getBP_DI_Max();
@@ -335,21 +388,6 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
 //                presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
 //            }
 
-            MyGlycemiaPsnJudgment myGlycemiaPsnJudgment =
-                    new MyGlycemiaPsnJudgment(wLevelShrPref,
-                            glyDataRows.get(0).getGData_value(),
-                            glyDataRows.get(0).getGData_meal_flag());
-            switch (myGlycemiaPsnJudgment.getResult()) {
-                case "normal":
-                    glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
-                    break;
-                case "warn":
-                    glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
-                    break;
-                case "dang":
-                    glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
-                    break;
-            }
 //            int BG_BM_Max = wLevelShrPref.getBG_BM_Max();
 //            int BG_BM_Min = wLevelShrPref.getBG_BM_Min();
 //            int BG_AM_Max = wLevelShrPref.getBG_AM_Max();
@@ -390,4 +428,15 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     /**
      *
      */
+    private void pressDataBtnsetting(boolean bool){
+        presslayout.setEnabled(bool);
+        pressThbBtn.setEnabled(bool);
+        pressMsgBtn.setEnabled(bool);
+    }
+
+    private void glycemiaDataBtnsetting(boolean bool){
+        glycemialayout.setEnabled(bool);
+        glycemiaThbBtn.setEnabled(bool);
+        glycemiaMsgBtn.setEnabled(bool);
+    }
 }

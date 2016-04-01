@@ -19,7 +19,8 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/today_3WeekText"
@@ -460,8 +461,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:id="@+id/todayDataLayout"
-            android:layout_weight="10"
-            android:visibility="visible">
+            android:layout_weight="10">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -611,7 +611,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/todayTimeLayout">
 
                 <TextView
                     android:id="@+id/MsTimeText"
@@ -627,7 +628,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:ems="6"
-                    android:text="a hh:mm"
+                    android:text="-"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:gravity="left|center_vertical" />
             </LinearLayout>
@@ -652,13 +653,14 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
+        <me.grantland.widget.AutofitTextView
             android:id="@+id/personalInfoText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="提供與血壓相關的\n個人化生活資訊\n依照近況顯示內容"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="-"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/tertiary_text_dark"/>
     </LinearLayout>
 
 </LinearLayout>

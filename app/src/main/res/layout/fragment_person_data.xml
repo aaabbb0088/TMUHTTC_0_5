@@ -230,7 +230,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/glycemiaValueText"
                     android:layout_centerHorizontal="true"
-                    android:text="飯前血糖"
+                    android:text="血糖"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#ffffff" />
 
