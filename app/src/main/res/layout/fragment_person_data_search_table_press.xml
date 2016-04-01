@@ -13,36 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ToggleButton
-            android:id="@+id/toggleButton3"
+            android:id="@+id/sevenDayBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/select_radiobutton_left"
+            android:checked="false"
             android:textColor="@color/color_radiobutton"
             android:textOff="近一周"
             android:textOn="近一周"
             android:textSize="17sp" />
 
         <ToggleButton
-            android:id="@+id/toggleButton4"
+            android:id="@+id/forteenDayDayBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/select_radiobutton_mid"
+            android:checked="false"
             android:textColor="@color/color_radiobutton"
             android:textOff="近二周"
             android:textOn="近二周"
             android:textSize="17sp" />
 
         <ToggleButton
-            android:id="@+id/toggleButton5"
+            android:id="@+id/thirtyDayBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/select_radiobutton_right"
+            android:checked="false"
             android:textColor="@color/color_radiobutton"
             android:textOff="近一個月"
             android:textOn="近一個月"
@@ -53,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TableLayout
             android:layout_width="match_parent"
@@ -65,12 +68,12 @@
             android:layout_marginTop="2dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:stretchColumns="*" >
+            android:stretchColumns="*">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center" >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/startDateTv"
@@ -116,12 +119,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tableLayout"
         android:background="@drawable/background_table_layout"
-        android:gravity="top|center_horizontal">
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical">
 
         <RadioGroup
             android:id="@+id/dataRadioGroup"
@@ -185,20 +188,26 @@
         </RadioGroup>
 
         <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/listViewItemName"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
-
-        <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listViewData"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary" />
+
+        <ListView
+            android:id="@+id/listViewData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
     </LinearLayout>
 
     <TextView

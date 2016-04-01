@@ -141,6 +141,8 @@ public class PersonDataPressFourDayFragment extends Fragment {
         signInShrPref = new SignInShrPref(getActivity());
         wLevelShrPref = new WLevelShrPref(getActivity());
         mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+        String warnDay = "";
+        String noDataDay = "";
 
         //更新周數
         Calendar calendar = Calendar.getInstance();
@@ -160,42 +162,22 @@ public class PersonDataPressFourDayFragment extends Fragment {
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         Date todayDate = clr.getTime();
         String todayStr = myDateSFormat.getFrmt_yMd().format(todayDate);
-        try {
-            todayDate = myDateSFormat.getFrmt_yMd().parse(todayStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        todayStr = myDateSFormat.getFrmt_yMdHm().format(todayDate);
+        todayStr = todayStr + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_1 = clr.getTime();
         String Date_1Str = myDateSFormat.getFrmt_yMd().format(Date_1);
-        try {
-            Date_1 = myDateSFormat.getFrmt_yMd().parse(Date_1Str);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date_1Str = myDateSFormat.getFrmt_yMdHm().format(Date_1);
+        Date_1Str = Date_1Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_2 = clr.getTime();
         String Date_2Str = myDateSFormat.getFrmt_yMd().format(Date_2);
-        try {
-            Date_2 = myDateSFormat.getFrmt_yMd().parse(Date_2Str);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date_2Str = myDateSFormat.getFrmt_yMdHm().format(Date_2);
+        Date_2Str = Date_2Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_3 = clr.getTime();
         String Date_3Str = myDateSFormat.getFrmt_yMd().format(Date_3);
-        try {
-            Date_3 = myDateSFormat.getFrmt_yMd().parse(Date_3Str);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date_3Str = myDateSFormat.getFrmt_yMdHm().format(Date_3);
+        Date_3Str = Date_3Str + " 00:00";
 
 
         //大前天
@@ -211,16 +193,15 @@ public class PersonDataPressFourDayFragment extends Fragment {
 
             if (today_3DataHText.getCurrentTextColor() == Color.BLACK
                     && today_3DataLText.getCurrentTextColor() == Color.BLACK) {
-                setImageView(today_3Image, R.mipmap.happy_blue);
-//                today_3Image.setImageResource(R.mipmap.happy_blue);
+                today_3Image.setImageResource(R.mipmap.happy_blue);
             } else {
-                setImageView(today_3Image, R.mipmap.sad_red);
-//                today_3Image.setImageResource(R.mipmap.sad_red);
+                today_3Image.setImageResource(R.mipmap.sad_red);
+                warnDay = warnDay + today_3WeekText.getText().toString() + ",";
             }
 
         } else {
-            setImageView(today_3Image, R.mipmap.question_yellow);
-//            today_3Image.setImageResource(R.mipmap.question_yellow);
+            today_3Image.setImageResource(R.mipmap.question_yellow);
+            noDataDay = noDataDay + today_3WeekText.getText().toString() + ",";
             today_3DataLayout.setVisibility(View.GONE);
             today_3NoDataText.setVisibility(View.VISIBLE);
         }
@@ -238,16 +219,15 @@ public class PersonDataPressFourDayFragment extends Fragment {
 
             if (today_2DataHText.getCurrentTextColor() == Color.BLACK
                     && today_2DataLText.getCurrentTextColor() == Color.BLACK) {
-                setImageView(today_2Image, R.mipmap.happy_blue);
-//                today_2Image.setImageResource(R.mipmap.happy_blue);
+                today_2Image.setImageResource(R.mipmap.happy_blue);
             } else {
-                setImageView(today_2Image, R.mipmap.sad_red);
-//                today_2Image.setImageResource(R.mipmap.sad_red);
+                today_2Image.setImageResource(R.mipmap.sad_red);
+                warnDay = warnDay + today_2WeekText.getText().toString() + ",";
             }
 
         } else {
-            setImageView(today_2Image, R.mipmap.question_yellow);
-//            today_2Image.setImageResource(R.mipmap.question_yellow);
+            today_2Image.setImageResource(R.mipmap.question_yellow);
+            noDataDay = noDataDay + today_2WeekText.getText().toString() + ",";
             today_2DataLayout.setVisibility(View.GONE);
             today_2NoDataText.setVisibility(View.VISIBLE);
         }
@@ -265,16 +245,15 @@ public class PersonDataPressFourDayFragment extends Fragment {
 
             if (today_1DataHText.getCurrentTextColor() == Color.BLACK
                     && today_1DataLText.getCurrentTextColor() == Color.BLACK) {
-                setImageView(today_1Image, R.mipmap.happy_blue);
-//                today_1Image.setImageResource(R.mipmap.happy_blue);
+                today_1Image.setImageResource(R.mipmap.happy_blue);
             } else {
-                setImageView(today_1Image, R.mipmap.sad_red);
-//                today_1Image.setImageResource(R.mipmap.sad_red);
+                today_1Image.setImageResource(R.mipmap.sad_red);
+                warnDay = warnDay + "昨天,";
             }
 
         } else {
-            setImageView(today_1Image, R.mipmap.question_yellow);
-//            today_1Image.setImageResource(R.mipmap.question_yellow);
+            today_1Image.setImageResource(R.mipmap.question_yellow);
+            noDataDay = noDataDay + "昨天,";
             today_1DataLayout.setVisibility(View.GONE);
             today_1NoDataText.setVisibility(View.VISIBLE);
         }
@@ -287,6 +266,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
                 .whereGreaterThan(PreDataRow.PDATA_DATETIME, todayStr)
                 .appendOrderDescBy(PreDataRow.PDATA_DATETIME)
                 .limit(0, 1));
+        LiteOrm.releaseMemory();
         if (preDataRows.size() != 0) {
             todayDataLayout.setVisibility(View.VISIBLE);
             todayTimeLayout.setVisibility(View.VISIBLE);
@@ -302,11 +282,10 @@ public class PersonDataPressFourDayFragment extends Fragment {
             if (todayDataText_H.getCurrentTextColor() == Color.BLACK
                     && todayDataText_L.getCurrentTextColor() == Color.BLACK
                     && todayDataText_Hr.getCurrentTextColor() == Color.BLACK) {
-                setImageView(todayImage, R.mipmap.happy_blue);
-//                todayImage.setImageResource(R.mipmap.happy_blue);
+                todayImage.setImageResource(R.mipmap.happy_blue);
             } else {
-                setImageView(todayImage, R.mipmap.sad_red);
-//                todayImage.setImageResource(R.mipmap.sad_red);
+                todayImage.setImageResource(R.mipmap.sad_red);
+                warnDay = warnDay + "今天,";
             }
 
             String todayTime = preDataRows.get(0).getPData_datetime();
@@ -319,8 +298,8 @@ public class PersonDataPressFourDayFragment extends Fragment {
             todayTimeText.setText(todayTime);
 
         } else {
-            setImageView(todayImage, R.mipmap.question_yellow);
-//            todayImage.setImageResource(R.mipmap.question_yellow);
+            todayImage.setImageResource(R.mipmap.question_yellow);
+            noDataDay = noDataDay + "今天,";
             todayDataLayout.setVisibility(View.GONE);
             todayTimeLayout.setVisibility(View.GONE);
             todayNoDataText.setVisibility(View.VISIBLE);
@@ -331,36 +310,11 @@ public class PersonDataPressFourDayFragment extends Fragment {
                 && preDataRows.size() == 0) {
             suggestStr = "最近都沒有測量血壓喔!\n現在就拿起血壓計，關心一下自己吧!";
             personalInfoText.setText(suggestStr);
-        } else if (getImageResource(today_3Image) == R.mipmap.happy_blue
-                && getImageResource(today_2Image) == R.mipmap.happy_blue
-                && getImageResource(today_1Image) == R.mipmap.happy_blue
-                && getImageResource(todayImage) == R.mipmap.happy_blue) {
+        } else if (warnDay.equals("") && noDataDay.equals("")) {
             suggestStr = "最近血壓保持得很好!\n要繼續保持喔!";
             personalInfoText.setText(suggestStr);
         } else {
-            String warnDay = "";
-            String noDataDay = "";
-            if (getImageResource(today_3Image) == R.mipmap.sad_red) {
-                warnDay = warnDay + today_3WeekText.getText().toString() + ",";
-            } else if (getImageResource(today_3Image) == R.mipmap.question_yellow) {
-                noDataDay = noDataDay + today_3WeekText.getText().toString() + ",";
-            }
-            if (getImageResource(today_2Image) == R.mipmap.sad_red) {
-                warnDay = warnDay + today_2WeekText.getText().toString() + ",";
-            } else if (getImageResource(today_2Image) == R.mipmap.question_yellow) {
-                noDataDay = noDataDay + today_2WeekText.getText().toString() + ",";
-            }
-            if (getImageResource(today_1Image) == R.mipmap.sad_red) {
-                warnDay = warnDay + "昨天,";
-            } else if (getImageResource(today_1Image) == R.mipmap.question_yellow) {
-                noDataDay = noDataDay + "昨天,";
-            }
-            if (getImageResource(todayImage) == R.mipmap.sad_red) {
-                warnDay = warnDay + "今天,";
-            } else if (getImageResource(todayImage) == R.mipmap.question_yellow) {
-                noDataDay = noDataDay + "今天,";
-            }
-            if (!warnDay.equals("")){
+            if (!warnDay.equals("")) {
                 suggestStr = suggestStr + warnDay + "血壓異常,\n";
             } else if (!noDataDay.equals("")) {
                 suggestStr = suggestStr + noDataDay + "沒有量測,\n";
@@ -368,6 +322,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
             suggestStr = suggestStr + "要多注意身體狀況喔!";
             personalInfoText.setText(suggestStr);
         }
+        mainDB.close();
     }
 
 
@@ -378,13 +333,16 @@ public class PersonDataPressFourDayFragment extends Fragment {
      *
      */
     private ArrayList<PreAvgRow> getOnePreAvgRow(String startDate, String endDate) {
-        return mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
+        ArrayList<PreAvgRow> arrayList;
+        arrayList = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
                 .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
                 .whereAppendAnd()
                 .whereGreaterThan(PreAvgRow.PAVG_DATETIME, startDate)
                 .whereAppendAnd()
                 .whereLessThan(PreAvgRow.PAVG_DATETIME, endDate)
                 .limit(0, 1));
+        LiteOrm.releaseMemory();
+        return arrayList;
     }
 
     private void setTvValueColor(TextView Tv, int Value, String valueFlag) {
@@ -425,14 +383,5 @@ public class PersonDataPressFourDayFragment extends Fragment {
                 }
                 break;
         }
-    }
-
-    private void setImageView(ImageView Imv, int resId) {
-        Imv.setImageResource(resId);
-        Imv.setTag(resId);
-    }
-
-    private int getImageResource(ImageView iv) {
-        return (Integer) iv.getTag();
     }
 }

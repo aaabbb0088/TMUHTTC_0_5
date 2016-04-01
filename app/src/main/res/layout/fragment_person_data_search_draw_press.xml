@@ -25,7 +25,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近一周"
             android:textOn="近一周"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
 
         <ToggleButton
             android:id="@+id/forteenDayDayBtn"
@@ -36,7 +37,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近二周"
             android:textOn="近二周"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
 
         <ToggleButton
             android:id="@+id/thirtyDayBtn"
@@ -47,7 +49,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近一個月"
             android:textOn="近一個月"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
     </LinearLayout>
 
     <LinearLayout

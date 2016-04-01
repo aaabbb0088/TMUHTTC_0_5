@@ -215,14 +215,8 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
             WLevelShrPref wLevelShrPref = new WLevelShrPref(getActivity());
             Calendar clr = Calendar.getInstance(Locale.TAIWAN);
             clr.add(Calendar.DAY_OF_MONTH, -1);
-            Date todayDate = clr.getTime();
             String todayStr = myDateSFormat.getFrmt_yMd().format(new Date());
-            try {
-                todayDate = myDateSFormat.getFrmt_yMd().parse(todayStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            todayStr = myDateSFormat.getFrmt_yMdHm().format(todayDate);
+            todayStr = todayStr + " 00:00";
 
             /**
              * 血壓
@@ -233,6 +227,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     .whereGreaterThan(PreDataRow.PDATA_DATETIME, todayStr)
                     .appendOrderDescBy(PreDataRow.PDATA_DATETIME)
                     .limit(0, 1));
+            LiteOrm.releaseMemory();
             if (preDataRows.size() != 0) {
                 //更新數據
                 String pressValue = String.valueOf(preDataRows.get(0).getPData_sys()) + " / "
@@ -246,6 +241,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     e.printStackTrace();
                 }
                 pressDateText.setText(pressTime);
+                pressUnitText.setVisibility(View.VISIBLE);
 
                 //更新顏色
                 MyPressPsnJudgment myPressPsnJudgment =
@@ -269,6 +265,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         .whereEquals(PreThumbRow.PDATA_THUMB_TABLE_ID, preDataRows.get(0).getPData_table_id())
                         .appendOrderDescBy(PreThumbRow.PDATA_THUMB_DATETIME)
                         .limit(0, 1));
+                LiteOrm.releaseMemory();
                 if (preThumbRows.size() != 0) {
                     if (preThumbRows.get(0).getPData_thumb_count() == 0) {
                         pressThumbTv.setVisibility(View.GONE);
@@ -286,6 +283,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 pressValueText.setText("沒有資料");
                 presslayout.setBackgroundResource(R.drawable.background_person_data_nodata);
                 pressDateText.setText("");
+                pressUnitText.setVisibility(View.INVISIBLE);
                 pressThumbTv.setVisibility(View.GONE);
 
                 pressDataBtnsetting(false);
@@ -301,6 +299,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     .whereGreaterThan(GlyDataRow.GDATA_DATETIME, todayStr)
                     .appendOrderDescBy(GlyDataRow.GDATA_DATETIME)
                     .limit(0, 1));
+            LiteOrm.releaseMemory();
             if (glyDataRows.size() != 0) {
                 //更新數據
                 String glyData = glyDataRows.get(0).getGData_meal_flag();
@@ -320,6 +319,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     e.printStackTrace();
                 }
                 glycemiaDateText.setText(glyDataTime);
+                glycemiaUnitText.setVisibility(View.VISIBLE);
 
                 //更新顏色
                 MyGlycemiaPsnJudgment myGlycemiaPsnJudgment =
@@ -343,6 +343,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         .whereEquals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
                         .appendOrderDescBy(GlyThumbRow.GDATA_THUMB_DATETIME)
                         .limit(0, 1));
+                LiteOrm.releaseMemory();
                 if (glyThumbRows.size() != 0) {
                     if (glyThumbRows.get(0).getGData_thumb_count() == 0) {
                         glycemiaThumbTv.setVisibility(View.GONE);
@@ -360,64 +361,12 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 glycemiaValueText.setText("沒有資料");
                 glycemialayout.setBackgroundResource(R.drawable.background_person_data_nodata);
                 glycemiaDateText.setText("");
+                glycemiaUnitText.setVisibility(View.INVISIBLE);
                 glycemiaThumbTv.setVisibility(View.GONE);
 
                 glycemiaDataBtnsetting(false);
             }
-
-
-            //調整Tab0 警示顏色
-
-//            int BP_SY_Max = wLevelShrPref.getBP_SY_Max();
-//            int BP_SY_Min = wLevelShrPref.getBP_SY_Min();
-//            int BP_DI_Max = wLevelShrPref.getBP_DI_Max();
-//            int BP_DI_Min = wLevelShrPref.getBP_DI_Min();
-//            int BP_SY_MaxDang = wLevelShrPref.getBP_SY_MaxDang();
-//            int BP_SY_MinDang = wLevelShrPref.getBP_SY_MinDang();
-//            int BP_DI_MaxDang = wLevelShrPref.getBP_DI_MaxDang();
-//            int BP_DI_MinDang = wLevelShrPref.getBP_DI_MinDang();
-//            int sysValue = preDataRows.get(0).getPData_sys();
-//            int diaValue = preDataRows.get(0).getPData_dia();
-//            if (BP_SY_Min <= sysValue && sysValue <= BP_SY_Max
-//                    && BP_DI_Min <= diaValue && diaValue <= BP_DI_Max) {
-//                presslayout.setBackgroundResource(R.drawable.selector_presslayout);
-//            } else if (BP_SY_MaxDang < sysValue || BP_DI_MaxDang < diaValue ||
-//                    sysValue < BP_SY_MinDang || diaValue < BP_DI_MinDang) {
-//                presslayout.setBackgroundResource(R.drawable.selector_redlayout);
-//            } else {
-//                presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
-//            }
-
-//            int BG_BM_Max = wLevelShrPref.getBG_BM_Max();
-//            int BG_BM_Min = wLevelShrPref.getBG_BM_Min();
-//            int BG_AM_Max = wLevelShrPref.getBG_AM_Max();
-//            int BG_AM_Min = wLevelShrPref.getBG_AM_Min();
-//            int BG_BM_MaxDang = wLevelShrPref.getBG_BM_MaxDang();
-//            int BG_BM_MinDang = wLevelShrPref.getBG_BM_MinDang();
-//            int BG_AM_MaxDang = wLevelShrPref.getBG_AM_MaxDang();
-//            int BG_AM_MinDang = wLevelShrPref.getBG_AM_MinDang();
-//            int glyValue = glyDataRows.get(0).getGData_value();
-//            String glyMealFlag = glyDataRows.get(0).getGData_meal_flag();
-//            switch (glyMealFlag) {
-//                case "af":
-//                    if (BG_AM_Min <= glyValue && glyValue <= BG_AM_Max) {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
-//                    } else if (glyValue < BG_AM_MinDang || BG_AM_MaxDang < glyValue) {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
-//                    } else {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
-//                    }
-//                    break;
-//                default:
-//                    if (BG_BM_Min <= glyValue && glyValue <= BG_BM_Max) {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
-//                    } else if (glyValue < BG_BM_MinDang || BG_BM_MaxDang < glyValue) {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
-//                    } else {
-//                        glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
-//                    }
-//                    break;
-//            }
+            mainDB.close();
         }
     }
 

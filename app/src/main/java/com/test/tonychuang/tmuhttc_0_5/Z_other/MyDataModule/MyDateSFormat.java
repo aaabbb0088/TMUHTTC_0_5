@@ -38,4 +38,8 @@ public class MyDateSFormat {
     public SimpleDateFormat getFrmt_ahm() {
         return new SimpleDateFormat("a h:mm", Locale.TAIWAN);
     }
+
+    public SimpleDateFormat getFrmt_Md() {
+        return new SimpleDateFormat("M/d", Locale.TAIWAN);
+    }
 }
