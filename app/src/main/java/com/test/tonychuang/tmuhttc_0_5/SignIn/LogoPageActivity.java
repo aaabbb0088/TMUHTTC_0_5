@@ -97,7 +97,7 @@ public class LogoPageActivity extends AppCompatActivity {
         if (signInShrPref.getSignInStatus()) {
             if (!signInShrPref.getPID().equals("error")) {
                 try {
-                    if (7 >= differ(myDateSFormat.getM2CFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
+                    if (7 >= differ(myDateSFormat.getFrmt_yMd().parse(signInShrPref.getSignInDatetime()), new Date())) {
                         //處理TextShow與自動登入時間不定誰長問題(主要問題:登入時間短於2.5秒，TextShow尚未跑完)
                         asyncTask = new AsyncTask<String, Void, String>() {
                             @Override

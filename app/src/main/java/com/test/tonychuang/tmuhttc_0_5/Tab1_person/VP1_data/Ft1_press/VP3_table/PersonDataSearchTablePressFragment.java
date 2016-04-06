@@ -153,6 +153,7 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
         tableLayout = (LinearLayout) view.findViewById(R.id.tableLayout);
         loadStatusText = (TextView) view.findViewById(R.id.loadStatusText);
         listViewItemName = (ListView) view.findViewById(R.id.listViewItemName);
+        listViewItemName.setEnabled(false);
         listViewData = (ListView) view.findViewById(R.id.listViewData);
 
         allBtn = (RadioButton) view.findViewById(R.id.allBtn);
@@ -262,6 +263,10 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
         int dataSize = preDataRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            loadStatusText.setVisibility(View.VISIBLE);
+            tableLayout.setVisibility(View.GONE);
+            listViewItemName.setAdapter(
+                    new PersonDataSearchTablePressItemNameListviewAdapter(getActivity(), dataFlag));
             setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);

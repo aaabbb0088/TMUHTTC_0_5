@@ -15,10 +15,6 @@ public class MyDateSFormat {
         return new SimpleDateFormat("yyyy/MM/dd a hh:mm", Locale.TAIWAN);
     }
 
-    public SimpleDateFormat getM2CFrmt_yMd() {
-        return new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
-    }
-
     public SimpleDateFormat getFrmt_yMd() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
     }

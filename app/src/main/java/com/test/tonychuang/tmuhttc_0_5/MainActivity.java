@@ -1010,7 +1010,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     super.onPostExecute(glyThumbRows);
                     if (glyThumbRows != null) {
                         mainDB.delete(new WhereBuilder(GlyThumbRow.class)
-                                .equals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
                                 .equals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID()));
                         if (glyThumbRows.size() != 0) {
                             for (int i = 0; i < glyThumbRows.size(); i++) {

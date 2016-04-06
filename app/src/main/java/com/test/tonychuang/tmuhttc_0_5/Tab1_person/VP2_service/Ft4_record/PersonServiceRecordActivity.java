@@ -1,17 +1,31 @@
 package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP2_service.Ft4_record;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.DataBase;
+import com.litesuits.orm.db.assit.QueryBuilder;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyInitReturnBar;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyPopuTimeWheel;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SRcrdRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
-import java.text.SimpleDateFormat;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -23,11 +37,22 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
     private ImageButton searchBtn;
     private MyPopuTimeWheel myPopuTimeWheel;
     private MyInitReturnBar myInitReturnBar;
+    private ToggleButton sevenDayBtn;
+    private ToggleButton thirtyDayBtn;
+    private TextView loadStatusText;
+    private ListView listViewItemName;
+    private ListView listViewData;
 
-    private SimpleDateFormat dateFormat;
+    private MyDateSFormat myDateSFormat;
     private int unChangeTextColor = Color.GRAY;
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
+
+    private ArrayList<SRcrdRow> oneWeekData;
+    private ArrayList<SRcrdRow> oneMounthData;
+    private ArrayList<SRcrdRow> nowRcdDataRows;
+
+    private SignInShrPref signInShrPref;
 
 
     @Override
@@ -38,6 +63,7 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         initBar();
         initData();
         initView();
+        initBtn();
     }
 
     @Override
@@ -45,13 +71,23 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         switch (v.getId()) {
             case R.id.startDateTv:
                 myPopuTimeWheel = new MyPopuTimeWheel(PersonServiceRecordActivity.this, startDateTv, endDateTv, 2, 1);
+                searchBtn.setEnabled(true);
                 break;
             case R.id.endDateTv:
                 myPopuTimeWheel = new MyPopuTimeWheel(PersonServiceRecordActivity.this, endDateTv, startDateTv, 2, 1);
+                searchBtn.setEnabled(true);
                 break;
             case R.id.searchBtn:
                 startDateTv.setTextColor(unChangeTextColor);
                 endDateTv.setTextColor(unChangeTextColor);
+                setDateBtntrue();
+                getRcdData();
+                break;
+            case R.id.sevenDayBtn:
+                setDateBtn(sevenDayBtn);
+                break;
+            case R.id.thirtyDayBtn:
+                setDateBtn(thirtyDayBtn);
                 break;
         }
     }
@@ -77,10 +113,69 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         searchBtn.setOnClickListener(this);
 
         //<code>test code</code>
-        startDateTv.setText(dateFormat.format(new Date()));
+        startDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
         startDateTv.setTextColor(Color.GRAY);
-        endDateTv.setText(dateFormat.format(new Date()));
+        endDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
         endDateTv.setTextColor(Color.GRAY);
+
+        sevenDayBtn = (ToggleButton) findViewById(R.id.sevenDayBtn);
+        sevenDayBtn.setOnClickListener(this);
+        thirtyDayBtn = (ToggleButton) findViewById(R.id.thirtyDayBtn);
+        thirtyDayBtn.setOnClickListener(this);
+        loadStatusText = (TextView) findViewById(R.id.loadStatusText);
+        listViewItemName = (ListView) findViewById(R.id.listViewItemName);
+        listViewItemName.setEnabled(false);
+        listViewData = (ListView) findViewById(R.id.listViewData);
+    }
+
+    private void initBtn() {
+        setDateBtn(sevenDayBtn);
+        sevenDayBtn.setChecked(true);
+        searchBtn.setEnabled(false);
+    }
+
+    private void setDateBtn(ToggleButton Btn) {
+        sevenDayBtn.setEnabled(true);
+        thirtyDayBtn.setEnabled(true);
+        switch (Btn.getId()) {
+            case R.id.sevenDayBtn:
+                sevenDayBtn.setEnabled(false);
+                thirtyDayBtn.setChecked(false);
+                showResult(oneWeekData);
+                nowRcdDataRows = oneWeekData;
+                break;
+            case R.id.thirtyDayBtn:
+                sevenDayBtn.setChecked(false);
+                thirtyDayBtn.setEnabled(false);
+                showResult(oneMounthData);
+                nowRcdDataRows = oneMounthData;
+                break;
+        }
+        if (nowRcdDataRows.size() != 0) {
+            startDateTv.setText(nowRcdDataRows.get(nowRcdDataRows.size() - 1).getSRcrd_datetime().substring(0, 10));
+            startDateTv.setTextColor(unChangeTextColor);
+            endDateTv.setText(nowRcdDataRows.get(0).getSRcrd_datetime().substring(0, 10));
+            endDateTv.setTextColor(unChangeTextColor);
+        } else {
+            startDateTv.setText("-");
+            startDateTv.setTextColor(unChangeTextColor);
+            endDateTv.setText("-");
+            endDateTv.setTextColor(unChangeTextColor);
+        }
+    }
+
+    private void setDateBtntrue() {
+        sevenDayBtn.setEnabled(true);
+        thirtyDayBtn.setEnabled(true);
+        sevenDayBtn.setChecked(false);
+        thirtyDayBtn.setChecked(false);
+    }
+
+    private void setDateBtnfalse() {
+        sevenDayBtn.setEnabled(false);
+        thirtyDayBtn.setEnabled(false);
+        sevenDayBtn.setChecked(false);
+        thirtyDayBtn.setChecked(false);
     }
 
 
@@ -90,6 +185,20 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
     /**
      *
      */
+    private void showResult(ArrayList<SRcrdRow> sRcrdRows) {
+        int dataSize = sRcrdRows.size();
+        if (dataSize == 0) {
+            loadStatusText.setText("無資料");
+            loadStatusText.setVisibility(View.VISIBLE);
+            listViewData.setVisibility(View.GONE);
+            listViewItemName.setAdapter(new PersonServiceRecordItemNameListviewAdapter(this));
+        } else {
+            loadStatusText.setVisibility(View.GONE);
+            listViewData.setVisibility(View.VISIBLE);
+            listViewItemName.setAdapter(new PersonServiceRecordItemNameListviewAdapter(this));
+            listViewData.setAdapter(new PersonServiceRecordListviewAdapter(this, sRcrdRows));
+        }
+    }
 
 
 
@@ -99,9 +208,77 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
     /**
      *
      */
-
     private void initData() {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        myDateSFormat = new MyDateSFormat();
+        signInShrPref = new SignInShrPref(this);
+
+        DataBase mainDB = LiteOrm.newSingleInstance(this, signInShrPref.getAID());
+
+        Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        clr.add(Calendar.WEEK_OF_MONTH, -1);
+        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneWeekDateStr = oneWeekDateStr + " 00:00";
+        clr = Calendar.getInstance(Locale.TAIWAN);
+        clr.add(Calendar.MONTH, -1);
+        String oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneMounthDateStr = oneMounthDateStr + " 00:00";
+
+        oneWeekData = mainDB.query(new QueryBuilder<SRcrdRow>(SRcrdRow.class)
+                .whereEquals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                .whereAppendAnd()
+                .whereGreaterThan(SRcrdRow.SRCRD_DATETIME, oneWeekDateStr)
+                .appendOrderDescBy(SRcrdRow.SRCRD_DATETIME));
+        LiteOrm.releaseMemory();
+        oneMounthData = mainDB.query(new QueryBuilder<SRcrdRow>(SRcrdRow.class)
+                .whereEquals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                .whereAppendAnd()
+                .whereGreaterThan(SRcrdRow.SRCRD_DATETIME, oneMounthDateStr)
+                .appendOrderDescBy(SRcrdRow.SRCRD_DATETIME));
+        LiteOrm.releaseMemory();
+        mainDB.close();
+    }
+
+    private void getRcdData() {
+        String sqlStartTime = startDateTv.getText().toString() + " 00:00";
+        String sqlEndTime = endDateTv.getText().toString() + " 23:59";
+
+        new AsyncTask<String, Void, ArrayList<SRcrdRow>>() {
+            @Override
+            protected ArrayList<SRcrdRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<SRcrdRow> sRcrdRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateRecordListTableData(params[0], params[1], params[2]);
+                    sRcrdRows = jsonParser.parseSRcrdRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return sRcrdRows;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                searchBtn.setEnabled(false);
+                searchBtn.setImageResource(R.mipmap.chartsearch_g);
+                setDateBtnfalse();
+                loadStatusText.setText("資料載入中");
+                loadStatusText.setVisibility(View.VISIBLE);
+                listViewData.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<SRcrdRow> sRcrdRows) {
+                super.onPostExecute(sRcrdRows);
+                nowRcdDataRows = sRcrdRows;
+                searchBtn.setImageResource(R.mipmap.chartsearch_wi_g);
+                setDateBtntrue();
+                showResult(sRcrdRows);
+            }
+        }.execute(signInShrPref.getSID(), sqlStartTime, sqlEndTime);
     }
 
 

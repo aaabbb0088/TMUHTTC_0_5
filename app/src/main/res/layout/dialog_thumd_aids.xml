@@ -5,12 +5,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/aidsListView"
+        android:layout_weight="1" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -178,4 +185,5 @@
             android:text="關閉"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
+
 </LinearLayout>

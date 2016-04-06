@@ -2,6 +2,7 @@ package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft2_glycemia.VP3_ta
 
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,11 +20,15 @@ import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.DataBase;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyPopuTimeWheel;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,7 +106,7 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
                 startDateTv.setTextColor(unChangeTextColor);
                 endDateTv.setTextColor(unChangeTextColor);
                 setDateBtntrue();
-//                getPreData();
+                getGlyData();
                 break;
             case R.id.sevenDayBtn:
                 setDateBtn(sevenDayBtn);
@@ -122,7 +127,6 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
     /**
      *
      */
-
     private void initView() {
         startDateTv = (TextView) view.findViewById(R.id.startDateTv);
         startDateTv.setOnClickListener(this);
@@ -149,6 +153,7 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         tableLayout = (LinearLayout) view.findViewById(R.id.tableLayout);
         loadStatusText = (TextView) view.findViewById(R.id.loadStatusText);
         listViewItemName = (ListView) view.findViewById(R.id.listViewItemName);
+        listViewItemName.setEnabled(false);
         listViewData = (ListView) view.findViewById(R.id.listViewData);
 
         allBtn = (RadioButton) view.findViewById(R.id.allBtn);
@@ -254,6 +259,10 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         int dataSize = glyDataRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            loadStatusText.setVisibility(View.VISIBLE);
+            tableLayout.setVisibility(View.GONE);
+            listViewItemName.setAdapter(
+                    new PersonDataSearchTableGlycemiaItemNameListviewAdapter(getActivity()));
             setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);
@@ -279,7 +288,6 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
     /**
      *
      */
-
     private void initData() {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         myDateSFormat = new MyDateSFormat();
@@ -319,6 +327,51 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
                 .appendOrderAscBy(GlyDataRow.GDATA_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();
+    }
+
+    private void getGlyData() {
+        String sqlStartTime = startDateTv.getText().toString() + " 00:00";
+        String sqlEndTime = endDateTv.getText().toString() + " 23:59";
+
+        new AsyncTask<String, Void, ArrayList<GlyDataRow>>() {
+            @Override
+            protected ArrayList<GlyDataRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<GlyDataRow> glyDataRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateGlycemiaListTableData(params[0], params[1], params[2]);
+                    glyDataRows = jsonParser.parseGlyDataRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return glyDataRows;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                searchBtn.setEnabled(false);
+                searchBtn.setImageResource(R.mipmap.chartsearch_g);
+                setDateBtnfalse();
+                dataRadioGroup.setEnabled(false);
+                loadStatusText.setText("資料載入中");
+                loadStatusText.setVisibility(View.VISIBLE);
+                tableLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<GlyDataRow> glyDataRows) {
+                super.onPostExecute(glyDataRows);
+                nowGlyDataRows = glyDataRows;
+                searchBtn.setImageResource(R.mipmap.chartsearch_wi_g);
+                setDateBtntrue();
+                dataRadioGroup.setEnabled(true);
+                showResult(glyDataRows);
+            }
+        }.execute(signInShrPref.getSID(), sqlStartTime, sqlEndTime);
     }
 
 

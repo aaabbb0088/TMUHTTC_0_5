@@ -3,6 +3,7 @@ package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft1_press.PersonData
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft2_glycemia.PersonDataGlycemiaActivity;
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgGlycemiaActivity;
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgPressActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyGlycemiaPsnJudgment;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyPressPsnJudgment;
@@ -32,6 +36,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
+
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -63,6 +69,10 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     private LinearLayout pressThbBtn;
     private LinearLayout glycemiaThbBtn;
     private View view;
+
+    private SignInShrPref signInShrPref;
+    private ArrayList<PreThumbRow> preThumbRows;
+    private ArrayList<GlyThumbRow> glyThumbRows;
 
 
     public PersonDataFragment() {
@@ -100,10 +110,12 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.pressThbBtn:
-                Toast.makeText(getActivity(), "press +1 ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "press +1 ", Toast.LENGTH_SHORT).show();
+                pressThbPlus();
                 break;
             case R.id.glycemiaThbBtn:
-                Toast.makeText(getActivity(), "glycemia +1", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "glycemia +1", Toast.LENGTH_SHORT).show();
+                glycemiaThbPlus();
                 break;
         }
     }
@@ -112,10 +124,10 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.pressThbBtn:
-                thumbAlertDialog();
+                thumbAlertDialog("P");
                 break;
             case R.id.glycemiaThbBtn:
-                thumbAlertDialog();
+                thumbAlertDialog("G");
                 break;
         }
         return true;
@@ -158,11 +170,19 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
      * List選單 對話框
      */
     //之後改成加入參數(要塞入listView的資料)
-    private void thumbAlertDialog() {
+    private void thumbAlertDialog(String Flag) {
         //之後把Layout改成listView(頭像+暱稱)，處理完按讚資料後，塞入listView
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_thumd_aids, null);
         TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
-
+        ListView aidsListView = (ListView) dialogView.findViewById(R.id.aidsListView);
+        switch (Flag){
+            case "P":
+                aidsListView.setAdapter(new ThbAidsAdapter(getActivity(), preThumbRows, Flag));
+                break;
+            case "G":
+                aidsListView.setAdapter(new ThbAidsAdapter(getActivity(), glyThumbRows, Flag));
+                break;
+        }
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setTitle("按讚好友")
                 .setView(dialogView)
@@ -206,7 +226,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
      *
      */
     public void initData() {
-        SignInShrPref signInShrPref = new SignInShrPref(getActivity());
+        signInShrPref = new SignInShrPref(getActivity());
         if (signInShrPref.getMemberFlag()) {
 
             //更新Tab0 數據資料、警示顏色
@@ -261,7 +281,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 }
 
                 //更新按讚數
-                ArrayList<PreThumbRow> preThumbRows = mainDB.query(new QueryBuilder<PreThumbRow>(PreThumbRow.class)
+                preThumbRows = mainDB.query(new QueryBuilder<PreThumbRow>(PreThumbRow.class)
                         .whereEquals(PreThumbRow.PDATA_THUMB_TABLE_ID, preDataRows.get(0).getPData_table_id())
                         .appendOrderDescBy(PreThumbRow.PDATA_THUMB_DATETIME)
                         .limit(0, 1));
@@ -273,12 +293,20 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         pressThumbTv.setVisibility(View.VISIBLE);
                         pressThumbTv.setText(String.valueOf(preThumbRows.get(0).getPData_thumb_count()));
                     }
+
+                    //檢查是否按過讚
+                    String[] tokens = preThumbRows.get(0).getPData_thumb_aids().split(",");
+                    pressDataBtnsetting(true);
+                    for (String token : tokens) {
+                        if (token.equals(signInShrPref.getAID())) {
+                            setThbBtnFalseBackground(pressThbBtn);
+                        }
+                    }
                 } else {
                     pressThumbTv.setVisibility(View.GONE);
+                    //設定按鈕
+                    pressDataBtnsetting(true);
                 }
-
-                //設定按鈕
-                pressDataBtnsetting(true);
             } else {
                 pressValueText.setText("沒有資料");
                 presslayout.setBackgroundResource(R.drawable.selector_nodatalayout);
@@ -339,8 +367,8 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 }
 
                 //更新按讚數
-                ArrayList<GlyThumbRow> glyThumbRows = mainDB.query(new QueryBuilder<GlyThumbRow>(GlyThumbRow.class)
-                        .whereEquals(GlyThumbRow.GDATA_THUMB_SID, signInShrPref.getSID())
+                glyThumbRows = mainDB.query(new QueryBuilder<GlyThumbRow>(GlyThumbRow.class)
+                        .whereEquals(GlyThumbRow.GDATA_THUMB_TABLE_ID, glyDataRows.get(0).getGData_table_id())
                         .appendOrderDescBy(GlyThumbRow.GDATA_THUMB_DATETIME)
                         .limit(0, 1));
                 LiteOrm.releaseMemory();
@@ -351,12 +379,20 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         glycemiaThumbTv.setVisibility(View.VISIBLE);
                         glycemiaThumbTv.setText(String.valueOf(glyThumbRows.get(0).getGData_thumb_count()));
                     }
+
+                    //檢查是否按過讚
+                    String[] tokens = glyThumbRows.get(0).getGData_thumb_aids().split(",");
+                    glycemiaDataBtnsetting(true);
+                    for (String token : tokens) {
+                        if (token.equals(signInShrPref.getAID())) {
+                            setThbBtnFalseBackground(glycemiaThbBtn);
+                        }
+                    }
                 } else {
                     glycemiaThumbTv.setVisibility(View.GONE);
+                    //更新按鈕
+                    glycemiaDataBtnsetting(true);
                 }
-
-                //更新按鈕
-                glycemiaDataBtnsetting(true);
             } else {
                 glycemiaValueText.setText("沒有資料");
                 glycemialayout.setBackgroundResource(R.drawable.selector_nodatalayout);
@@ -377,13 +413,124 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     /**
      *
      */
-    private void pressDataBtnsetting(boolean bool){
+    private void pressDataBtnsetting(boolean bool) {
         pressThbBtn.setEnabled(bool);
         pressMsgBtn.setEnabled(bool);
+        if (bool) {
+            pressThbBtn.setBackgroundResource(R.drawable.selector_thumbbtn);
+            pressMsgBtn.setBackgroundResource(R.drawable.selector_msgbtn);
+        } else {
+            pressThbBtn.setBackgroundResource(R.drawable.background_person_data_thumb_true);
+            pressMsgBtn.setBackgroundResource(R.drawable.background_person_data_message_true);
+        }
     }
 
-    private void glycemiaDataBtnsetting(boolean bool){
+    private void glycemiaDataBtnsetting(boolean bool) {
         glycemiaThbBtn.setEnabled(bool);
         glycemiaMsgBtn.setEnabled(bool);
+        if (bool) {
+            glycemiaThbBtn.setBackgroundResource(R.drawable.selector_thumbbtn);
+            glycemiaMsgBtn.setBackgroundResource(R.drawable.selector_msgbtn);
+        } else {
+            glycemiaThbBtn.setBackgroundResource(R.drawable.background_person_data_thumb_true);
+            glycemiaMsgBtn.setBackgroundResource(R.drawable.background_person_data_message_true);
+        }
+    }
+
+    private void pressThbPlus() {
+        if (getDrawableId(pressThbBtn) != R.drawable.background_person_data_thumb_true) {
+            new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
+                @Override
+                protected ArrayList<PreThumbRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<PreThumbRow> preThumbRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.pressThumbPlus(params[0], params[1]);
+                        preThumbRows = jsonParser.parsePreThumbRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return preThumbRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<PreThumbRow> preThumbRows) {
+                    super.onPostExecute(preThumbRows);
+                    if (preThumbRows != null) {
+                        if (preThumbRows.size() != 0){
+                            DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+                            mainDB.update(preThumbRows.get(0));
+                            pressThumbTv.setText(String.valueOf(preThumbRows.get(0).getPData_thumb_count()));
+                            pressThumbTv.setVisibility(View.VISIBLE);
+                            setThbBtnFalseBackground(pressThbBtn);
+                            PersonDataFragment.this.preThumbRows = new ArrayList<PreThumbRow>();
+                            PersonDataFragment.this.preThumbRows.addAll(preThumbRows);
+                            LiteOrm.releaseMemory();
+                            mainDB.close();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "網路不穩，請稍後再試", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }.execute(String.valueOf(preThumbRows.get(0).getPData_thumb_table_id()), signInShrPref.getAID());
+        }
+    }
+
+    private void glycemiaThbPlus() {
+        if (getDrawableId(glycemiaThbBtn) != R.drawable.background_person_data_thumb_true) {
+            new AsyncTask<String, Void, ArrayList<GlyThumbRow>>() {
+                @Override
+                protected ArrayList<GlyThumbRow> doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    ArrayList<GlyThumbRow> glyThumbRows = null;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.glycemiaThumbPlus(params[0], params[1]);
+                        glyThumbRows = jsonParser.parseGlyThumbRow(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return glyThumbRows;
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<GlyThumbRow> glyThumbRows) {
+                    super.onPostExecute(glyThumbRows);
+                    if (glyThumbRows != null) {
+                        if (glyThumbRows.size() != 0){
+                            DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+                            mainDB.update(glyThumbRows.get(0));
+                            glycemiaThumbTv.setText(String.valueOf(glyThumbRows.get(0).getGData_thumb_count()));
+                            glycemiaThumbTv.setVisibility(View.VISIBLE);
+                            setThbBtnFalseBackground(glycemiaThbBtn);
+                            PersonDataFragment.this.glyThumbRows = new ArrayList<GlyThumbRow>();
+                            PersonDataFragment.this.glyThumbRows.addAll(glyThumbRows);
+                            LiteOrm.releaseMemory();
+                            mainDB.close();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "網路不穩，請稍後再試", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }.execute(String.valueOf(glyThumbRows.get(0).getGData_thumb_table_id()), signInShrPref.getAID());
+        }
+    }
+
+    private void setThbBtnFalseBackground(LinearLayout linearLayout) {
+        linearLayout.setBackgroundResource(R.drawable.background_person_data_thumb_true);
+        linearLayout.setTag(R.drawable.background_person_data_thumb_true);
+    }
+
+    private int getDrawableId(LinearLayout linearLayout) {
+        int result = 0;
+        if(linearLayout.getTag() != null){
+            result = (Integer) linearLayout.getTag();
+        }
+        return result;
     }
 }

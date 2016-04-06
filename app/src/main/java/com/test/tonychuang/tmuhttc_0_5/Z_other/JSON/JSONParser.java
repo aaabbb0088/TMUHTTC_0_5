@@ -497,7 +497,7 @@ public class JSONParser {
                         jsonObj.getString("SMed_sid"),
                         jsonObj.getLong("SMed_table_id"),
                         jsonObj.getString("SMed_datetime"),
-                        jsonObj.getString("SMed_bm")
+                        jsonObj.getString("SMed_medname")
                 ));
             }
 

@@ -700,6 +700,84 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject UpdateGlycemiaListTableData(String sid,String startDate,String endDate) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateGlycemiaListTableData");
+        p.put("sid",mapObject(sid));
+        p.put("startDate",mapObject(startDate));
+        p.put("endDate",mapObject(endDate));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateMedicineListTableData(String sid,String startDate,String endDate) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateMedicineListTableData");
+        p.put("sid",mapObject(sid));
+        p.put("startDate",mapObject(startDate));
+        p.put("endDate",mapObject(endDate));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateRecordListTableData(String sid,String startDate,String endDate) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateRecordListTableData");
+        p.put("sid",mapObject(sid));
+        p.put("startDate",mapObject(startDate));
+        p.put("endDate",mapObject(endDate));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject pressThumbPlus(String tableId,String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "pressThumbPlus");
+        p.put("tableId",mapObject(tableId));
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject glycemiaThumbPlus(String tableId,String aid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "glycemiaThumbPlus");
+        p.put("tableId",mapObject(tableId));
+        p.put("aid",mapObject(aid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

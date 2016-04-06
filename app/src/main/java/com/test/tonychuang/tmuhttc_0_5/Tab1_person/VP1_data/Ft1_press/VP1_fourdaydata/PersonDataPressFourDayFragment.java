@@ -316,7 +316,9 @@ public class PersonDataPressFourDayFragment extends Fragment {
         } else {
             if (!warnDay.equals("")) {
                 suggestStr = suggestStr + warnDay + "血壓異常,\n";
-            } else if (!noDataDay.equals("")) {
+            }
+
+            if (!noDataDay.equals("")) {
                 suggestStr = suggestStr + noDataDay + "沒有量測血壓,\n";
             }
             suggestStr = suggestStr + "要多注意身體狀況喔!";

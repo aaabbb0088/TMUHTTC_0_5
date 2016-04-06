@@ -14,7 +14,7 @@ public class SMedRow extends BaseModel {
     public static final String SMED_SID = "SMed_sid";
     public static final String SMED_TABLE_ID = "SMed_table_id";
     public static final String SMED_DATETIME = "SMed_datetime";
-    public static final String SMED_BM = "SMed_bm";
+    public static final String SMED_MEDNAME = "SMed_medname";
 
     @NotNull
     private String SMed_sid;
@@ -23,16 +23,16 @@ public class SMedRow extends BaseModel {
     @NotNull
     private String SMed_datetime;
     @NotNull
-    private String SMed_bm;
+    private String SMed_medname;
 
     public SMedRow() {
     }
 
-    public SMedRow(String SMed_sid, long SMed_table_id, String SMed_datetime, String SMed_bm) {
+    public SMedRow(String SMed_sid, long SMed_table_id, String SMed_datetime, String SMed_medname) {
         this.SMed_sid = SMed_sid;
         this.SMed_table_id = SMed_table_id;
         this.SMed_datetime = SMed_datetime;
-        this.SMed_bm = SMed_bm;
+        this.SMed_medname = SMed_medname;
     }
 
     public String getSMed_sid() {
@@ -59,12 +59,12 @@ public class SMedRow extends BaseModel {
         this.SMed_datetime = SMed_datetime;
     }
 
-    public String getSMed_bm() {
-        return SMed_bm;
+    public String getSMed_medname() {
+        return SMed_medname;
     }
 
-    public void setSMed_bm(String SMed_bm) {
-        this.SMed_bm = SMed_bm;
+    public void setSMed_medname(String SMed_medname) {
+        this.SMed_medname = SMed_medname;
     }
 
     public ArrayList<String> getColumnNameAry(){
@@ -72,7 +72,7 @@ public class SMedRow extends BaseModel {
         arrayList.add("SMed_sid");
         arrayList.add("SMed_table_id");
         arrayList.add("SMed_datetime");
-        arrayList.add("SMed_bm");
+        arrayList.add("SMed_medname");
         return arrayList;
     }
 
