@@ -22,8 +22,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HTTCJSONAPI {
+
 //    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
     private final String urlString = "http://10.15.2.113:9999/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.0.107:9999/HTTCJSONAPI/Handler.ashx";
 //    private final String urlString = "http://120.97.32.179:9999/Handler.ashx";
 //    private final String urlString = "http://192.168.0.12:9999/HTTCJSONAPI/Handler.ashx";
 
@@ -667,12 +669,28 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdatePressListTableData(String sid,String startDate,String endDate) throws Exception {
+    public JSONObject UpdatePressListTableData(String sid, String startDate, String endDate) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface", "HTTCJSONAPI");
+        o.put("method", "UpdatePressListTableData");
+        p.put("sid", mapObject(sid));
+        p.put("startDate", mapObject(startDate));
+        p.put("endDate", mapObject(endDate));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateGlycemiaAvgdraweData(String sid,String startDate,String endDate) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface","HTTCJSONAPI");
-        o.put("method", "UpdatePressListTableData");
+        o.put("method", "UpdateGlycemiaAvgdraweData");
         p.put("sid",mapObject(sid));
         p.put("startDate",mapObject(startDate));
         p.put("endDate",mapObject(endDate));

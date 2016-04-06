@@ -281,7 +281,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 pressDataBtnsetting(true);
             } else {
                 pressValueText.setText("沒有資料");
-                presslayout.setBackgroundResource(R.drawable.background_person_data_nodata);
+                presslayout.setBackgroundResource(R.drawable.selector_nodatalayout);
                 pressDateText.setText("");
                 pressUnitText.setVisibility(View.INVISIBLE);
                 pressThumbTv.setVisibility(View.GONE);
@@ -359,7 +359,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 glycemiaDataBtnsetting(true);
             } else {
                 glycemiaValueText.setText("沒有資料");
-                glycemialayout.setBackgroundResource(R.drawable.background_person_data_nodata);
+                glycemialayout.setBackgroundResource(R.drawable.selector_nodatalayout);
                 glycemiaDateText.setText("");
                 glycemiaUnitText.setVisibility(View.INVISIBLE);
                 glycemiaThumbTv.setVisibility(View.GONE);
@@ -378,13 +378,11 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
      *
      */
     private void pressDataBtnsetting(boolean bool){
-        presslayout.setEnabled(bool);
         pressThbBtn.setEnabled(bool);
         pressMsgBtn.setEnabled(bool);
     }
 
     private void glycemiaDataBtnsetting(boolean bool){
-        glycemialayout.setEnabled(bool);
         glycemiaThbBtn.setEnabled(bool);
         glycemiaMsgBtn.setEnabled(bool);
     }

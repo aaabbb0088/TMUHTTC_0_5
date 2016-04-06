@@ -308,7 +308,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
         String suggestStr = "";
         if (preAvgRows3.size() == 0 && preAvgRows2.size() == 0 && preAvgRows1.size() == 0
                 && preDataRows.size() == 0) {
-            suggestStr = "最近都沒有測量血壓喔!\n現在就拿起血壓計，關心一下自己吧!";
+            suggestStr = "最近都沒有測量血壓喔!\n現在就拿起血壓計，\n關心一下自己吧!";
             personalInfoText.setText(suggestStr);
         } else if (warnDay.equals("") && noDataDay.equals("")) {
             suggestStr = "最近血壓保持得很好!\n要繼續保持喔!";
@@ -317,7 +317,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
             if (!warnDay.equals("")) {
                 suggestStr = suggestStr + warnDay + "血壓異常,\n";
             } else if (!noDataDay.equals("")) {
-                suggestStr = suggestStr + noDataDay + "沒有量測,\n";
+                suggestStr = suggestStr + noDataDay + "沒有量測血壓,\n";
             }
             suggestStr = suggestStr + "要多注意身體狀況喔!";
             personalInfoText.setText(suggestStr);

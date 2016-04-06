@@ -5,130 +5,138 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <me.grantland.widget.AutofitTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="日期"
             android:id="@+id/dataDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:autoText="false"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="日期"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/textView36"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/textView36" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
         android:id="@+id/hDataLayout"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <me.grantland.widget.AutofitTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="收縮壓"
             android:id="@+id/hData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:maxLines="1"
+            android:text="收縮壓"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="16sp" />
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/textView37"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"
             android:text="mm-Hg"
-            android:id="@+id/textView37" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
         android:id="@+id/lDataLayout"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <me.grantland.widget.AutofitTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/lData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:maxLines="1"
             android:text="舒張壓"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="16sp" />
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/textView38"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"
             android:text="mm-Hg"
-            android:id="@+id/textView38" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/hrDataLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center"
-        android:id="@+id/hrDataLayout"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/hrData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="脈搏"
-            android:id="@+id/hrData"
             android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:maxLines="1"
+            android:text="脈搏"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="16sp" />
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/textView39"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"
             android:text="bpm"
-            android:id="@+id/textView39" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1.1"
         android:gravity="center"
-        android:layout_weight="1.1">
+        android:orientation="vertical">
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/memo"
             android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:maxLines="1"
             android:text="備註"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/textView40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/textView40" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
 </LinearLayout>

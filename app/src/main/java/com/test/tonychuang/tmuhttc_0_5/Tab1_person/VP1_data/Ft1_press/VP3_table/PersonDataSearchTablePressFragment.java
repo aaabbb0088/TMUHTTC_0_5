@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -54,6 +55,10 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
     private TextView loadStatusText;
     private ListView listViewItemName;
     private ListView listViewData;
+    private RadioButton allBtn;
+    private RadioButton hBtn;
+    private RadioButton lBtn;
+    private RadioButton hrBtn;
 
     private SimpleDateFormat dateFormat;
     private MyDateSFormat myDateSFormat;
@@ -67,13 +72,6 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
     private ArrayList<PreDataRow> nowPreDataRows;
     private WLevelShrPref wLevelShrPref;
     private SignInShrPref signInShrPref;
-
-    private int BP_SY_Max;
-    private int BP_SY_Min;
-    private int BP_DI_Max;
-    private int BP_DI_Min;
-    private int BP_HR_Max;
-    private int BP_HR_Min;
 
     private String dataFlag = "allBtn";
 
@@ -156,6 +154,11 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
         loadStatusText = (TextView) view.findViewById(R.id.loadStatusText);
         listViewItemName = (ListView) view.findViewById(R.id.listViewItemName);
         listViewData = (ListView) view.findViewById(R.id.listViewData);
+
+        allBtn = (RadioButton) view.findViewById(R.id.allBtn);
+        hBtn = (RadioButton) view.findViewById(R.id.hBtn);
+        lBtn = (RadioButton) view.findViewById(R.id.lBtn);
+        hrBtn = (RadioButton) view.findViewById(R.id.hrBtn);
     }
 
     private void initBtn() {
@@ -259,6 +262,7 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
         int dataSize = preDataRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);
             tableLayout.setVisibility(View.VISIBLE);
@@ -266,7 +270,15 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
                     new PersonDataSearchTablePressItemNameListviewAdapter(getActivity(), dataFlag));
             listViewData.setAdapter(
                     new PersonDataSearchTablePressListviewAdapter(getActivity(), preDataRows, dataFlag));
+            setRadioGroupTF(true);
         }
+    }
+
+    private void setRadioGroupTF(boolean bool) {
+        allBtn.setEnabled(bool);
+        hBtn.setEnabled(bool);
+        lBtn.setEnabled(bool);
+        hrBtn.setEnabled(bool);
     }
 
 
@@ -315,13 +327,6 @@ public class PersonDataSearchTablePressFragment extends Fragment implements View
                 .appendOrderAscBy(PreDataRow.PDATA_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();
-
-        BP_SY_Max = wLevelShrPref.getBP_SY_Max();
-        BP_SY_Min = wLevelShrPref.getBP_SY_Min();
-        BP_DI_Max = wLevelShrPref.getBP_DI_Max();
-        BP_DI_Min = wLevelShrPref.getBP_DI_Min();
-        BP_HR_Max = wLevelShrPref.getBP_HR_Max();
-        BP_HR_Min = wLevelShrPref.getBP_HR_Min();
     }
 
     private void getPreData() {

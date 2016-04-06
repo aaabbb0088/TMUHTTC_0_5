@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -67,8 +68,12 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
     private RadioGroup dataRadioGroup;
     private CombinedChart chartView;
     private Button resetChartBtn;
-    private LinearLayout drawLayout;
+    private RelativeLayout drawLayout;
     private TextView loadStatusText;
+    private RadioButton allBtn;
+    private RadioButton hBtn;
+    private RadioButton lBtn;
+    private RadioButton hrBtn;
 
     private SimpleDateFormat dateFormat;
     private MyDateSFormat myDateSFormat;
@@ -175,8 +180,13 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         resetChartBtn.setOnClickListener(this);
 
         chartView = (CombinedChart) view.findViewById(R.id.chartView);
-        drawLayout = (LinearLayout) view.findViewById(R.id.drawLayout);
+        drawLayout = (RelativeLayout) view.findViewById(R.id.drawLayout);
         loadStatusText = (TextView) view.findViewById(R.id.loadStatusText);
+
+        allBtn = (RadioButton) view.findViewById(R.id.allBtn);
+        hBtn = (RadioButton) view.findViewById(R.id.hBtn);
+        lBtn = (RadioButton) view.findViewById(R.id.lBtn);
+        hrBtn = (RadioButton) view.findViewById(R.id.hrBtn);
     }
 
     private void initBtn() {
@@ -249,9 +259,6 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (nowPreAvgRows != null) {
-                    SimpleDateFormat parseDateF = new SimpleDateFormat("yyyy/MM/dd a hh:mm:ss", Locale.getDefault());
-                    SimpleDateFormat showDataF = new SimpleDateFormat("M/d", Locale.getDefault());
-
                     ArrayList<String> xData = new ArrayList<String>();
                     for (int index = 0; index < nowPreAvgRows.size(); index++) {
                         Date date = new Date();
@@ -338,6 +345,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                     }
                     chartView.setData(yData);
                     chartView.invalidate();
+                    chartView.fitScreen();
                 }
             }
         });
@@ -354,11 +362,20 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         int dataSize = preAvgRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);
             drawLayout.setVisibility(View.VISIBLE);
             DrawChart(preAvgRows);
+            setRadioGroupTF(true);
         }
+    }
+
+    private void setRadioGroupTF(boolean bool) {
+        allBtn.setEnabled(bool);
+        hBtn.setEnabled(bool);
+        lBtn.setEnabled(bool);
+        hrBtn.setEnabled(bool);
     }
 
     private void DrawChart(ArrayList<PreAvgRow> preAvgRows) {
@@ -586,17 +603,17 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
      *
      */
     private void initLimitLines() {
-        hULimitLine = new LimitLine(BP_SY_Max, "高血壓線 " + BP_SY_Max);
+        hULimitLine = new LimitLine(BP_SY_Max, "高血壓線 " + String.valueOf(BP_SY_Max));
         initUpLimitLine(hULimitLine);
-        hLLimitLine = new LimitLine(BP_SY_Min, "低血壓線 " + BP_SY_Min);
+        hLLimitLine = new LimitLine(BP_SY_Min, "低血壓線 " + String.valueOf(BP_SY_Min));
         initLowLimitLine(hLLimitLine);
-        lULimitLine = new LimitLine(BP_DI_Max, "高血壓線 " + BP_DI_Max);
+        lULimitLine = new LimitLine(BP_DI_Max, "高血壓線 " + String.valueOf(BP_DI_Max));
         initUpLimitLine(lULimitLine);
-        lLLimitLine = new LimitLine(BP_DI_Min, "低血壓線 " + BP_DI_Min);
+        lLLimitLine = new LimitLine(BP_DI_Min, "低血壓線 " + String.valueOf(BP_DI_Min));
         initLowLimitLine(lLLimitLine);
-        hrULimitLine = new LimitLine(BP_HR_Max, "脈搏過快 " + BP_HR_Max);
+        hrULimitLine = new LimitLine(BP_HR_Max, "脈搏過快 " + String.valueOf(BP_HR_Max));
         initUpLimitLine(hrULimitLine);
-        hrLLimitLine = new LimitLine(BP_HR_Min, "脈搏過慢 " + BP_HR_Min);
+        hrLLimitLine = new LimitLine(BP_HR_Min, "脈搏過慢 " + String.valueOf(BP_HR_Min));
         initLowLimitLine(hrLLimitLine);
     }
 
