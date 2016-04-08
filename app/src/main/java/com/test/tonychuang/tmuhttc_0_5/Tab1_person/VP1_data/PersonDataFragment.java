@@ -71,9 +71,10 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     private View view;
 
     private SignInShrPref signInShrPref;
+    private MyDateSFormat myDateSFormat;
+    private WLevelShrPref wLevelShrPref;
     private ArrayList<PreThumbRow> preThumbRows;
     private ArrayList<GlyThumbRow> glyThumbRows;
-
 
     public PersonDataFragment() {
         // Required empty public constructor
@@ -226,13 +227,14 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
      *
      */
     public void initData() {
+        myDateSFormat = new MyDateSFormat();
+        wLevelShrPref = new WLevelShrPref(getActivity());
+
         signInShrPref = new SignInShrPref(getActivity());
         if (signInShrPref.getMemberFlag()) {
 
             //更新Tab0 數據資料、警示顏色
             DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
-            MyDateSFormat myDateSFormat = new MyDateSFormat();
-            WLevelShrPref wLevelShrPref = new WLevelShrPref(getActivity());
             Calendar clr = Calendar.getInstance(Locale.TAIWAN);
             clr.add(Calendar.DAY_OF_MONTH, -1);
             String todayStr = myDateSFormat.getFrmt_yMd().format(new Date());
@@ -308,7 +310,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     pressDataBtnsetting(true);
                 }
             } else {
-                pressValueText.setText("沒有資料");
+                pressValueText.setText("今天未量測");
                 presslayout.setBackgroundResource(R.drawable.selector_nodatalayout);
                 pressDateText.setText("");
                 pressUnitText.setVisibility(View.INVISIBLE);
@@ -394,7 +396,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                     glycemiaDataBtnsetting(true);
                 }
             } else {
-                glycemiaValueText.setText("沒有資料");
+                glycemiaValueText.setText("今天未量測");
                 glycemialayout.setBackgroundResource(R.drawable.selector_nodatalayout);
                 glycemiaDateText.setText("");
                 glycemiaUnitText.setVisibility(View.INVISIBLE);

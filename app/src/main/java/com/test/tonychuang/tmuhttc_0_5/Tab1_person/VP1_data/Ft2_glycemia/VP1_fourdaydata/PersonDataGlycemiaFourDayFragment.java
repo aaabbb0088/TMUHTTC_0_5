@@ -68,6 +68,11 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
     private SignInShrPref signInShrPref;
     private WLevelShrPref wLevelShrPref;
 
+    private int BG_BM_Max;
+    private int BG_BM_Min;
+    private int BG_AM_Max;
+    private int BG_AM_Min;
+
 
     public PersonDataGlycemiaFourDayFragment() {
         // Required empty public constructor
@@ -138,6 +143,12 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
         myDateSFormat = new MyDateSFormat();
         signInShrPref = new SignInShrPref(getActivity());
         wLevelShrPref = new WLevelShrPref(getActivity());
+
+        BG_BM_Max = wLevelShrPref.getBG_BM_Max();
+        BG_BM_Min = wLevelShrPref.getBG_BM_Min();
+        BG_AM_Max = wLevelShrPref.getBG_AM_Max();
+        BG_AM_Min = wLevelShrPref.getBG_AM_Min();
+
         mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
         String warnDay = "";
         String noDataDay = "";
@@ -283,6 +294,8 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
             todayDataLayout.setVisibility(View.GONE);
             todayNoDataText.setVisibility(View.VISIBLE);
         } else {
+            todayDataBfText.setTextColor(Color.BLACK);
+            todayDataAfText.setTextColor(Color.BLACK);
             if (glyBfDataRows.size() != 0) {
                 todayDataLayout.setVisibility(View.VISIBLE);
                 todayNoDataText.setVisibility(View.GONE);
@@ -371,11 +384,6 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
     private void setTvValueColor(TextView Tv, int Value, String valueFlag) {
         if (Value != 0) {
             Tv.setText(String.valueOf(Value));
-
-            int BG_BM_Max = wLevelShrPref.getBG_BM_Max();
-            int BG_BM_Min = wLevelShrPref.getBG_BM_Min();
-            int BG_AM_Max = wLevelShrPref.getBG_AM_Max();
-            int BG_AM_Min = wLevelShrPref.getBG_AM_Min();
             switch (valueFlag) {
                 case "B":
                     if (Value < BG_BM_Min) {

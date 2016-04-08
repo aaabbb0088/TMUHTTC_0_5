@@ -15,6 +15,15 @@
             <option value="$PROJECT_DIR$/timescroller" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/chat" />
+            <option value="$PROJECT_DIR$/secrettextview" />
+            <option value="$PROJECT_DIR$/timescroller" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

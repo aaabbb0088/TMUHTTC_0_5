@@ -3,157 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
+    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:focusableInTouchMode="true"
-    android:focusable="true"
     tools:context="com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgPressActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/background_msg_data_layout"
-        android:divider="@drawable/divider_msg_data"
-        android:showDividers="middle"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView125"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="收縮壓 :"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/textView126"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="XXX"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/textView128"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="舒張壓 :"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/textView129"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="XX"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/textView130"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="脈搏 :"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/textView131"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="XX"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView132"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="量測時間"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/textView133"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="right"
-                android:text="MM/dd aa hh:mm"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:fillViewport="true"
+        android:layout_weight="1">
 
-        <ScrollView
-            android:id="@+id/scrollView3"
+        <ExpandableListView
+            android:id="@+id/exListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never">
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:dividerHeight="3dp"
+            android:groupIndicator="@null" />
+    </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView134"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="頭像、暱稱、留言內容、留言時間\n使用expendableListView，列出當天所有量測記錄\n關閉exList伸縮功能"
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#7fd8d8d8" />
 
     <com.test.tonychuang.chat.keyboard.KJChatKeyboard
         android:id="@+id/chat_msg_input_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 </LinearLayout>

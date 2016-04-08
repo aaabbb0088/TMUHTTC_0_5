@@ -64,7 +64,7 @@ dependencies {
     compile 'com.orhanobut:dialogplus:1.11@aar'
     compile 'com.brucetoo.pickview:library:1.1.1'
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0'
-    compile files('libs/lite-orm-1.7.0.jar')
+    compile files('libs/lite-orm-1.8.1.jar')
 }
 
 

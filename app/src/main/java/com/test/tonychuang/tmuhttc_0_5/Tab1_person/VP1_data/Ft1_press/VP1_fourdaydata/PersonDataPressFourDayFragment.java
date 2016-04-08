@@ -69,6 +69,13 @@ public class PersonDataPressFourDayFragment extends Fragment {
     private SignInShrPref signInShrPref;
     private WLevelShrPref wLevelShrPref;
 
+    private int BP_SY_Max;
+    private int BP_SY_Min;
+    private int BP_DI_Max;
+    private int BP_DI_Min;
+    private int BP_HR_Max;
+    private int BP_HR_Min;
+
 
     public PersonDataPressFourDayFragment() {
         // Required empty public constructor
@@ -140,6 +147,14 @@ public class PersonDataPressFourDayFragment extends Fragment {
         myDateSFormat = new MyDateSFormat();
         signInShrPref = new SignInShrPref(getActivity());
         wLevelShrPref = new WLevelShrPref(getActivity());
+
+        BP_SY_Max = wLevelShrPref.getBP_SY_Max();
+        BP_SY_Min = wLevelShrPref.getBP_SY_Min();
+        BP_DI_Max = wLevelShrPref.getBP_DI_Max();
+        BP_DI_Min = wLevelShrPref.getBP_DI_Min();
+        BP_HR_Max = wLevelShrPref.getBP_HR_Max();
+        BP_HR_Min = wLevelShrPref.getBP_HR_Min();
+
         mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
         String warnDay = "";
         String noDataDay = "";
@@ -349,13 +364,6 @@ public class PersonDataPressFourDayFragment extends Fragment {
 
     private void setTvValueColor(TextView Tv, int Value, String valueFlag) {
         Tv.setText(String.valueOf(Value));
-
-        int BP_SY_Max = wLevelShrPref.getBP_SY_Max();
-        int BP_SY_Min = wLevelShrPref.getBP_SY_Min();
-        int BP_DI_Max = wLevelShrPref.getBP_DI_Max();
-        int BP_DI_Min = wLevelShrPref.getBP_DI_Min();
-        int BP_HR_Max = wLevelShrPref.getBP_HR_Max();
-        int BP_HR_Min = wLevelShrPref.getBP_HR_Min();
         switch (valueFlag) {
             case "H":
                 if (Value < BP_SY_Min) {

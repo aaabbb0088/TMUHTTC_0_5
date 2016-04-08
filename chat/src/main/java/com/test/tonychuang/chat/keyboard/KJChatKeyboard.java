@@ -83,8 +83,9 @@ public class KJChatKeyboard extends RelativeLayout implements SoftKeyboardStateH
     }
 
     private void initData() {
-        mKeyboardHelper = new SoftKeyboardStateHelper(((Activity) getContext())
-                .getWindow().getDecorView());
+//        mKeyboardHelper = new SoftKeyboardStateHelper(((Activity) getContext())
+//                .getWindow().getDecorView());
+        mKeyboardHelper = new SoftKeyboardStateHelper(View.inflate(context, R.layout.chat_tool_box, null));
         mKeyboardHelper.addSoftKeyboardStateListener(this);
     }
 
@@ -96,8 +97,10 @@ public class KJChatKeyboard extends RelativeLayout implements SoftKeyboardStateH
         mRlFace = (RelativeLayout) findViewById(R.id.toolbox_layout_face);
         mPagerFaceCagetory = (ViewPager) findViewById(R.id.toolbox_pagers_face);
         mFaceTabs = (PagerSlidingTabStrip) findViewById(R.id.toolbox_tabs);
-        adapter = new FaceCategroyAdapter(((FragmentActivity) getContext())
-                .getSupportFragmentManager(), LAYOUT_TYPE_FACE);
+        if(context instanceof FragmentActivity){ //判斷型別
+            adapter = new FaceCategroyAdapter(((FragmentActivity) getContext())
+                    .getSupportFragmentManager(), LAYOUT_TYPE_FACE);
+        }
         mBtnSend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,11 +260,6 @@ public class KJChatKeyboard extends RelativeLayout implements SoftKeyboardStateH
 
     public void setOnToolBoxListener(OnToolBoxListener mFaceListener) {
         this.mFaceListener = mFaceListener;
-    }
-
-
-    public EditText getmEtMsg() {
-        return mEtMsg;
     }
 
     public CheckBox getmBtnFace() {

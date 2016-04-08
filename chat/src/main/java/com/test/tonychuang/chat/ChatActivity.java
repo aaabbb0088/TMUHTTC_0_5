@@ -8,14 +8,18 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,8 +48,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private KJChatKeyboard box;
     private ListView listView;
+
     private MessageAdapter adapter;
     private List<Message> messages = new ArrayList<Message>();
+
+    private int mListViewHeight;
+    private boolean listViewBottomFlag = false;
+    private boolean moveFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,7 @@ public class ChatActivity extends AppCompatActivity {
         initView();
         initMessageInputToolBox();
         initListView();
+        initListener();
     }
 
     private void initBar() {
@@ -98,7 +108,6 @@ public class ChatActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.messageListview);
     }
 
-
     private void initListView() {
 
         //create Data
@@ -128,6 +137,86 @@ public class ChatActivity extends AppCompatActivity {
         listView.setSelection(adapter.getCount() - 1); //let listview scroll to bottom
     }
 
+    private void initListener() {
+        listView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mListViewHeight = listView.getHeight();
+
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                    listView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    listView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                moveFlag = scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                if (firstVisibleItem == 0) {
+//                    View firstVisibleItemView = listView.getChildAt(0);
+//                    if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+//                        Log.d("ListView", "<----滾動到頂部----->");
+//                    }
+//                }
+//                if ((firstVisibleItem + visibleItemCount) == totalItemCount) {
+//                    View lastVisibleItemView = listView.getChildAt(listView.getChildCount() - 1);
+//                    if (lastVisibleItemView != null && lastVisibleItemView.getBottom() == mListViewHeight) {
+//                        Log.d("ListView", "#####滾動到底部######");
+//                        listViewBottomFlag = true;
+//                    }
+//                }
+                if ((firstVisibleItem + visibleItemCount) == totalItemCount) {
+                    View lastVisibleItemView = listView.getChildAt(listView.getChildCount() - 1);
+                    if (lastVisibleItemView != null && lastVisibleItemView.getBottom() == mListViewHeight) {
+                        Log.d("ListView", "#####滾動到底部######");
+                        listViewBottomFlag = true;
+                    } else {
+                        listViewBottomFlag = false;
+                    }
+                } else {
+                    listViewBottomFlag = false;
+                }
+            }
+        });
+
+        /**
+         * 若软键盘或表情键盘弹起，点击上端空白处应该隐藏输入法键盘
+         *
+         * @return 会隐藏输入法键盘的触摸事件监听器
+         */
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_UP && !moveFlag) {
+                    box.hideLayout();
+                    box.hideKeyboard(ChatActivity.this);
+                    box.getEditTextBox().clearFocus();
+                }
+                return false;
+            }
+        });
+
+        box.getEditTextBox().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && listViewBottomFlag) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            listView.setSelection(listView.getBottom());
+                        }
+                    }, 200);
+                }
+            }
+        });
+    }
 
     private void initMessageInputToolBox() {
         box.setOnOperationListener(new OnOperationListener() {
@@ -135,7 +224,7 @@ public class ChatActivity extends AppCompatActivity {
             public void send(String content) {
                 Message message = new Message(0, 1, "遠距照護中心", "avatar", "Jerry", "avatar", content, true, true, new Date(), true);
                 adapter.getData().add(message);
-                listView.setSelection(listView.getBottom());
+                listView.setSelection(listView.getBottom()); //let listview scroll to bottom
 
                 //Just demo
                 createReplayMsg(message);
@@ -187,9 +276,6 @@ public class ChatActivity extends AppCompatActivity {
         }
         box.setFaceData(faceCagegory);
 
-        listView.setOnTouchListener(getOnTouchListener());
-
-
         //嘗試設定的code
 //        final boolean[] isLastRow = {false};
 //        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -224,25 +310,6 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        });
 
-    }
-
-
-    /**
-     * 若软键盘或表情键盘弹起，点击上端空白处应该隐藏输入法键盘
-     *
-     * @return 会隐藏输入法键盘的触摸事件监听器
-     */
-    private View.OnTouchListener getOnTouchListener() {
-        return new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_UP){
-                    box.hideLayout();
-                    box.hideKeyboard(ChatActivity.this);
-                }
-                return false;
-            }
-        };
     }
 
 
@@ -306,14 +373,26 @@ public class ChatActivity extends AppCompatActivity {
             public void onPhotoClick(int position) {
                 KJLoger.debug("圖片路徑" + messages.get(position).getContent());
                 ViewInject.toast(ChatActivity.this, "圖片路徑" + messages.get(position).getContent());
+
+                box.hideLayout();
+                box.hideKeyboard(ChatActivity.this);
+                box.getEditTextBox().clearFocus();
             }
 
             @Override
             public void onTextClick(int position) {
+
+                box.hideLayout();
+                box.hideKeyboard(ChatActivity.this);
+                box.getEditTextBox().clearFocus();
             }
 
             @Override
             public void onFaceClick(int position) {
+
+                box.hideLayout();
+                box.hideKeyboard(ChatActivity.this);
+                box.getEditTextBox().clearFocus();
             }
         };
     }

@@ -24,7 +24,7 @@ public class MyDateSFormat {
     }
 
     public SimpleDateFormat getFrmt_Mdahm() {
-        return new SimpleDateFormat("M月d日 a hh:mm", Locale.TAIWAN);
+        return new SimpleDateFormat("M月d日 a h:mm", Locale.TAIWAN);
     }
 
     public SimpleDateFormat getFrmt_E() {

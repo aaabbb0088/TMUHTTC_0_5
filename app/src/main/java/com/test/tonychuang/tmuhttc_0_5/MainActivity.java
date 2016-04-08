@@ -1673,7 +1673,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    long count = mainDB.queryCount(FGRow.class);
 //                    ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
 //                    if (list1.size() != 0){
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aid();
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aids();
 //                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
 //                    } else {
 //                        String str = String.valueOf(count);

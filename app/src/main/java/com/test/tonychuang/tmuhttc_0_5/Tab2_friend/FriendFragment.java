@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
@@ -29,22 +31,38 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.zxing.WriterException;
+import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.DataBase;
+import com.litesuits.orm.db.assit.QueryBuilder;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft1_board.FriendBoardActivity;
+import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft2_map.FriendMapActivity;
+import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft3_personal.FriendPersonalActivity;
+import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft4_setting.FriendSettingActivity;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.AES.MyAES;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.QRCode.MyQRCodeCreate;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.grantland.widget.AutofitTextView;
 
 /**
@@ -53,14 +71,16 @@ import me.grantland.widget.AutofitTextView;
 public class FriendFragment extends Fragment {
 
 
-    static ExpandableListView expandableListView;
-    private List<GroupEntity> lists;
-    private FriendAdapter adapter;
-
+    private ExpandableListView expandableListView;
 
     private View view;  //Fragment的佈局
     private ActionBar actionBar;
     private SignInShrPref signInShrPref;
+    private MyDateSFormat myDateSFormat;
+    private DataBase mainDB;
+    private ArrayList<FRow> fRows;
+    private ArrayList<FGRow> fgRows;
+    private List<String[]> fgRowsAidsList;
 
 
     public FriendFragment() {
@@ -75,6 +95,7 @@ public class FriendFragment extends Fragment {
         initBar();
         initView();
         initData();
+        updateView();
         return view;
     }
 
@@ -153,6 +174,49 @@ public class FriendFragment extends Fragment {
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
     }
 
+    private void updateView() {
+        expandableListView.setAdapter(new GFListViewAdapter(getActivity(), fgRows, fgRowsAidsList, fRows));
+
+//        expandableListView.setGroupIndicator(null); // 去掉默认带的箭头
+//        expandableListView.setSelection(0);// 设置默认选中项
+        //箭頭移到右邊
+        int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        expandableListView.setIndicatorBounds(width-70, width-20);
+        // 遍历所有group,将所有项设置成默认展开
+        int groupCount = expandableListView.getCount();
+        for (int i = 0; i < groupCount; i++) {
+            expandableListView.expandGroup(i);
+        }
+    }
+
+
+    /**
+     * v2
+     */
+    /**
+     *
+     */
+    //覆寫PopupMenu方法，使PopupMenu的icon顯示出來
+    public static void setForceShowIcon(PopupMenu popupMenu) {
+        try {
+            Field[] fields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
+                            .getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod(
+                            "setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
     private void addFriendAlertDialog() {
         View dialogTitleView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_friend_title, null);
         final View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_friend_body, null);
@@ -225,8 +289,8 @@ public class FriendFragment extends Fragment {
                     case R.id.qrcodeBtn:
                         pidEd.setText("");
                         aidEd.setText("");
-                        InputMethodManager imm = (InputMethodManager)dialogView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(aidEd.getWindowToken(),0);
+                        InputMethodManager imm = (InputMethodManager) dialogView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(aidEd.getWindowToken(), 0);
                         confirmTv.setEnabled(false);
                         idLayout.setVisibility(View.GONE);
                         qrLayout.setVisibility(View.VISIBLE);
@@ -386,7 +450,7 @@ public class FriendFragment extends Fragment {
         alertDialog.show();
 
         try {
-            qrcodeImv.setImageBitmap(new MyQRCodeCreate("T111111111").getBitmap());
+            qrcodeImv.setImageBitmap(new MyQRCodeCreate(signInShrPref.getAID()).getBitmap());
         } catch (WriterException e) {
             e.printStackTrace();
         }
@@ -424,34 +488,6 @@ public class FriendFragment extends Fragment {
         });
     }
 
-
-    /**
-     * v2
-     */
-    /**
-     *
-     */
-    //覆寫PopupMenu方法，使PopupMenu的icon顯示出來
-    public static void setForceShowIcon(PopupMenu popupMenu) {
-        try {
-            Field[] fields = popupMenu.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popupMenu);
-                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                            .getClass().getName());
-                    Method setForceIcons = classPopupHelper.getMethod(
-                            "setForceShowIcon", boolean.class);
-                    setForceIcons.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     private DialogInterface.OnKeyListener getOnKeyListener() {
         return new DialogInterface.OnKeyListener() {
             @Override
@@ -471,44 +507,484 @@ public class FriendFragment extends Fragment {
     /**
      *
      */
-
     private void initData() {
-        lists = initList();
-        adapter = new FriendAdapter(getActivity(), lists);
-        expandableListView.setAdapter(adapter);
-        expandableListView.setGroupIndicator(null); // 去掉默认带的箭头
-        expandableListView.setSelection(0);// 设置默认选中项
-        // 遍历所有group,将所有项设置成默认展开
-        int groupCount = expandableListView.getCount();
-        for (int i = 0; i < groupCount; i++) {
-            expandableListView.expandGroup(i);
+        signInShrPref = new SignInShrPref(getActivity());
+        myDateSFormat = new MyDateSFormat();
+        mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+
+        fgRows = mainDB.query(FGRow.class);
+        fgRowsAidsList = new ArrayList<>();
+        if (fgRows.size() != 0) {
+            String[] fAidsArray;
+            for (int i = 0; i < fgRows.size(); i++) {
+                fAidsArray = fgRows.get(i).getFG_fri_aids().split(",");
+                fgRowsAidsList.add(fAidsArray);
+            }
         }
+        fRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                .whereEquals(FRow.F_RELATION_FLAG, 1));
+        LiteOrm.releaseMemory();
+        mainDB.close();
     }
 
-    private List<GroupEntity> initList() {
+    private class GFListViewAdapter extends BaseExpandableListAdapter {
+        private LayoutInflater myInflater;
+        private Context context;
+        private ArrayList<FGRow> fgRows;
+        private List<String[]> fgRowsAidsList;
+        private ArrayList<FRow> fRows;
 
-        List<GroupEntity> groupList;
-        //测试数据
-        String[] groupArray = new String[]{"家人", "好友"};
-        String[][] childTimeArray = new String[][]{
-                {"測試帳戶1", "測試帳戶2", "測試帳戶3"}, {"測試帳戶", "測試帳戶", "測試帳戶", "測試帳戶", "測試帳戶", "測試帳戶", "測試帳戶"}};
-        groupList = new ArrayList<GroupEntity>();
-        for (int i = 0; i < groupArray.length; i++) {
-            GroupEntity groupEntity = new GroupEntity(groupArray[i]);
-            List<ChildEntity> childList = new ArrayList<ChildEntity>();
-            for (int j = 0; j < childTimeArray[i].length; j++) {
-                ChildEntity childStatusEntity = new ChildEntity(childTimeArray[i][j]);
-                childList.add(childStatusEntity);
-            }
-            groupEntity.setChildEntities(childList);
-            groupList.add(groupEntity);
+        public GFListViewAdapter(Context context, ArrayList<FGRow> fgRows,
+                                 List<String[]> fgRowsAidsList, ArrayList<FRow> fRows) {
+            myInflater = LayoutInflater.from(context);
+            this.context = context;
+            this.fgRows = fgRows;
+            this.fgRowsAidsList = fgRowsAidsList;
+            this.fRows = fRows;
         }
-        return groupList;
+
+        @Override
+        public int getGroupCount() {
+            return fgRows.size() + 1;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            if (groupPosition < fgRows.size()){
+                return fgRowsAidsList.get(groupPosition).length;
+            } else {
+                return fRows.size();
+            }
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            if (groupPosition < fgRows.size()){
+                return fgRowsAidsList.get(groupPosition);
+            } else {
+                return fRows;
+            }
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            if (groupPosition < fgRows.size()){
+                return fgRowsAidsList.get(groupPosition)[childPosition];
+            } else {
+                return fRows.get(childPosition);
+            }
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        public View getGroupView(final int groupPosition, final boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+            final GroupViewHolder holder;
+            if (convertView != null) {
+                holder = (GroupViewHolder) convertView.getTag();
+            } else {
+                holder = new GroupViewHolder();
+                convertView = myInflater.inflate(R.layout.friend_listview_item_group, null);
+                holder.groupName = (TextView) convertView.findViewById(R.id.one_status_name);
+                holder.groupCount = (TextView) convertView.findViewById(R.id.groupCount);
+                holder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.sample);
+                holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipeLayout.findViewWithTag("Edit"));
+                holder.iv_edit = (ImageView) convertView.findViewById(R.id.edit);
+                holder.iv_trash = (ImageView) convertView.findViewById(R.id.trash);
+                convertView.setTag(holder);
+            }
+
+            final String groupName;
+            if (groupPosition < fgRows.size()){
+                holder.swipeLayout.setSwipeEnabled(true);
+                groupName = fgRows.get(groupPosition).getFG_group_name();
+                holder.groupName.setText(groupName);
+                holder.groupCount.setText("(" + fgRowsAidsList.get(groupPosition).length + ")");
+            } else {
+                holder.swipeLayout.setSwipeEnabled(false);
+                groupName = "全部好友";
+                holder.groupName.setText(groupName);
+                holder.groupCount.setText("(" + fRows.size() + ")");
+            }
+
+            convertView.findViewById(R.id.item_surface).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isExpanded) {
+                        expandableListView.collapseGroup(groupPosition);
+                    } else {
+                        expandableListView.expandGroup(groupPosition);
+                    }
+                }
+            });
+
+            holder.iv_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editGroupAlertDialog(groupName);
+                    holder.swipeLayout.close();
+                }
+            });
+
+            holder.iv_trash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deletGroupCheckAlertDialog(groupName);
+                    notifyDataSetChanged();
+                }
+            });
+
+            return convertView;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+                                 View convertView, ViewGroup parent) {
+            final ChildViewHolder viewHolder;
+            if (convertView != null) {
+                viewHolder = (ChildViewHolder) convertView.getTag();
+            } else {
+                viewHolder = new ChildViewHolder();
+                convertView = myInflater.inflate(R.layout.friend_listview_item_child, null);
+                viewHolder.childTitle = (TextView) convertView.findViewById(R.id.tv_title);
+                viewHolder.lastDateTv = (TextView) convertView.findViewById(R.id.lastDateTv);
+                viewHolder.avatarIv = (CircleImageView) convertView.findViewById(R.id.avatarIv);
+                viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.sample);
+                viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+                viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.swipeLayout.findViewWithTag("Edit"));
+                viewHolder.iv_edit = (ImageView) convertView.findViewById(R.id.edit);
+                viewHolder.iv_trash = (ImageView) convertView.findViewById(R.id.trash);
+                viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, viewHolder.swipeLayout.findViewWithTag("Map"));
+                viewHolder.iv_map = (ImageView) convertView.findViewById(R.id.map);
+                convertView.setTag(viewHolder);
+            }
+
+            String lastDateStr = "";
+            final String friendNickName;
+            if (groupPosition < fgRows.size()){
+                DataBase mainDB = LiteOrm.newSingleInstance(context, signInShrPref.getAID());
+                ArrayList<FRow> fRowArrayList = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                        .whereEquals(FRow.F_FRI_AID, fgRowsAidsList.get(groupPosition)[childPosition]));
+                LiteOrm.releaseMemory();
+                if (fRowArrayList.get(0).getF_member_flag().equals("Y")) { //是遠距會員，可能有最後量測時間
+                    ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
+                            .whereEquals(PreDataRow.PDATA_SID, fRowArrayList.get(0).getF_fri_sid())
+                            .appendOrderDescBy(PreDataRow.PDATA_DATETIME)
+                            .limit(0, 1));
+                    LiteOrm.releaseMemory();
+                    ArrayList<GlyDataRow> glyDataRows = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
+                            .whereEquals(GlyDataRow.GDATA_SID, fRowArrayList.get(0).getF_fri_sid())
+                            .appendOrderDescBy(GlyDataRow.GDATA_DATETIME)
+                            .limit(0, 1));
+                    LiteOrm.releaseMemory();
+                    Date lastPreDate = new Date();
+                    Date lastGlyDate = new Date();
+                    if (preDataRows.size() != 0 && glyDataRows.size() != 0) {
+                        try {
+                            lastPreDate = myDateSFormat.getFrmt_yMdHm().parse(preDataRows.get(0).getPData_datetime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            lastGlyDate = myDateSFormat.getFrmt_yMdHm().parse(glyDataRows.get(0).getGData_datetime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (lastPreDate.after(lastGlyDate)) {
+                            lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastPreDate);
+                        } else {
+                            lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastGlyDate);
+                        }
+                    } else if (preDataRows.size() != 0) {
+                        try {
+                            lastPreDate = myDateSFormat.getFrmt_yMdHm().parse(preDataRows.get(0).getPData_datetime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastPreDate);
+                    } else if (glyDataRows.size() != 0) {
+                        try {
+                            lastGlyDate = myDateSFormat.getFrmt_yMdHm().parse(glyDataRows.get(0).getGData_datetime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastGlyDate);
+                    }
+                    if (!"".equals(lastDateStr)){
+                        lastDateStr = "最近量測時間 " + lastDateStr;
+                    }
+                }
+                mainDB.close();
+                friendNickName = fRowArrayList.get(0).getF_nickname();
+            } else {
+                friendNickName = fRows.get(childPosition).getF_nickname();
+                if (fRows.get(childPosition).getF_member_flag().equals("Y")) {
+                    DataBase mainDB = LiteOrm.newSingleInstance(context, signInShrPref.getAID());
+                    ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
+                            .whereEquals(PreDataRow.PDATA_SID, fRows.get(childPosition).getF_fri_sid())
+                            .appendOrderDescBy(PreDataRow.PDATA_DATETIME)
+                            .limit(0, 1));
+                    LiteOrm.releaseMemory();
+                    ArrayList<GlyDataRow> glyDataRows = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
+                            .whereEquals(GlyDataRow.GDATA_SID, fRows.get(childPosition).getF_fri_sid())
+                            .appendOrderDescBy(GlyDataRow.GDATA_DATETIME)
+                            .limit(0, 1));
+                    LiteOrm.releaseMemory();
+                    mainDB.close();
+                    Date lastPreDate = new Date();
+                    Date lastGlyDate = new Date();
+                    try {
+                        lastPreDate = myDateSFormat.getFrmt_yMdHm().parse(preDataRows.get(0).getPData_datetime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        lastGlyDate = myDateSFormat.getFrmt_yMdHm().parse(glyDataRows.get(0).getGData_datetime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (preDataRows.size() != 0 && glyDataRows.size() != 0) {
+                        if (lastPreDate.after(lastGlyDate)) {
+                            lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastPreDate);
+                        } else {
+                            lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastGlyDate);
+                        }
+                    } else if (preDataRows.size() != 0) {
+                        lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastPreDate);
+                    } else if (glyDataRows.size() != 0) {
+                        lastDateStr = myDateSFormat.getFrmt_Mdahm().format(lastGlyDate);
+                    }
+                    lastDateStr = "最近量測時間 " + lastDateStr;
+                }
+            }
+            viewHolder.childTitle.setText(friendNickName);
+            viewHolder.lastDateTv.setText(lastDateStr);
+//                viewHolder.avatarIv.setImageResource();
+
+            viewHolder.iv_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    toast("click edit");
+                    //do something
+                    new AsyncTask<Class<?>, Void, String>() {
+                        @Override
+                        protected String doInBackground(Class<?>... params) {
+                            Intent intent = new Intent(context, params[0]);
+                            context.startActivity(intent);
+                            return "finish";
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+                            super.onPostExecute(s);
+                            viewHolder.swipeLayout.close();
+                        }
+                    }.execute(FriendSettingActivity.class);
+                }
+            });
+
+            viewHolder.iv_map.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    toast("click map");
+                    //do something
+                    new AsyncTask<Class<?>, Void, String>() {
+                        @Override
+                        protected String doInBackground(Class<?>... params) {
+                            Intent intent = new Intent(context, params[0]);
+                            context.startActivity(intent);
+                            return "finish";
+                        }
+
+                        @Override
+                        protected void onPostExecute(String s) {
+                            super.onPostExecute(s);
+                            viewHolder.swipeLayout.close();
+                        }
+                    }.execute(FriendMapActivity.class);
+                }
+            });
+
+            viewHolder.iv_trash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deletfriendCheckAlertDialog(friendNickName);
+                    notifyDataSetChanged();
+                    //do something
+                }
+            });
+
+            convertView.findViewById(R.id.item_surface).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //do something
+                    Intent intent = new Intent(context, FriendPersonalActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+            return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+
+        public class GroupViewHolder {
+            public SwipeLayout swipeLayout;
+            public ImageView iv_trash, iv_edit;
+            public TextView groupName, groupCount;
+        }
+
+        public class ChildViewHolder {
+            public SwipeLayout swipeLayout;
+            public ImageView iv_trash, iv_edit, iv_map;
+            public TextView childTitle, lastDateTv;
+            public CircleImageView avatarIv;
+        }
+
+        private void editGroupAlertDialog(String groupName) {
+            View dialogTitleView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_group_title, null);
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_group_body, null);
+            final TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
+            TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
+            final MaterialEditText groupNameEd = (MaterialEditText) dialogView.findViewById(R.id.groupNameEd);
+            final AlertDialog alertDialog = new AlertDialog.Builder(context)
+                    .setCustomTitle(dialogTitleView)
+                    .setView(dialogView)
+                    .setOnKeyListener(getOnKeyListener())
+                    .setCancelable(false).create();
+            alertDialog.show();
+
+            groupNameEd.setHint(groupName);
+            confirmTv.setEnabled(false);
+            groupNameEd.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (!"".equals(groupNameEd.getText().toString().trim())) {
+                        confirmTv.setEnabled(true);
+                    } else {
+                        confirmTv.setEnabled(false);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            confirmTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+        }
+
+        @SuppressLint("SetTextI18n")
+        private void deletGroupCheckAlertDialog(String groupName) {
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_delete_friend_group_body, null);
+            TextView msgTv = (TextView) dialogView.findViewById(R.id.msgTv);
+            final TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
+            TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
+            final AlertDialog alertDialog = new AlertDialog.Builder(context)
+                    .setTitle("刪除群組")
+                    .setView(dialogView)
+                    .setOnKeyListener(getOnKeyListener())
+                    .setCancelable(false).create();
+            alertDialog.show();
+
+            msgTv.setText("確定要刪除 \"" + groupName + "\" 群組 嗎?");
+            confirmTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+        }
+
+        private void deletfriendCheckAlertDialog(String friendName) {
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_delete_friend_group_body, null);
+            TextView msgTv = (TextView) dialogView.findViewById(R.id.msgTv);
+            final TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
+            TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
+            final AlertDialog alertDialog = new AlertDialog.Builder(context)
+                    .setTitle("刪除好友")
+                    .setView(dialogView)
+                    .setOnKeyListener(getOnKeyListener())
+                    .setCancelable(false).create();
+            alertDialog.show();
+
+            msgTv.setText("確定要刪除 \"" + friendName + "\" 嗎?");
+            confirmTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+        }
+
+        private void toast(String msg) {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+
+        }
+
+        private DialogInterface.OnKeyListener getOnKeyListener() {
+            return new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                    }
+                    return false;
+                }
+            };
+        }
     }
 
 
     /**
-     * v2
+     * d2
      */
     /**
      *
