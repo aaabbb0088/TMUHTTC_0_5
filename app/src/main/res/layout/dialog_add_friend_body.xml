@@ -71,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="身分證字號"
+                    android:imeOptions="actionDone"
                     android:maxLength="10"
                     android:singleLine="true"
                     android:theme="@style/TextEd"
@@ -100,6 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="APP 12碼 帳號"
+                    android:imeOptions="actionDone"
                     android:inputType="number"
                     android:maxLength="12"
                     android:singleLine="true"
@@ -133,17 +135,17 @@
                     android:id="@+id/nameTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="會員姓名"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:gravity="center" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/nicknameTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="會員暱稱"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:gravity="center" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -158,8 +160,8 @@
                 android:id="@+id/qrReadLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="250dp"

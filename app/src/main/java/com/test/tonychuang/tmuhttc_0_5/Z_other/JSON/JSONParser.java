@@ -450,7 +450,7 @@ public class JSONParser {
                 jsonObj = jsonArray.getJSONObject(i);
                 arrayList.add(new FGRow(
                         jsonObj.getString("FG_group_name"),
-                        jsonObj.getString("FG_fri_aids")
+                        jsonObj.getString("FG_fri_aid")
                 ));
             }
 

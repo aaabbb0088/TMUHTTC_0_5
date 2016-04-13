@@ -1590,53 +1590,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void UpdateFriendData() {
         if (!signInShrPref.getSameSignInMachine()) {
 
-            //更新好友群組表 end[18]
-            new AsyncTask<String, Void, ArrayList<FGRow>>() {
-                @Override
-                protected ArrayList<FGRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<FGRow> fgRows = null;
-
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateFriendGroupTable(params[0]);
-                        fgRows = jsonParser.parseFGRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return fgRows;
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<FGRow> fgRows) {
-                    super.onPostExecute(fgRows);
-                    if (fgRows != null) {
-                        mainDB.deleteAll(FGRow.class);
-                        if (fgRows.size() != 0) {
-                            for (int i = 0; i < fgRows.size(); i++) {
-                                mainDB.save(fgRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "群組表更新失敗", Toast.LENGTH_SHORT).show();
-                    }
-//                    //test
-//                    long count = mainDB.queryCount(FGRow.class);
-//                    ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
-//                    if (list1.size() != 0){
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aids();
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    } else {
-//                        String str = String.valueOf(count);
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    }
-//                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 2);
-                }
-            }.execute(signInShrPref.getAID());
-
             //APP使用者個人資料分享好友設定表 end[19]
             new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
                 @Override
@@ -1731,10 +1684,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.execute(signInShrPref.getAID());
         } else {
-            updateRnEndflagSetting(updateEndflag.length - 2);
             updateRnEndflagSetting(updateEndflag.length - 4);
             updateRnEndflagSetting(updateEndflag.length - 5);
         }
+
+        //更新好友群組表 end[18]
+        new AsyncTask<String, Void, ArrayList<FGRow>>() {
+            @Override
+            protected ArrayList<FGRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FGRow> fgRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendGroupTable(params[0]);
+                    fgRows = jsonParser.parseFGRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fgRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FGRow> fgRows) {
+                super.onPostExecute(fgRows);
+                if (fgRows != null) {
+                    mainDB.deleteAll(FGRow.class);
+                    if (fgRows.size() != 0) {
+                        for (int i = 0; i < fgRows.size(); i++) {
+                            mainDB.save(fgRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "群組表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                    //test
+//                    long count = mainDB.queryCount(FGRow.class);
+//                    ArrayList<FGRow> list1 = mainDB.query(FGRow.class);
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFG_fri_aids();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
+//                    //test
+                updateRnEndflagSetting(updateEndflag.length - 2);
+            }
+        }.execute(signInShrPref.getAID());
 
         //更新好友關係表 end[17]
         new AsyncTask<String, Void, ArrayList<FRow>>() {
@@ -1877,7 +1876,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateRnEndflagSetting(updateEndflag.length - 7);
             }
         }.execute(signInShrPref.getAID());
-
 
         //好友訊息表 end[23]
         ArrayList<FNotRow> fNotRowArrayList = mainDB.query(new QueryBuilder<FNotRow>(FNotRow.class)

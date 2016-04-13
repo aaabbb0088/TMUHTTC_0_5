@@ -34,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:ems="12"
                 android:hint="範例 家人"
+                android:imeOptions="actionDone"
                 android:maxLength="10"
+                android:maxLines="1"
                 android:singleLine="true"
                 android:theme="@style/TextEd"
                 app:met_baseColor="#000000"
@@ -47,9 +49,9 @@
             android:id="@+id/countTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="已選中0項"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="5dp" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ListView
             android:id="@+id/friLv"
