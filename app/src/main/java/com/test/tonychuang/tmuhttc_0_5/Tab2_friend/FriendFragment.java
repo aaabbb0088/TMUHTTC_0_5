@@ -1273,7 +1273,7 @@ public class FriendFragment extends Fragment {
                     gfExListViewAdapter.notifyDataSetChanged();
                     int count;
                     for (count = 0; count < fgRows.size(); count++) {
-                        if(fgRows.get(count).getFG_group_name().equals(groupName)){
+                        if (fgRows.get(count).getFG_group_name().equals(groupName)) {
                             break;
                         }
                     }
@@ -1624,8 +1624,10 @@ public class FriendFragment extends Fragment {
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
             final ChildViewHolder viewHolder;
+            OnClick listener;
             if (convertView != null) {
                 viewHolder = (ChildViewHolder) convertView.getTag();
+                listener = (OnClick) convertView.getTag(viewHolder.item_surface.getId());//重新獲得監聽對象
             } else {
                 viewHolder = new ChildViewHolder();
                 convertView = myInflater.inflate(R.layout.friend_listview_item_child, null);
@@ -1641,7 +1643,10 @@ public class FriendFragment extends Fragment {
                 viewHolder.iv_map = (ImageView) convertView.findViewById(R.id.map);
                 viewHolder.memberFlagIv = (ImageView) convertView.findViewById(R.id.memberFlagIv);
                 viewHolder.item_surface = (LinearLayout) convertView.findViewById(R.id.item_surface);
+                listener = new OnClick();//在這裏新建監聽對象
+                viewHolder.item_surface.setOnClickListener(listener);
                 convertView.setTag(viewHolder);
+                convertView.setTag(viewHolder.item_surface.getId(), listener);//對監聽對象保存
             }
 
             boolean memberFlag = false;
@@ -1652,7 +1657,7 @@ public class FriendFragment extends Fragment {
                 ArrayList<FRow> fRowArrayList = mainDB.query(new QueryBuilder<FRow>(FRow.class)
                         .whereEquals(FRow.F_FRI_AID, fgRowsAidsList.get(groupPosition)[childPosition]));
                 LiteOrm.releaseMemory();
-                if (fRowArrayList.get(0).getF_member_flag().equals("Y")) { //是遠距會員，可能有最後量測時間
+                if (fRowArrayList.get(0).getF_member_flag().equals("Y")) { //群組部分，是遠距會員，可能有最後量測時間
                     memberFlag = true;
                     ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
                             .whereEquals(PreDataRow.PDATA_SID, fRowArrayList.get(0).getF_fri_sid())
@@ -1700,6 +1705,9 @@ public class FriendFragment extends Fragment {
                     if (!"".equals(lastDateStr)) {
                         lastDateStr = "最近量測時間 " + lastDateStr;
                     }
+                    listener.setOnClick("groupSelf", true, childPosition);
+                } else { //群組部分，非遠距會員
+                    listener.setOnClick("groupSelf", false, childPosition);
                 }
                 mainDB.close();
                 friendNickName = fRowArrayList.get(0).getF_nickname();
@@ -1712,19 +1720,9 @@ public class FriendFragment extends Fragment {
                         //do something
                     }
                 });
-
-                if (memberFlag) {
-                    viewHolder.item_surface.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, FriendPersonalActivity.class);
-                            context.startActivity(intent);
-                        }
-                    });
-                }
             } else if (groupPosition == fgRows.size()) { //所有好友部分
                 friendNickName = fRows.get(childPosition).getF_nickname();
-                if (fRows.get(childPosition).getF_member_flag().equals("Y")) {
+                if (fRows.get(childPosition).getF_member_flag().equals("Y")) { //所有好友部分，是遠距會員
                     memberFlag = true;
                     DataBase mainDB = LiteOrm.newSingleInstance(context, signInShrPref.getAID());
                     ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
@@ -1774,6 +1772,9 @@ public class FriendFragment extends Fragment {
                     if (!"".equals(lastDateStr.trim())) {
                         lastDateStr = "最近量測時間 " + lastDateStr;
                     }
+                    listener.setOnClick("allFriend", true, childPosition);
+                } else { //所有好友部分，非遠距會員
+                    listener.setOnClick("allFriend", false, childPosition);
                 }
                 viewHolder.iv_trash.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1783,15 +1784,6 @@ public class FriendFragment extends Fragment {
                         //do something
                     }
                 });
-                if (memberFlag) {
-                    viewHolder.item_surface.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, FriendPersonalActivity.class);
-                            context.startActivity(intent);
-                        }
-                    });
-                }
             } else if (groupPosition == fgRows.size() + 1) { //自己邀請的好友
                 friendNickName = fAddSendRows.get(childPosition).getFAddNot_recv_name();
                 switch (fAddSendRows.get(childPosition).getFAddNot_add_way()) {
@@ -1806,6 +1798,7 @@ public class FriendFragment extends Fragment {
                         break;
                 }
                 viewHolder.swipeLayout.setSwipeEnabled(false);
+                viewHolder.item_surface.setEnabled(false);
             } else { //邀請自己的好友
                 friendNickName = fAddRecvRows.get(childPosition).getFAddNot_send_name();
                 switch (fAddRecvRows.get(childPosition).getFAddNot_add_way()) {
@@ -1820,13 +1813,7 @@ public class FriendFragment extends Fragment {
                         break;
                 }
                 viewHolder.swipeLayout.setSwipeEnabled(false);
-                viewHolder.item_surface.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        replyFriendInviteDialog(fAddRecvRows.get(childPosition).getFAddNot_send_name()
-                                , fAddRecvRows.get(childPosition).getFAddNot_send_aid());
-                    }
-                });
+                listener.setOnClick("inviteSlef", true, childPosition);
             }
 
             viewHolder.childTitle.setText(friendNickName);
@@ -1910,6 +1897,47 @@ public class FriendFragment extends Fragment {
             public TextView childTitle, lastDateTv;
             public CircleImageView avatarIv;
             public LinearLayout item_surface;
+        }
+
+        private class OnClick implements View.OnClickListener {
+            String groupKind;
+            boolean memberFlag;
+            int childPosition;
+
+            public void setOnClick(String groupKind, boolean memberFlag, int childPosition) {
+                this.groupKind = groupKind;
+                this.memberFlag = memberFlag;
+                this.childPosition = childPosition;
+            }
+
+            @Override
+            public void onClick(View v) {
+                switch (groupKind){
+                    case "groupSelf":
+                        if (memberFlag){
+//                            toast("自訂群組");
+                            Intent intent = new Intent(context, FriendPersonalActivity.class);
+                            context.startActivity(intent);
+                        } else {
+                            toast("非遠距會員");
+                        }
+                        break;
+                    case "allFriend":
+                        if (memberFlag){
+//                            toast("所有好友");
+                            Intent intent = new Intent(context, FriendPersonalActivity.class);
+                            context.startActivity(intent);
+                        } else {
+                            toast("非遠距會員");
+                        }
+                        break;
+                    case "inviteSlef":
+//                        toast("好友邀請");
+                        replyFriendInviteDialog(fAddRecvRows.get(childPosition).getFAddNot_send_name()
+                                , fAddRecvRows.get(childPosition).getFAddNot_send_aid());
+                        break;
+                }
+            }
         }
 
         private void toast(String msg) {
