@@ -44,14 +44,15 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView48"
+            android:id="@+id/countTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="listView多選單"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="已選中0項"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginBottom="5dp" />
 
         <ListView
-            android:id="@+id/listView3"
+            android:id="@+id/friLv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />

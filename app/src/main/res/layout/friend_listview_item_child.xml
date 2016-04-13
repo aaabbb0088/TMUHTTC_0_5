@@ -60,7 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/selector_setting_personal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatarIv"
@@ -105,6 +106,17 @@
                     android:gravity="bottom|right"
                     android:text="MM/dd HH:mm"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/memberFlagIv"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/lastDateTv"
+                    android:layout_alignEnd="@+id/lastDateTv"
+                    android:src="@drawable/emoji_1f49e"
+                    android:layout_marginRight="10dp"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
         </LinearLayout>

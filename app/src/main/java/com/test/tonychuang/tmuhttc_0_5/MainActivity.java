@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signInShrPref = new SignInShrPref(this);
         UsersRecordShrPref usersRecordShrPref = new UsersRecordShrPref(this);
         SharedPreferences firstUse = MainActivity.this.getSharedPreferences("firstUse", 0);
-        if (firstUse.getString("firstUseFlag", "Y").equals("Y") || !usersRecordShrPref.isRecroded(signInShrPref.getPID())){
+        if (firstUse.getString("firstUseFlag", "Y").equals("Y") || !usersRecordShrPref.isRecroded(signInShrPref.getPID())) {
             signInShrPref.setSameSignInMachine(false);
             firstUse.edit().putString("firstUseFlag", "N").apply();
             usersRecordShrPref.saveUser(signInShrPref.getPID(), signInShrPref.getPWD());
@@ -1586,56 +1586,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      *
      */
-    //更新好友關係表、好友群組表、好友設定三表 end[17]~end[21]
+    //更新好友關係表、好友群組表、個人資料分享設定表、好友訊息接受設定表、好友訊息分享設定表、好友邀請訊息表、好友訊息表end[17]~end[23]
     private void UpdateFriendData() {
-        if (!signInShrPref.getSameSignInMachine()){
-            //更新好友關係表 end[17]
-            new AsyncTask<String, Void, ArrayList<FRow>>() {
-                @Override
-                protected ArrayList<FRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<FRow> fRows = null;
-
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateFriendTable(params[0]);
-                        fRows = jsonParser.parseFRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return fRows;
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<FRow> fRows) {
-                    super.onPostExecute(fRows);
-                    if (fRows != null) {
-                        if (fRows.size() != 0) {
-                            mainDB.deleteAll(FRow.class);
-                            for (int i = 0; i < fRows.size(); i++) {
-                                mainDB.save(fRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "好友關係表更新失敗", Toast.LENGTH_SHORT).show();
-                    }
-//                    //test
-//                    long count = mainDB.queryCount(FRow.class);
-//                    ArrayList<FRow> list1 = mainDB.query(FRow.class);
-//                    if (list1.size() != 0){
-//                        String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    } else {
-//                        String str = String.valueOf(count);
-//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-//                    }
-//                    //test
-                    UpdateFriendPsnData(); //更新好友個人警戒值、血壓流水資料、血糖流水資料
-                    updateRnEndflagSetting(updateEndflag.length - 3);
-                }
-            }.execute(signInShrPref.getAID());
+        if (!signInShrPref.getSameSignInMachine()) {
 
             //更新好友群組表 end[18]
             new AsyncTask<String, Void, ArrayList<FGRow>>() {
@@ -1659,8 +1612,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 protected void onPostExecute(ArrayList<FGRow> fgRows) {
                     super.onPostExecute(fgRows);
                     if (fgRows != null) {
+                        mainDB.deleteAll(FGRow.class);
                         if (fgRows.size() != 0) {
-                            mainDB.deleteAll(FGRow.class);
                             for (int i = 0; i < fgRows.size(); i++) {
                                 mainDB.save(fgRows.get(i));
                             }
@@ -1731,51 +1684,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.execute(signInShrPref.getAID());
 
-//            //APP使用者個人訊息分享好友設定表 ---改成---> 好友資料分享設定表
-//            new AsyncTask<String, Void, ArrayList<FShrNotSetRow>>() {
-//                @Override
-//                protected ArrayList<FShrNotSetRow> doInBackground(String... params) {
-//                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-//                    JSONParser jsonParser = new JSONParser();
-//                    ArrayList<FShrNotSetRow> fShrNotSetRows = null;
-//
-//                    JSONObject jsonObject;
-//                    try {
-//                        jsonObject = httcjsonapi.UpdateFriendShareNoticeSettingTable(params[0]);
-//                        fShrNotSetRows = jsonParser.parseFShrNotSetRow(jsonObject);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    return fShrNotSetRows;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(ArrayList<FShrNotSetRow> fShrNotSetRows) {
-//                    super.onPostExecute(fShrNotSetRows);
-//                    if (fShrNotSetRows != null) {
-//                        if (fShrNotSetRows.size() != 0) {
-//                            mainDB.deleteAll(FShrNotSetRow.class);
-//                            for (int i = 0; i < fShrNotSetRows.size(); i++) {
-//                                mainDB.save(fShrNotSetRows.get(i));
-//                            }
-//                            LiteOrm.releaseMemory();
-//                        }
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
-//                    }
-////                    //test
-////                    long count = mainDB.queryCount(FShrNotSetRow.class);
-////                    ArrayList<FShrNotSetRow> list1 = mainDB.query(FShrNotSetRow.class);
-////                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrNotSet_fri_aid();
-////                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
-////                    //test
-//                    updateRnEndflagSetting(updateEndflag.length - 6);
-//                }
-//            }.execute(signInShrPref.getAID());
-
-            /**
-             *
-             */
             //APP使用者好友訊息接受設定表 end[20]
             new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
                 @Override
@@ -1823,12 +1731,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }.execute(signInShrPref.getAID());
         } else {
-            UpdateFriendPsnData(); //更新好友個人警戒值、血壓流水資料、血糖流水資料
             updateRnEndflagSetting(updateEndflag.length - 2);
-            updateRnEndflagSetting(updateEndflag.length - 3);
             updateRnEndflagSetting(updateEndflag.length - 4);
             updateRnEndflagSetting(updateEndflag.length - 5);
         }
+
+        //更新好友關係表 end[17]
+        new AsyncTask<String, Void, ArrayList<FRow>>() {
+            @Override
+            protected ArrayList<FRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FRow> fRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendTable(params[0]);
+                    fRows = jsonParser.parseFRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FRow> fRows) {
+                super.onPostExecute(fRows);
+                if (fRows != null) {
+                    mainDB.deleteAll(FRow.class);
+                    if (fRows.size() != 0) {
+                        for (int i = 0; i < fRows.size(); i++) {
+                            mainDB.save(fRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "好友關係表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                    //test
+//                    long count = mainDB.queryCount(FRow.class);
+//                    ArrayList<FRow> list1 = mainDB.query(FRow.class);
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getF_active_datetime();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
+//                    //test
+                UpdateFriendPsnData(); //更新好友個人警戒值、血壓流水資料、血糖流水資料
+                updateRnEndflagSetting(updateEndflag.length - 3);
+            }
+        }.execute(signInShrPref.getAID());
 
         //APP使用者好友資料分享設定表(別人願意分享哪些給此APP使用者) end[21]
         new AsyncTask<String, Void, ArrayList<FShrDataFlagRow>>() {
@@ -1878,15 +1832,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }.execute(signInShrPref.getAID());
 
         //好友邀請訊息表 end[22]
-        ArrayList<FAddNotRow> fAddNotRowArrayList = mainDB.query(new QueryBuilder<FAddNotRow>(FAddNotRow.class)
-                .appendOrderDescBy(FAddNotRow.ID)
-                .limit(0, 1));
-        String fAddNotRowlastDataTime;
-        if (fAddNotRowArrayList.size() != 0) { //有資料，更新
-            fAddNotRowlastDataTime = fAddNotRowArrayList.get(0).getFAddNot_datetime();
-        } else { //無資料，從最後一筆未讀資料開始更新
-            fAddNotRowlastDataTime = "";
-        }
         new AsyncTask<String, Void, ArrayList<FAddNotRow>>() {
             @Override
             protected ArrayList<FAddNotRow> doInBackground(String... params) {
@@ -1896,7 +1841,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 JSONObject jsonObject;
                 try {
-                    jsonObject = httcjsonapi.UpdateFriendAddNoticeTable(params[0], params[1]);
+                    jsonObject = httcjsonapi.UpdateFriendAddNoticeTable(params[0]);
                     fAddNotRows = jsonParser.parseFAddNotRow(jsonObject);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1908,6 +1853,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             protected void onPostExecute(ArrayList<FAddNotRow> fAddNotRows) {
                 super.onPostExecute(fAddNotRows);
                 if (fAddNotRows != null) {
+                    mainDB.deleteAll(FAddNotRow.class);
                     if (fAddNotRows.size() != 0) {
                         for (int i = 0; i < fAddNotRows.size(); i++) {
                             mainDB.save(fAddNotRows.get(i));
@@ -1930,7 +1876,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                //test
                 updateRnEndflagSetting(updateEndflag.length - 7);
             }
-        }.execute(signInShrPref.getAID(), fAddNotRowlastDataTime);
+        }.execute(signInShrPref.getAID());
 
 
         //好友訊息表 end[23]
@@ -2003,20 +1949,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.DAY_OF_MONTH, -1);
         /**
-         * end[-9~-21]
+         * end[-9~-11]
          * 1.取得是遠距會員的好友sid
          * 2.更新資料
          *   警戒值
-         *   血壓4表
-         *   血糖4表
-         *   服務4表
+         *   血壓流水資料表
+         *   血糖流水資料表
          */
 
         /**
          * 取得是遠距會員的好友sid
          */
         ArrayList<FRow> fRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
-                .whereEquals(FRow.F_RELATION_FLAG, 1)
+                .whereEquals(FRow.F_RELATION_FLAG, 0)
                 .whereAppendAnd()
                 .whereEquals(FRow.F_MEMBER_FLAG, "Y"));
         if (fRows.size() != 0) {  //有遠距會員好友
@@ -2071,7 +2016,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     updateRnEndflagSetting(updateEndflag.length - 9);
                 }
             }.execute(friMemberSIDs);
-
 
             //好友血壓流水資料
             ArrayList<PreDataRow> preDataRowArrayList = mainDB.query(

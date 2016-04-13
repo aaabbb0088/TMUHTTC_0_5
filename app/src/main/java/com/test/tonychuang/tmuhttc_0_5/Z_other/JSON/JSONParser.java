@@ -419,6 +419,7 @@ public class JSONParser {
                         jsonObj.getLong("F_table_id"),
                         jsonObj.getString("F_fri_aid"),
                         jsonObj.getString("F_fri_sid"),
+                        jsonObj.getString("F_fri_pid"),
                         jsonObj.getInt("F_relation_flag"),
                         jsonObj.getString("F_active_datetime"),
                         jsonObj.getString("F_member_flag"),
@@ -662,7 +663,14 @@ public class JSONParser {
                 arrayList.add(new FAddNotRow(
                         jsonObj.getLong("FAddNot_table_id"),
                         jsonObj.getString("FAddNot_send_aid"),
-                        jsonObj.getInt("FAddNot_type"),
+                        jsonObj.getString("FAddNot_send_pid"),
+                        jsonObj.getString("FAddNot_send_name"),
+                        jsonObj.getString("FAddNot_send_avatar"),
+                        jsonObj.getString("FAddNot_recv_aid"),
+                        jsonObj.getString("FAddNot_recv_pid"),
+                        jsonObj.getString("FAddNot_recv_name"),
+                        jsonObj.getString("FAddNot_recv_avatar"),
+                        jsonObj.getInt("FAddNot_add_way"),
                         jsonObj.getString("FAddNot_sender_name"),
                         jsonObj.getString("FAddNot_datetime"),
                         jsonObj.getInt("FAddNot_status_flag")

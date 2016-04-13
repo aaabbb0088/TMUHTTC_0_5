@@ -134,14 +134,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="會員姓名"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/nicknameTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="會員暱稱"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="center" />
             </LinearLayout>
         </LinearLayout>
 
@@ -149,7 +151,8 @@
             android:id="@+id/qrLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/qrReadLayout"

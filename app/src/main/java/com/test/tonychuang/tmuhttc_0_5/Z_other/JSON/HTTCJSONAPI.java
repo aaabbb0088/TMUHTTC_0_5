@@ -23,11 +23,12 @@ import java.util.Map;
 
 public class HTTCJSONAPI {
 
-//    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
-    private final String urlString = "http://10.15.2.113:9999/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
 //    private final String urlString = "http://192.168.0.12:9999/HTTCJSONAPI/Handler.ashx";
-//    private final String urlString = "http://192.168.0.107:9999/HTTCJSONAPI/Handler.ashx";
 //    private final String urlString = "http://120.97.32.179:9999/Handler.ashx";
+//    private final String urlString = "http://10.15.2.113:9999/HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.0.107:9999/HTTCJSONAPI/Handler.ashx";
+
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";
@@ -579,14 +580,13 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdateFriendAddNoticeTable(String aid, String lastDataTime) throws Exception {
+    public JSONObject UpdateFriendAddNoticeTable(String aid) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface", "HTTCJSONAPI");
         o.put("method", "UpdateFriendAddNoticeTable");
         p.put("aid", mapObject(aid));
-        p.put("lastDataTime", mapObject(lastDataTime));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -685,15 +685,15 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdateGlycemiaAvgdraweData(String sid,String startDate,String endDate) throws Exception {
+    public JSONObject UpdateGlycemiaAvgdraweData(String sid, String startDate, String endDate) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "UpdateGlycemiaAvgdraweData");
-        p.put("sid",mapObject(sid));
-        p.put("startDate",mapObject(startDate));
-        p.put("endDate",mapObject(endDate));
+        p.put("sid", mapObject(sid));
+        p.put("startDate", mapObject(startDate));
+        p.put("endDate", mapObject(endDate));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -701,15 +701,15 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdateGlycemiaListTableData(String sid,String startDate,String endDate) throws Exception {
+    public JSONObject UpdateGlycemiaListTableData(String sid, String startDate, String endDate) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "UpdateGlycemiaListTableData");
-        p.put("sid",mapObject(sid));
-        p.put("startDate",mapObject(startDate));
-        p.put("endDate",mapObject(endDate));
+        p.put("sid", mapObject(sid));
+        p.put("startDate", mapObject(startDate));
+        p.put("endDate", mapObject(endDate));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -717,15 +717,15 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdateMedicineListTableData(String sid,String startDate,String endDate) throws Exception {
+    public JSONObject UpdateMedicineListTableData(String sid, String startDate, String endDate) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "UpdateMedicineListTableData");
-        p.put("sid",mapObject(sid));
-        p.put("startDate",mapObject(startDate));
-        p.put("endDate",mapObject(endDate));
+        p.put("sid", mapObject(sid));
+        p.put("startDate", mapObject(startDate));
+        p.put("endDate", mapObject(endDate));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -733,15 +733,15 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject UpdateRecordListTableData(String sid,String startDate,String endDate) throws Exception {
+    public JSONObject UpdateRecordListTableData(String sid, String startDate, String endDate) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "UpdateRecordListTableData");
-        p.put("sid",mapObject(sid));
-        p.put("startDate",mapObject(startDate));
-        p.put("endDate",mapObject(endDate));
+        p.put("sid", mapObject(sid));
+        p.put("startDate", mapObject(startDate));
+        p.put("endDate", mapObject(endDate));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -749,14 +749,14 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject pressThumbPlus(String tableId,String aid) throws Exception {
+    public JSONObject pressThumbPlus(String tableId, String aid) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "pressThumbPlus");
-        p.put("tableId",mapObject(tableId));
-        p.put("aid",mapObject(aid));
+        p.put("tableId", mapObject(tableId));
+        p.put("aid", mapObject(aid));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -764,14 +764,14 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject glycemiaThumbPlus(String tableId,String aid) throws Exception {
+    public JSONObject glycemiaThumbPlus(String tableId, String aid) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "glycemiaThumbPlus");
-        p.put("tableId",mapObject(tableId));
-        p.put("aid",mapObject(aid));
+        p.put("tableId", mapObject(tableId));
+        p.put("aid", mapObject(aid));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -779,20 +779,20 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject WritePressMsg(String PMsg_table_id,String PMsg_sid,String PMsg_writer_aid,
-                                    String PMsg_datetime,String PMsg_content,
+    public JSONObject WritePressMsg(String PMsg_table_id, String PMsg_sid, String PMsg_writer_aid,
+                                    String PMsg_datetime, String PMsg_content,
                                     String PMsg_status_flag) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "WritePressMsg");
-        p.put("PMsg_table_id",mapObject(PMsg_table_id));
-        p.put("PMsg_sid",mapObject(PMsg_sid));
-        p.put("PMsg_writer_aid",mapObject(PMsg_writer_aid));
-        p.put("PMsg_datetime",mapObject(PMsg_datetime));
-        p.put("PMsg_content",mapObject(PMsg_content));
-        p.put("PMsg_status_flag",mapObject(PMsg_status_flag));
+        p.put("PMsg_table_id", mapObject(PMsg_table_id));
+        p.put("PMsg_sid", mapObject(PMsg_sid));
+        p.put("PMsg_writer_aid", mapObject(PMsg_writer_aid));
+        p.put("PMsg_datetime", mapObject(PMsg_datetime));
+        p.put("PMsg_content", mapObject(PMsg_content));
+        p.put("PMsg_status_flag", mapObject(PMsg_status_flag));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -800,20 +800,173 @@ public class HTTCJSONAPI {
         return result;
     }
 
-    public JSONObject WriteGlycemiaMsg(String GMsg_table_id,String GMsg_sid,String GMsg_writer_aid,
-                                       String GMsg_datetime,String GMsg_content,
+    public JSONObject WriteGlycemiaMsg(String GMsg_table_id, String GMsg_sid, String GMsg_writer_aid,
+                                       String GMsg_datetime, String GMsg_content,
                                        String GMsg_status_flag) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
-        o.put("interface","HTTCJSONAPI");
+        o.put("interface", "HTTCJSONAPI");
         o.put("method", "WriteGlycemiaMsg");
-        p.put("GMsg_table_id",mapObject(GMsg_table_id));
-        p.put("GMsg_sid",mapObject(GMsg_sid));
-        p.put("GMsg_writer_aid",mapObject(GMsg_writer_aid));
-        p.put("GMsg_datetime",mapObject(GMsg_datetime));
-        p.put("GMsg_content",mapObject(GMsg_content));
-        p.put("GMsg_status_flag",mapObject(GMsg_status_flag));
+        p.put("GMsg_table_id", mapObject(GMsg_table_id));
+        p.put("GMsg_sid", mapObject(GMsg_sid));
+        p.put("GMsg_writer_aid", mapObject(GMsg_writer_aid));
+        p.put("GMsg_datetime", mapObject(GMsg_datetime));
+        p.put("GMsg_content", mapObject(GMsg_content));
+        p.put("GMsg_status_flag", mapObject(GMsg_status_flag));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject SearchAddingFriend(String id,String addWayFlag) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "SearchAddingFriend");
+        p.put("id",mapObject(id));
+        p.put("addWayFlag",mapObject(addWayFlag));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject InviteAddingFriend(String aid,String friAid,String addWayFlag) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "InviteAddingFriend");
+        p.put("aid",mapObject(aid));
+        p.put("friAid",mapObject(friAid));
+        p.put("addWayFlag",mapObject(addWayFlag));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject AgreeAddingFriend(String aid,String friAid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "AgreeAddingFriend");
+        p.put("aid",mapObject(aid));
+        p.put("friAid",mapObject(friAid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateNewFWLevelShrPref(String sid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateNewFWLevelShrPref");
+        p.put("sid",mapObject(sid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateNewFPressDataTable(String sid,String date) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateNewFPressDataTable");
+        p.put("sid",mapObject(sid));
+        p.put("date",mapObject(date));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject UpdateNewFGlycemiaDataTable(String sid,String date) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateNewFGlycemiaDataTable");
+        p.put("sid",mapObject(sid));
+        p.put("date",mapObject(date));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject RefuseAddingFriend(String aid,String friAid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "RefuseAddingFriend");
+        p.put("aid",mapObject(aid));
+        p.put("friAid",mapObject(friAid));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject AddFriendGroup(String aid,String groupName,String friAids) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "AddFriendGroup");
+        p.put("aid",mapObject(aid));
+        p.put("groupName",mapObject(groupName));
+        p.put("friAids",mapObject(friAids));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditFriendGroup(String aid,String beforeChangeName,String afterChangeName,String friAids) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditFriendGroup");
+        p.put("aid",mapObject(aid));
+        p.put("beforeChangeName",mapObject(beforeChangeName));
+        p.put("afterChangeName",mapObject(afterChangeName));
+        p.put("friAids",mapObject(friAids));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject DeleteFriendGroup(String aid,String groupName) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "DeleteFriendGroup");
+        p.put("aid",mapObject(aid));
+        p.put("groupName",mapObject(groupName));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

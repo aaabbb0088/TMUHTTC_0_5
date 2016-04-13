@@ -125,10 +125,14 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.pressThbBtn:
-                thumbAlertDialog("P");
+                if (preThumbRows.get(0).getPData_thumb_count() != 0){
+                    thumbAlertDialog("P");
+                }
                 break;
             case R.id.glycemiaThbBtn:
-                thumbAlertDialog("G");
+                if (glyThumbRows.get(0).getGData_thumb_count() != 0){
+                    thumbAlertDialog("G");
+                }
                 break;
         }
         return true;
