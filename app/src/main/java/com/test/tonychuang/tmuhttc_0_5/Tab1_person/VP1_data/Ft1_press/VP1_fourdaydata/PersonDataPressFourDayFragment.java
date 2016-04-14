@@ -177,26 +177,22 @@ public class PersonDataPressFourDayFragment extends Fragment {
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         Date todayDate = clr.getTime();
         String todayStr = myDateSFormat.getFrmt_yMd().format(todayDate);
-        todayStr = todayStr + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_1 = clr.getTime();
         String Date_1Str = myDateSFormat.getFrmt_yMd().format(Date_1);
-        Date_1Str = Date_1Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_2 = clr.getTime();
         String Date_2Str = myDateSFormat.getFrmt_yMd().format(Date_2);
-        Date_2Str = Date_2Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_3 = clr.getTime();
         String Date_3Str = myDateSFormat.getFrmt_yMd().format(Date_3);
-        Date_3Str = Date_3Str + " 00:00";
 
 
         //大前天
-        ArrayList<PreAvgRow> preAvgRows3 = getOnePreAvgRow(Date_3Str, Date_2Str);
+        ArrayList<PreAvgRow> preAvgRows3 = getOnePreAvgRow(Date_3Str);
         if (preAvgRows3.size() != 0) {
             today_3DataLayout.setVisibility(View.VISIBLE);
             today_3NoDataText.setVisibility(View.GONE);
@@ -222,7 +218,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
         }
 
         //前天
-        ArrayList<PreAvgRow> preAvgRows2 = getOnePreAvgRow(Date_2Str, Date_1Str);
+        ArrayList<PreAvgRow> preAvgRows2 = getOnePreAvgRow(Date_2Str);
         if (preAvgRows2.size() != 0) {
             today_2DataLayout.setVisibility(View.VISIBLE);
             today_2NoDataText.setVisibility(View.GONE);
@@ -248,7 +244,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
         }
 
         //昨天
-        ArrayList<PreAvgRow> preAvgRows1 = getOnePreAvgRow(Date_1Str, todayStr);
+        ArrayList<PreAvgRow> preAvgRows1 = getOnePreAvgRow(Date_1Str);
         if (preAvgRows1.size() != 0) {
             today_1DataLayout.setVisibility(View.VISIBLE);
             today_1NoDataText.setVisibility(View.GONE);
@@ -275,6 +271,7 @@ public class PersonDataPressFourDayFragment extends Fragment {
 
 
         //更新當天數據、顏色、圖示
+        todayStr = todayStr + " 00:00";
         ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
                 .whereEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
                 .whereAppendAnd()
@@ -349,14 +346,12 @@ public class PersonDataPressFourDayFragment extends Fragment {
     /**
      *
      */
-    private ArrayList<PreAvgRow> getOnePreAvgRow(String startDate, String endDate) {
+    private ArrayList<PreAvgRow> getOnePreAvgRow(String date) {
         ArrayList<PreAvgRow> arrayList;
         arrayList = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
                 .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(PreAvgRow.PAVG_DATETIME, startDate)
-                .whereAppendAnd()
-                .whereLessThan(PreAvgRow.PAVG_DATETIME, endDate)
+                .whereEquals(PreAvgRow.PAVG_DATETIME, date)
                 .limit(0, 1));
         LiteOrm.releaseMemory();
         return arrayList;

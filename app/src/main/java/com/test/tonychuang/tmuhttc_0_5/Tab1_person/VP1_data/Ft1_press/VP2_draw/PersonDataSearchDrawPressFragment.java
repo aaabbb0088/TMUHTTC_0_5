@@ -1,6 +1,7 @@
 package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft1_press.VP2_draw;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.ToggleButton;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -28,6 +30,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.DataBase;
@@ -45,7 +48,6 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -75,12 +77,15 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
     private RadioButton lBtn;
     private RadioButton hrBtn;
 
-    private SimpleDateFormat dateFormat;
     private MyDateSFormat myDateSFormat;
     private int unChangeTextColor = Color.GRAY;
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
 
+    private String todayDateStr;
+    private String oneWeekDateStr;
+    private String twoWeekDateStr;
+    private String oneMounthDateStr;
     private ArrayList<PreAvgRow> oneWeekData;
     private ArrayList<PreAvgRow> twoWeekData;
     private ArrayList<PreAvgRow> oneMounthData;
@@ -119,8 +124,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_person_data_search_draw_press, container, false);
-        initData();
         initView();
+        initData();
         initBtn();
 
         return view;
@@ -201,6 +206,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 chartView.fitScreen();
             }
         });
+
+        startDateTv.setText(oneWeekDateStr);
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setText(todayDateStr);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtn(ToggleButton Btn) {
@@ -214,6 +224,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 thirtyDayBtn.setChecked(false);
                 showResult(oneWeekData);
                 nowPreAvgRows = oneWeekData;
+                startDateTv.setText(oneWeekDateStr);
                 break;
             case R.id.forteenDayDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -221,6 +232,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 thirtyDayBtn.setChecked(false);
                 showResult(twoWeekData);
                 nowPreAvgRows = twoWeekData;
+                startDateTv.setText(twoWeekDateStr);
                 break;
             case R.id.thirtyDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -228,11 +240,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowPreAvgRows = oneMounthData;
+                startDateTv.setText(oneMounthDateStr);
                 break;
         }
-        startDateTv.setText(nowPreAvgRows.get(0).getPAvg_datetime());
         startDateTv.setTextColor(unChangeTextColor);
-        endDateTv.setText(nowPreAvgRows.get(nowPreAvgRows.size() - 1).getPAvg_datetime());
+        endDateTv.setText(todayDateStr);
         endDateTv.setTextColor(unChangeTextColor);
     }
 
@@ -258,7 +270,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         dataRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (nowPreAvgRows != null) {
+                if (nowPreAvgRows != null && nowPreAvgRows.size() != 0) {
                     ArrayList<String> xData = new ArrayList<String>();
                     for (int index = 0; index < nowPreAvgRows.size(); index++) {
                         Date date = new Date();
@@ -362,6 +374,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         int dataSize = preAvgRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            loadStatusText.setVisibility(View.VISIBLE);
+            drawLayout.setVisibility(View.GONE);
             setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);
@@ -427,7 +441,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 rightAxis.setDrawGridLines(true);
                 rightAxis.enableGridDashedLine(10f, 10f, 0f);
 
-                yMax = Math.max(Math.max(Float.valueOf(BP_SY_Max), lineData.getYMax()), barData.getYMax());
+                yMax = Math.max(Math.max((float) BP_SY_Max, lineData.getYMax()), barData.getYMax());
                 leftAxis.setAxisMaxValue(yMax + 30f);
                 leftAxis.setAxisMinValue(0f);
                 rightAxis.setDrawGridLines(true);
@@ -441,8 +455,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 leftAxis.addLimitLine(hULimitLine);
                 leftAxis.addLimitLine(hLLimitLine);
 
-                yMax = Math.max(Float.valueOf(BP_SY_Max), lineData.getYMax());
-                yMin = Math.min(Float.valueOf(BP_SY_Min), lineData.getYMin());
+                yMax = Math.max((float) BP_SY_Max, lineData.getYMax());
+                yMin = Math.min((float) BP_SY_Min, lineData.getYMin());
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMaxValue(yMax + 30f);
                 leftAxis.setAxisMinValue(yMin - 30f);
@@ -456,8 +470,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 leftAxis.addLimitLine(lULimitLine);
                 leftAxis.addLimitLine(lLLimitLine);
 
-                yMax = Math.max(Float.valueOf(BP_DI_Max), lineData.getYMax());
-                yMin = Math.min(Float.valueOf(BP_DI_Min), lineData.getYMin());
+                yMax = Math.max((float) BP_DI_Max, lineData.getYMax());
+                yMin = Math.min((float) BP_DI_Min, lineData.getYMin());
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMaxValue(yMax + 30f);
                 leftAxis.setAxisMinValue(yMin - 30f);
@@ -471,8 +485,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 leftAxis.addLimitLine(hrULimitLine);
                 leftAxis.addLimitLine(hrLLimitLine);
 
-                yMax = Math.max(Float.valueOf(BP_HR_Max), barData.getYMax());
-                yMin = Math.min(Float.valueOf(BP_HR_Min), barData.getYMin());
+                yMax = Math.max((float) BP_HR_Max, barData.getYMax());
+                yMin = Math.min((float) BP_HR_Min, barData.getYMin());
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMaxValue(yMax + 30f);
                 leftAxis.setAxisMinValue(yMin - 30f);
@@ -481,10 +495,40 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                 rightAxis.setAxisMinValue(yMin - 30f);
                 break;
         }
+        MarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_view);
+        chartView.setMarkerView(mv);
         chartView.setAutoScaleMinMaxEnabled(true);
         chartView.setData(yData);
         chartView.invalidate();
         chartView.fitScreen();
+    }
+
+    /**
+     *         構造一個類似Android Toast的彈出消息提示框。
+     */
+    private class MyMarkerView extends MarkerView {
+
+        private TextView tvContent;
+
+        public MyMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+            tvContent = (TextView) findViewById(R.id.tvContent);
+        }
+
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            int n = (int) e.getVal();
+            tvContent.setText(String.valueOf(n));
+        }
+        @Override
+        public int getXOffset(float v) {
+            return -(getWidth() / 2);
+        }
+
+        @Override
+        public int getYOffset(float v) {
+            return -getHeight();
+        }
     }
 
 
@@ -495,7 +539,6 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
      *
      */
     private void initData() {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         myDateSFormat = new MyDateSFormat();
         wLevelShrPref = new WLevelShrPref(getActivity());
         signInShrPref = new SignInShrPref(getActivity());
@@ -503,13 +546,14 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
 
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.MONTH, -1);
-        String oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
 
         oneWeekData = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
                 .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
@@ -649,11 +693,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         set1.setColor(Color.rgb(255, 69, 0));
         set1.setLineWidth(2.5f);
         set1.setCircleColor(Color.rgb(255, 69, 0));
-        set1.setCircleRadius(5f);
+        set1.setCircleRadius(3f);
         set1.setFillColor(Color.rgb(255, 69, 0));
         set1.setDrawCubic(true);
         set1.setDrawValues(true);
-        set1.setValueTextSize(10f);
+        set1.setValueTextSize(0f);
         set1.setValueTextColor(Color.rgb(255, 69, 0));
         set1.setValueFormatter(new IntegerValueFormatter());
 
@@ -672,11 +716,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         set2.setColor(Color.rgb(65, 105, 225));
         set2.setLineWidth(2.5f);
         set2.setCircleColor(Color.rgb(65, 105, 225));
-        set2.setCircleRadius(5f);
+        set2.setCircleRadius(3f);
         set2.setFillColor(Color.rgb(65, 105, 225));
         set2.setDrawCubic(true);
         set2.setDrawValues(true);
-        set2.setValueTextSize(10f);
+        set2.setValueTextSize(0f);
         set2.setValueTextColor(Color.rgb(65, 105, 225));
         set2.setValueFormatter(new IntegerValueFormatter());
 
@@ -701,11 +745,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         set1.setColor(Color.rgb(255, 69, 0));
         set1.setLineWidth(2.5f);
         set1.setCircleColor(Color.rgb(255, 69, 0));
-        set1.setCircleRadius(5f);
+        set1.setCircleRadius(3f);
         set1.setFillColor(Color.rgb(255, 69, 0));
         set1.setDrawCubic(true);
         set1.setDrawValues(true);
-        set1.setValueTextSize(10f);
+        set1.setValueTextSize(0f);
         set1.setValueTextColor(Color.rgb(255, 69, 0));
         set1.setValueFormatter(new IntegerValueFormatter());
 
@@ -730,11 +774,11 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         set2.setColor(Color.rgb(65, 105, 225));
         set2.setLineWidth(2.5f);
         set2.setCircleColor(Color.rgb(65, 105, 225));
-        set2.setCircleRadius(5f);
+        set2.setCircleRadius(3f);
         set2.setFillColor(Color.rgb(65, 105, 225));
         set2.setDrawCubic(true);
         set2.setDrawValues(true);
-        set2.setValueTextSize(10f);
+        set2.setValueTextSize(0f);
         set2.setValueTextColor(Color.rgb(65, 105, 225));
         set2.setValueFormatter(new IntegerValueFormatter());
 
@@ -780,7 +824,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         BarDataSet set = new BarDataSet(entries, "脈搏");
         set.setColor(Color.rgb(60, 220, 78));
         set.setValueTextColor(Color.rgb(60, 220, 78));
-        set.setValueTextSize(10f);
+        set.setValueTextSize(0f);
         set.setValueFormatter(new IntegerValueFormatter());
         d.addDataSet(set);
 

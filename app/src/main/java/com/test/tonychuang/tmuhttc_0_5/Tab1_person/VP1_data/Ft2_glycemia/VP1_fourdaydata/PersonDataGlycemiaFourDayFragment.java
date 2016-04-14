@@ -171,26 +171,22 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         Date todayDate = clr.getTime();
         String todayStr = myDateSFormat.getFrmt_yMd().format(todayDate);
-        todayStr = todayStr + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_1 = clr.getTime();
         String Date_1Str = myDateSFormat.getFrmt_yMd().format(Date_1);
-        Date_1Str = Date_1Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_2 = clr.getTime();
         String Date_2Str = myDateSFormat.getFrmt_yMd().format(Date_2);
-        Date_2Str = Date_2Str + " 00:00";
 
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date Date_3 = clr.getTime();
         String Date_3Str = myDateSFormat.getFrmt_yMd().format(Date_3);
-        Date_3Str = Date_3Str + " 00:00";
 
 
         //大前天
-        ArrayList<GlyAvgRow> glyAvgRows3 = getOneGlyAvgRow(Date_3Str, Date_2Str);
+        ArrayList<GlyAvgRow> glyAvgRows3 = getOneGlyAvgRow(Date_3Str);
         if (glyAvgRows3.size() != 0) {
             today_3DataLayout.setVisibility(View.VISIBLE);
             today_3NoDataText.setVisibility(View.GONE);
@@ -216,7 +212,7 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
         }
 
         //前天
-        ArrayList<GlyAvgRow> glyAvgRows2 = getOneGlyAvgRow(Date_2Str, Date_1Str);
+        ArrayList<GlyAvgRow> glyAvgRows2 = getOneGlyAvgRow(Date_2Str);
         if (glyAvgRows2.size() != 0) {
             today_2DataLayout.setVisibility(View.VISIBLE);
             today_2NoDataText.setVisibility(View.GONE);
@@ -242,7 +238,7 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
         }
 
         //昨天
-        ArrayList<GlyAvgRow> glyAvgRows1 = getOneGlyAvgRow(Date_1Str, todayStr);
+        ArrayList<GlyAvgRow> glyAvgRows1 = getOneGlyAvgRow(Date_1Str);
         if (glyAvgRows1.size() != 0) {
             today_1DataLayout.setVisibility(View.VISIBLE);
             today_1NoDataText.setVisibility(View.GONE);
@@ -269,6 +265,7 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
 
 
         //更新當天數據、顏色、圖示
+        todayStr = todayStr + " 00:00";
         ArrayList<GlyDataRow> glyBfDataRows = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
                 .whereEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                 .whereAppendAnd()
@@ -368,14 +365,12 @@ public class PersonDataGlycemiaFourDayFragment extends Fragment {
     /**
      *
      */
-    private ArrayList<GlyAvgRow> getOneGlyAvgRow(String startDate, String endDate) {
+    private ArrayList<GlyAvgRow> getOneGlyAvgRow(String date) {
         ArrayList<GlyAvgRow> arrayList;
         arrayList = mainDB.query(new QueryBuilder<GlyAvgRow>(GlyAvgRow.class)
                 .whereEquals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(GlyAvgRow.GAVG_DATETIME, startDate)
-                .whereAppendAnd()
-                .whereLessThan(GlyAvgRow.GAVG_DATETIME, endDate)
+                .whereEquals(GlyAvgRow.GAVG_DATETIME, date)
                 .limit(0, 1));
         LiteOrm.releaseMemory();
         return arrayList;

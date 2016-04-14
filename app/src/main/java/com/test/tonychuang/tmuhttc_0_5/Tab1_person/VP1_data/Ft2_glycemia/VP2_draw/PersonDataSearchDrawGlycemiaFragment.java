@@ -1,6 +1,7 @@
 package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft2_glycemia.VP2_draw;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.ToggleButton;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,6 +27,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.litesuits.orm.LiteOrm;
@@ -45,7 +48,6 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,12 +76,15 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
     private RadioButton bfBtn;
     private RadioButton afBtn;
 
-    private SimpleDateFormat dateFormat;
     private MyDateSFormat myDateSFormat;
     private int unChangeTextColor = Color.GRAY;
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
 
+    private String todayDateStr;
+    private String oneWeekDateStr;
+    private String twoWeekDateStr;
+    private String oneMounthDateStr;
     private ArrayList<GlyAvgRow> oneWeekData;
     private ArrayList<GlyAvgRow> twoWeekData;
     private ArrayList<GlyAvgRow> oneMounthData;
@@ -115,8 +120,8 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_person_data_search_draw_glycemia, container, false);
-        initData();
         initView();
+        initData();
         initBtn();
 
         return view;
@@ -183,12 +188,6 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         allBtn = (RadioButton) view.findViewById(R.id.allBtn);
         bfBtn = (RadioButton) view.findViewById(R.id.bfBtn);
         afBtn = (RadioButton) view.findViewById(R.id.afBtn);
-
-        //<code>test code</code>
-        startDateTv.setText(dateFormat.format(new Date()));
-        startDateTv.setTextColor(Color.GRAY);
-        endDateTv.setText(dateFormat.format(new Date()));
-        endDateTv.setTextColor(Color.GRAY);
     }
 
     private void initBtn() {
@@ -203,6 +202,11 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                 chartView.fitScreen();
             }
         });
+
+        startDateTv.setText(oneWeekDateStr);
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setText(todayDateStr);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtn(ToggleButton Btn) {
@@ -216,6 +220,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                 thirtyDayBtn.setChecked(false);
                 showResult(oneWeekData);
                 nowGlyAvgRows = oneWeekData;
+                startDateTv.setText(oneWeekDateStr);
                 break;
             case R.id.forteenDayDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -223,6 +228,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                 thirtyDayBtn.setChecked(false);
                 showResult(twoWeekData);
                 nowGlyAvgRows = twoWeekData;
+                startDateTv.setText(twoWeekDateStr);
                 break;
             case R.id.thirtyDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -230,11 +236,11 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowGlyAvgRows = oneMounthData;
+                startDateTv.setText(oneMounthDateStr);
                 break;
         }
-        startDateTv.setText(nowGlyAvgRows.get(0).getGAvg_datetime());
         startDateTv.setTextColor(unChangeTextColor);
-        endDateTv.setText(nowGlyAvgRows.get(nowGlyAvgRows.size() - 1).getGAvg_datetime());
+        endDateTv.setText(todayDateStr);
         endDateTv.setTextColor(unChangeTextColor);
     }
 
@@ -260,7 +266,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         dataRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (nowGlyAvgRows != null) {
+                if (nowGlyAvgRows != null && nowGlyAvgRows.size() != 0) {
                     ArrayList<String> xData = new ArrayList<String>();
                     for (int index = 0; index < nowGlyAvgRows.size(); index++) {
                         Date date = new Date();
@@ -287,7 +293,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                             rightAxis.setDrawGridLines(true);
                             rightAxis.enableGridDashedLine(10f, 10f, 0f);
 
-                            yMax = Math.max(Float.valueOf(BG_AM_Max), Math.max(ybarDataSets.get(0).getYMax(), ybarDataSets.get(1).getYMax()));
+                            yMax = Math.max((float) BG_AM_Max, Math.max(ybarDataSets.get(0).getYMax(), ybarDataSets.get(1).getYMax()));
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(0f);
                             rightAxis.setDrawGridLines(true);
@@ -301,7 +307,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                             leftAxis.addLimitLine(bULimitLine);
                             leftAxis.addLimitLine(bLLimitLine);
 
-                            yMax = Math.max(Float.valueOf(BG_BM_Max), ybarDataSets.get(0).getYMax());
+                            yMax = Math.max((float) BG_BM_Max, ybarDataSets.get(0).getYMax());
                             leftAxis.setDrawGridLines(false);
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(0f);
@@ -315,7 +321,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                             leftAxis.addLimitLine(aULimitLine);
                             leftAxis.addLimitLine(aLLimitLine);
 
-                            yMax = Math.max(Float.valueOf(BG_AM_Max), ybarDataSets.get(0).getYMax());
+                            yMax = Math.max((float) BG_AM_Max, ybarDataSets.get(0).getYMax());
                             leftAxis.setDrawGridLines(false);
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(0f);
@@ -343,6 +349,8 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         int dataSize = glyAvgRows.size();
         if (dataSize == 0) {
             loadStatusText.setText("無資料");
+            loadStatusText.setVisibility(View.VISIBLE);
+            drawLayout.setVisibility(View.GONE);
             setRadioGroupTF(false);
         } else {
             loadStatusText.setVisibility(View.GONE);
@@ -437,10 +445,47 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
                 rightAxis.setAxisMinValue(0f);
                 break;
         }
+        MarkerView mv = new MyMarkerView(getActivity(), R.layout.marker_view);
+        chartView.setMarkerView(mv);
         chartView.setAutoScaleMinMaxEnabled(true);
         chartView.setData(barData);
         chartView.invalidate();
         chartView.fitScreen();
+    }
+
+    /**
+     * 構造一個類似Android Toast的彈出消息提示框。
+     */
+    private class MyMarkerView extends MarkerView {
+
+        private TextView tvContent;
+
+        public MyMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+            tvContent = (TextView) findViewById(R.id.tvContent);
+        }
+
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+            int n = (int) e.getVal();
+            String content;
+            if (n == 0) {
+                content = "未量測";
+            } else {
+                content = String.valueOf(n);
+            }
+            tvContent.setText(content);
+        }
+
+        @Override
+        public int getXOffset(float v) {
+            return -(getWidth() / 2);
+        }
+
+        @Override
+        public int getYOffset(float v) {
+            return -getHeight();
+        }
     }
 
 
@@ -451,7 +496,6 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
      *
      */
     private void initData() {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         myDateSFormat = new MyDateSFormat();
         wLevelShrPref = new WLevelShrPref(getActivity());
         signInShrPref = new SignInShrPref(getActivity());
@@ -459,13 +503,14 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
 
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.MONTH, -1);
-        String oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
 
         oneWeekData = mainDB.query(new QueryBuilder<GlyAvgRow>(GlyAvgRow.class)
                 .whereEquals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
@@ -627,7 +672,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         BarDataSet set1 = new BarDataSet(entries1, "飯前血糖");
         set1.setColor(Color.rgb(65, 105, 225));
         set1.setValueTextColor(Color.rgb(65, 105, 225));
-        set1.setValueTextSize(10f);
+        set1.setValueTextSize(0f);
         set1.setValueFormatter(new IntegerValueFormatter());
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
         d.add(set1);
@@ -646,7 +691,7 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         BarDataSet set2 = new BarDataSet(entries2, "飯後血糖");
         set2.setColor(Color.rgb(255, 69, 0));
         set2.setValueTextColor(Color.rgb(255, 69, 0));
-        set2.setValueTextSize(10f);
+        set2.setValueTextSize(0f);
         set2.setValueFormatter(new IntegerValueFormatter());
         set2.setAxisDependency(YAxis.AxisDependency.LEFT);
         d.add(set2);

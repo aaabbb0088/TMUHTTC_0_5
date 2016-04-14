@@ -30,10 +30,8 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.WLevelShrPref;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -59,12 +57,15 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
     private RadioButton bfBtn;
     private RadioButton afBtn;
 
-    private SimpleDateFormat dateFormat;
     private MyDateSFormat myDateSFormat;
     private int unChangeTextColor = Color.GRAY;
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
 
+    private String todayDateStr;
+    private String oneWeekDateStr;
+    private String twoWeekDateStr;
+    private String oneMounthDateStr;
     private ArrayList<GlyDataRow> oneWeekData;
     private ArrayList<GlyDataRow> twoWeekData;
     private ArrayList<GlyDataRow> oneMounthData;
@@ -84,8 +85,8 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_person_data_search_table_glycemia, container, false);
-        initData();
         initView();
+        initData();
         initBtn();
 
         return view;
@@ -135,12 +136,6 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         searchBtn = (ImageButton) view.findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(this);
 
-        //<code>test code</code>
-        startDateTv.setText(dateFormat.format(new Date()));
-        startDateTv.setTextColor(Color.GRAY);
-        endDateTv.setText(dateFormat.format(new Date()));
-        endDateTv.setTextColor(Color.GRAY);
-
         searchBtn = (ImageButton) view.findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(this);
         sevenDayBtn = (ToggleButton) view.findViewById(R.id.sevenDayBtn);
@@ -167,6 +162,11 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         setDataRadioGroup();
         dataRadioGroup.check(R.id.allBtn);
         searchBtn.setEnabled(false);
+
+        startDateTv.setText(oneWeekDateStr);
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setText(todayDateStr);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtn(ToggleButton Btn) {
@@ -180,6 +180,7 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
                 thirtyDayBtn.setChecked(false);
                 showResult(oneWeekData);
                 nowGlyDataRows = oneWeekData;
+                startDateTv.setText(oneWeekDateStr);
                 break;
             case R.id.forteenDayDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -187,6 +188,7 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
                 thirtyDayBtn.setChecked(false);
                 showResult(twoWeekData);
                 nowGlyDataRows = twoWeekData;
+                startDateTv.setText(twoWeekDateStr);
                 break;
             case R.id.thirtyDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -194,11 +196,11 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowGlyDataRows = oneMounthData;
+                startDateTv.setText(oneMounthDateStr);
                 break;
         }
-        startDateTv.setText(nowGlyDataRows.get(0).getGData_datetime().substring(0, 10));
         startDateTv.setTextColor(unChangeTextColor);
-        endDateTv.setText(nowGlyDataRows.get(nowGlyDataRows.size() - 1).getGData_datetime().substring(0, 10));
+        endDateTv.setText(todayDateStr);
         endDateTv.setTextColor(unChangeTextColor);
     }
 
@@ -289,7 +291,6 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
      *
      */
     private void initData() {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         myDateSFormat = new MyDateSFormat();
         wLevelShrPref = new WLevelShrPref(getActivity());
         signInShrPref = new SignInShrPref(getActivity());
@@ -297,33 +298,34 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
 
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        oneWeekDateStr = oneWeekDateStr + " 00:00";
+        oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String oneWeekDateTimeStr = oneWeekDateStr + " 00:00";
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        twoWeekDateStr = twoWeekDateStr + " 00:00";
+        twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String twoWeekDateTimeStr = twoWeekDateStr + " 00:00";
         clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.MONTH, -1);
-        String oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        oneMounthDateStr = oneMounthDateStr + " 00:00";
+        oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String oneMounthDateTimeStr = oneMounthDateStr + " 00:00";
 
         oneWeekData = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
                 .whereEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, oneWeekDateStr)
+                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, oneWeekDateTimeStr)
                 .appendOrderAscBy(GlyDataRow.GDATA_DATETIME));
         LiteOrm.releaseMemory();
         twoWeekData = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
                 .whereEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, twoWeekDateStr)
+                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, twoWeekDateTimeStr)
                 .appendOrderAscBy(GlyDataRow.GDATA_DATETIME));
         LiteOrm.releaseMemory();
         oneMounthData = mainDB.query(new QueryBuilder<GlyDataRow>(GlyDataRow.class)
                 .whereEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, oneMounthDateStr)
+                .whereGreaterThan(GlyDataRow.GDATA_DATETIME, oneMounthDateTimeStr)
                 .appendOrderAscBy(GlyDataRow.GDATA_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();
