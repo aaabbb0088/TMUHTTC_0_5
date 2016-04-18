@@ -17,19 +17,19 @@
             android:id="@+id/textView46"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="回復好友關係"
+            android:text="點選確定後，可回復好友關係"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/textView48"
+            android:id="@+id/countTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="listView多選單"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_marginBottom="5dp"
+            android:text="已選中0項"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ListView
-            android:id="@+id/listView3"
+            android:id="@+id/delFriLv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />

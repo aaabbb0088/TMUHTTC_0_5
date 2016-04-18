@@ -13,6 +13,7 @@ import android.widget.ToggleButton;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.DataBase;
 import com.litesuits.orm.db.assit.QueryBuilder;
+import com.litesuits.orm.db.assit.WhereBuilder;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
@@ -26,7 +27,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class PersonServiceRecordActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,6 +48,9 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
 
+    private String todayDateStr;
+    private String oneWeekDateStr;
+    private String oneMounthDateStr;
     private ArrayList<SRcrdRow> oneWeekData;
     private ArrayList<SRcrdRow> oneMounthData;
     private ArrayList<SRcrdRow> nowRcdDataRows;
@@ -99,7 +102,6 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
     /**
      *
      */
-
     private void initBar() {
         myInitReturnBar = new MyInitReturnBar(this, "服務歷程", 0);
     }
@@ -111,13 +113,6 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         endDateTv.setOnClickListener(this);
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(this);
-
-        //<code>test code</code>
-        startDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
-        startDateTv.setTextColor(Color.GRAY);
-        endDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
-        endDateTv.setTextColor(Color.GRAY);
-
         sevenDayBtn = (ToggleButton) findViewById(R.id.sevenDayBtn);
         sevenDayBtn.setOnClickListener(this);
         thirtyDayBtn = (ToggleButton) findViewById(R.id.thirtyDayBtn);
@@ -132,6 +127,11 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         setDateBtn(sevenDayBtn);
         sevenDayBtn.setChecked(true);
         searchBtn.setEnabled(false);
+
+        startDateTv.setText(oneWeekDateStr);
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setText(todayDateStr);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtn(ToggleButton Btn) {
@@ -143,25 +143,20 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
                 thirtyDayBtn.setChecked(false);
                 showResult(oneWeekData);
                 nowRcdDataRows = oneWeekData;
+                startDateTv.setText(oneWeekDateStr);
+                endDateTv.setText(todayDateStr);
                 break;
             case R.id.thirtyDayBtn:
                 sevenDayBtn.setChecked(false);
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowRcdDataRows = oneMounthData;
+                startDateTv.setText(todayDateStr);
+                endDateTv.setText(oneMounthDateStr);
                 break;
         }
-        if (nowRcdDataRows.size() != 0) {
-            startDateTv.setText(nowRcdDataRows.get(nowRcdDataRows.size() - 1).getSRcrd_datetime().substring(0, 10));
-            startDateTv.setTextColor(unChangeTextColor);
-            endDateTv.setText(nowRcdDataRows.get(0).getSRcrd_datetime().substring(0, 10));
-            endDateTv.setTextColor(unChangeTextColor);
-        } else {
-            startDateTv.setText("-");
-            startDateTv.setTextColor(unChangeTextColor);
-            endDateTv.setText("-");
-            endDateTv.setTextColor(unChangeTextColor);
-        }
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtntrue() {
@@ -215,24 +210,45 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
         DataBase mainDB = LiteOrm.newSingleInstance(this, signInShrPref.getAID());
 
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
+        todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String todayDateEndStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        todayDateEndStr = todayDateEndStr + " 23:59";
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        oneWeekDateStr = oneWeekDateStr + " 00:00";
+        oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String  oneWeekDateTimeStr = oneWeekDateStr + " 00:00";
         clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.MONTH, -1);
-        String oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        oneMounthDateStr = oneMounthDateStr + " 00:00";
+        oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String  oneMounthDateTimeStr = oneMounthDateStr + " 00:00";
 
         oneWeekData = mainDB.query(new QueryBuilder<SRcrdRow>(SRcrdRow.class)
-                .whereEquals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
-                .whereAppendAnd()
-                .whereGreaterThan(SRcrdRow.SRCRD_DATETIME, oneWeekDateStr)
+                .where(new WhereBuilder(SRcrdRow.class)
+                        .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                        .and()
+                        .greaterThan(SRcrdRow.SRCRD_DATETIME, oneWeekDateTimeStr)
+                        .and()
+                        .lessThan(SRcrdRow.SRCRD_DATETIME, todayDateEndStr)
+                        .or()
+                        .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                        .and()
+                        .greaterThan(SRcrdRow.SRCRD_DATETIME, oneWeekDateTimeStr)
+                        .and()
+                        .equals(SRcrdRow.SRCRD_DATETIME, todayDateEndStr))
                 .appendOrderDescBy(SRcrdRow.SRCRD_DATETIME));
         LiteOrm.releaseMemory();
         oneMounthData = mainDB.query(new QueryBuilder<SRcrdRow>(SRcrdRow.class)
-                .whereEquals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
-                .whereAppendAnd()
-                .whereGreaterThan(SRcrdRow.SRCRD_DATETIME, oneMounthDateStr)
+                .where(new WhereBuilder(SRcrdRow.class)
+                        .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                        .and()
+                        .greaterThan(SRcrdRow.SRCRD_DATETIME, oneMounthDateTimeStr)
+                        .and()
+                        .lessThan(SRcrdRow.SRCRD_DATETIME, todayDateEndStr)
+                        .or()
+                        .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
+                        .and()
+                        .greaterThan(SRcrdRow.SRCRD_DATETIME, oneMounthDateTimeStr)
+                        .and()
+                        .equals(SRcrdRow.SRCRD_DATETIME, todayDateEndStr))
                 .appendOrderDescBy(SRcrdRow.SRCRD_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();

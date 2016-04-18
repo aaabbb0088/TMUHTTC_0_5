@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager fragmentManager; //用於對Fragment進行管理
 
     private SignInShrPref signInShrPref;
+    private MyDateSFormat myDateSFormat;
     private MySyncingDialog mySyncingDialog;
 
     private Boolean[] updateEndflag;
@@ -399,6 +400,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateEndflag = new Boolean[]{false, false, false, false, false, false, false, false
                 , false, false, false, false, false, false, false, false, false, false, false
                 , false, false, false, false, false, false, false, false, false}; //MainActivity重新啟動時初始化更新旗標 共38個
+
+        myDateSFormat = new MyDateSFormat();
     }
 
     private void updateData() {
@@ -570,13 +573,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.DAY_OF_MONTH, -1);
         Date todayDate = clr.getTime();
-        final String todayStr = new MyDateSFormat().getFrmt_yMd().format(new Date());
+        final String todayStr = myDateSFormat.getFrmt_yMd().format(new Date());
         try {
-            todayDate = new MyDateSFormat().getFrmt_yMd().parse(todayStr);
+            todayDate = myDateSFormat.getFrmt_yMd().parse(todayStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+        String lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
         Date lastTime;
 
         //遠距會員
@@ -627,17 +630,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (preDataRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preDataRowArrayList.get(0).getPData_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(preDataRowArrayList.get(0).getPData_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<PreDataRow>>() {
                 @Override
@@ -667,7 +670,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(PreDataRow.class)
                                     .equals(PreDataRow.PDATA_SID, signInShrPref.getSID())
                                     .lessThan(PreDataRow.PDATA_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMdHm().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -695,17 +698,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (preThumbRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preThumbRowArrayList.get(0).getPData_thumb_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(preThumbRowArrayList.get(0).getPData_thumb_datetime());
                     if (lastTime.after(todayDate)) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
             }
             new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
                 @Override
@@ -734,8 +737,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < preThumbRows.size(); i++) {
                                 mainDB.save(preThumbRows.get(i));
                             }
-                            LiteOrm.releaseMemory();
                         }
+                        LiteOrm.releaseMemory();
                     } else {
                         Toast.makeText(MainActivity.this, "個人血壓按讚資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
@@ -770,17 +773,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (preMsgRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(preMsgRowArrayList.get(0).getPMsg_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(preMsgRowArrayList.get(0).getPMsg_datetime());
                     if (lastTime.after(todayDate)) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
             }
             new AsyncTask<String, Void, ArrayList<PreMsgRow>>() {
                 @Override
@@ -838,17 +841,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (preAvgRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMd().parse(preAvgRowArrayList.get(0).getPAvg_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMd().parse(preAvgRowArrayList.get(0).getPAvg_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMd().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMd().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMd().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<PreAvgRow>>() {
                 @Override
@@ -878,7 +881,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(PreAvgRow.class)
                                     .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
                                     .lessThan(PreAvgRow.PAVG_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -907,17 +910,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (glyDataRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(glyDataRowArrayList.get(0).getGData_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(glyDataRowArrayList.get(0).getGData_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<GlyDataRow>>() {
                 @Override
@@ -947,7 +950,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(GlyDataRow.class)
                                     .equals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
                                     .lessThan(GlyDataRow.GDATA_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMdHm().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -976,17 +979,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (glyThumbRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(glyThumbRowArrayList.get(0).getGData_thumb_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(glyThumbRowArrayList.get(0).getGData_thumb_datetime());
                     if (lastTime.after(todayDate)) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
             }
             new AsyncTask<String, Void, ArrayList<GlyThumbRow>>() {
                 @Override
@@ -1015,8 +1018,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             for (int i = 0; i < glyThumbRows.size(); i++) {
                                 mainDB.save(glyThumbRows.get(i));
                             }
-                            LiteOrm.releaseMemory();
                         }
+                        LiteOrm.releaseMemory();
                     } else {
                         Toast.makeText(MainActivity.this, "個人血糖按讚資料更新失敗", Toast.LENGTH_SHORT).show();
                     }
@@ -1043,17 +1046,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (glyMsgRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(glyMsgRowArrayList.get(0).getGMsg_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(glyMsgRowArrayList.get(0).getGMsg_datetime());
                     if (lastTime.after(todayDate)) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(todayDate);
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(todayDate);
             }
             new AsyncTask<String, Void, ArrayList<GlyMsgRow>>() {
                 @Override
@@ -1111,17 +1114,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (glyAvgRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMd().parse(glyAvgRowArrayList.get(0).getGAvg_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMd().parse(glyAvgRowArrayList.get(0).getGAvg_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMd().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMd().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMd().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMd().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<GlyAvgRow>>() {
                 @Override
@@ -1151,7 +1154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(GlyAvgRow.class)
                                     .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
                                     .lessThan(GlyAvgRow.GAVG_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -1179,13 +1182,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (psnNotRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(psnNotRowArrayList.get(0).getPsnNot_datetime());
-                    lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(psnNotRowArrayList.get(0).getPsnNot_datetime());
+                    lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<PsnNotRow>>() {
                 @Override
@@ -1239,17 +1242,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (sMedRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sMedRowArrayList.get(0).getSMed_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(sMedRowArrayList.get(0).getSMed_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<SMedRow>>() {
                 @Override
@@ -1278,8 +1281,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             mainDB.delete(new WhereBuilder(SMedRow.class)
                                     .equals(SMedRow.SMED_SID, signInShrPref.getSID())
+                                    .and()
                                     .lessThan(SMedRow.SMED_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -1311,8 +1315,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (sRprtRowArrayList.size() != 0) { //已有資料，下載新資料
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sRprtRowArrayList.get(0).getSRprt_datetime());
-                    lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(sRprtRowArrayList.get(0).getSRprt_datetime());
+                    lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -1375,8 +1379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (sPayRowArrayList.size() != 0) { //已有資料，下載新資料
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sPayRowArrayList.get(0).getSPay_datetime());
-                    lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(sPayRowArrayList.get(0).getSPay_datetime());
+                    lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -1436,17 +1440,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .limit(0, 1));
             if (sRcrdRowArrayList.size() != 0) {
                 try {
-                    lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(sRcrdRowArrayList.get(0).getSRcrd_datetime());
+                    lastTime = myDateSFormat.getFrmt_yMdHm().parse(sRcrdRowArrayList.get(0).getSRcrd_datetime());
                     if (lastTime.after(calendar.getTime())) {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
                     } else {
-                        lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                        lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else {
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
             }
             new AsyncTask<String, Void, ArrayList<SRcrdRow>>() {
                 @Override
@@ -1477,7 +1481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mainDB.delete(new WhereBuilder(SRcrdRow.class)
                                     .equals(SRcrdRow.SRCRD_SID, signInShrPref.getSID())
                                     .lessThan(SMedRow.SMED_DATETIME,
-                                            new MyDateSFormat().getFrmt_yMd().format(calendar.getTime())));
+                                            myDateSFormat.getFrmt_yMd().format(calendar.getTime())));
                             LiteOrm.releaseMemory();
                         }
                     } else {
@@ -1522,13 +1526,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .limit(0, 1));
         if (ctrNotRowArrayList.size() != 0) {
             try {
-                lastTime = new MyDateSFormat().getFrmt_yMdHm().parse(ctrNotRowArrayList.get(0).getCtrNot_datetime());
-                lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(lastTime);
+                lastTime = myDateSFormat.getFrmt_yMdHm().parse(ctrNotRowArrayList.get(0).getCtrNot_datetime());
+                lastDataTime = myDateSFormat.getFrmt_yMdHm().format(lastTime);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            lastDataTime = new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime());
+            lastDataTime = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
         }
         new AsyncTask<String, Void, ArrayList<CtrNotRow>>() {
             @Override
@@ -1588,40 +1592,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     //更新好友關係表、好友群組表、個人資料分享設定表、好友訊息接受設定表、好友訊息分享設定表、好友邀請訊息表、好友訊息表end[17]~end[23]
     private void UpdateFriendData() {
-        if (!signInShrPref.getSameSignInMachine()) {
 
-            //APP使用者個人資料分享好友設定表 end[19]
-            new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
-                @Override
-                protected ArrayList<FShrSetRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<FShrSetRow> fShrSetRows = null;
+        //APP使用者個人資料分享好友設定表 end[19]
+        new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
+            @Override
+            protected ArrayList<FShrSetRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FShrSetRow> fShrSetRows = null;
 
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateFriendShareSettingTable(params[0]);
-                        fShrSetRows = jsonParser.parseFShrSetRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return fShrSetRows;
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendShareSettingTable(params[0]);
+                    fShrSetRows = jsonParser.parseFShrSetRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                return fShrSetRows;
+            }
 
-                @Override
-                protected void onPostExecute(ArrayList<FShrSetRow> fShrSetRows) {
-                    super.onPostExecute(fShrSetRows);
-                    if (fShrSetRows != null) {
-                        if (fShrSetRows.size() != 0) {
-                            mainDB.deleteAll(FShrSetRow.class);
-                            for (int i = 0; i < fShrSetRows.size(); i++) {
-                                mainDB.save(fShrSetRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
+            @Override
+            protected void onPostExecute(ArrayList<FShrSetRow> fShrSetRows) {
+                super.onPostExecute(fShrSetRows);
+                if (fShrSetRows != null) {
+                    if (fShrSetRows.size() != 0) {
+                        mainDB.deleteAll(FShrSetRow.class);
+                        for (int i = 0; i < fShrSetRows.size(); i++) {
+                            mainDB.save(fShrSetRows.get(i));
                         }
-                    } else {
-                        Toast.makeText(MainActivity.this, "個人資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                        LiteOrm.releaseMemory();
                     }
+                } else {
+                    Toast.makeText(MainActivity.this, "個人資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
 //                    //test
 //                    long count = mainDB.queryCount(FShrSetRow.class);
 //                    ArrayList<FShrSetRow> list1 = mainDB.query(FShrSetRow.class);
@@ -1633,42 +1636,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
 //                    }
 //                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 5);
+                updateRnEndflagSetting(updateEndflag.length - 5);
+            }
+        }.execute(signInShrPref.getAID());
+
+        //APP使用者接受好友訊息設定表 end[20]
+        new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
+            @Override
+            protected ArrayList<FRecvNotSetRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FRecvNotSetRow> fRecvNotSetRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateFriendReceiveNoticeSettingTable(params[0]);
+                    fRecvNotSetRows = jsonParser.parseFRecvNotSetRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }.execute(signInShrPref.getAID());
+                return fRecvNotSetRows;
+            }
 
-            //APP使用者好友訊息接受設定表 end[20]
-            new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
-                @Override
-                protected ArrayList<FRecvNotSetRow> doInBackground(String... params) {
-                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
-                    JSONParser jsonParser = new JSONParser();
-                    ArrayList<FRecvNotSetRow> fRecvNotSetRows = null;
-
-                    JSONObject jsonObject;
-                    try {
-                        jsonObject = httcjsonapi.UpdateFriendReceiveNoticeSettingTable(params[0]);
-                        fRecvNotSetRows = jsonParser.parseFRecvNotSetRow(jsonObject);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return fRecvNotSetRows;
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<FRecvNotSetRow> fRecvNotSetRows) {
-                    super.onPostExecute(fRecvNotSetRows);
-                    if (fRecvNotSetRows != null) {
-                        if (fRecvNotSetRows.size() != 0) {
-                            mainDB.deleteAll(FRecvNotSetRow.class);
-                            for (int i = 0; i < fRecvNotSetRows.size(); i++) {
-                                mainDB.save(fRecvNotSetRows.get(i));
-                            }
-                            LiteOrm.releaseMemory();
+            @Override
+            protected void onPostExecute(ArrayList<FRecvNotSetRow> fRecvNotSetRows) {
+                super.onPostExecute(fRecvNotSetRows);
+                if (fRecvNotSetRows != null) {
+                    if (fRecvNotSetRows.size() != 0) {
+                        mainDB.deleteAll(FRecvNotSetRow.class);
+                        for (int i = 0; i < fRecvNotSetRows.size(); i++) {
+                            mainDB.save(fRecvNotSetRows.get(i));
                         }
-                    } else {
-                        Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                        LiteOrm.releaseMemory();
                     }
+                } else {
+                    Toast.makeText(MainActivity.this, "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
 //                    //test
 //                    long count = mainDB.queryCount(FRecvNotSetRow.class);
 //                    ArrayList<FRecvNotSetRow> list1 = mainDB.query(FRecvNotSetRow.class);
@@ -1680,13 +1683,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
 //                    }
 //                    //test
-                    updateRnEndflagSetting(updateEndflag.length - 4);
-                }
-            }.execute(signInShrPref.getAID());
-        } else {
-            updateRnEndflagSetting(updateEndflag.length - 4);
-            updateRnEndflagSetting(updateEndflag.length - 5);
-        }
+                updateRnEndflagSetting(updateEndflag.length - 4);
+            }
+        }.execute(signInShrPref.getAID());
 
         //更新好友群組表 end[18]
         new AsyncTask<String, Void, ArrayList<FGRow>>() {
@@ -1715,8 +1714,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < fgRows.size(); i++) {
                             mainDB.save(fgRows.get(i));
                         }
-                        LiteOrm.releaseMemory();
                     }
+                    LiteOrm.releaseMemory();
                 } else {
                     Toast.makeText(MainActivity.this, "群組表更新失敗", Toast.LENGTH_SHORT).show();
                 }
@@ -1762,8 +1761,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < fRows.size(); i++) {
                             mainDB.save(fRows.get(i));
                         }
-                        LiteOrm.releaseMemory();
                     }
+                    LiteOrm.releaseMemory();
                 } else {
                     Toast.makeText(MainActivity.this, "好友關係表更新失敗", Toast.LENGTH_SHORT).show();
                 }
@@ -1857,8 +1856,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (int i = 0; i < fAddNotRows.size(); i++) {
                             mainDB.save(fAddNotRows.get(i));
                         }
-                        LiteOrm.releaseMemory();
                     }
+                    LiteOrm.releaseMemory();
                 } else {
                     Toast.makeText(MainActivity.this, "好友邀請訊息更新失敗", Toast.LENGTH_SHORT).show();
                 }
@@ -1884,7 +1883,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String fNotRowlastDataTime;
         if (fNotRowArrayList.size() != 0) { //有資料，更新
             fNotRowlastDataTime = fNotRowArrayList.get(0).getFNot_datetime();
-        } else { //無資料，從最後一筆未讀資料開始更新
+        } else { //無資料，從1小時前開始更新
             fNotRowlastDataTime = "";
         }
         new AsyncTask<String, Void, ArrayList<FNotRow>>() {
@@ -1944,8 +1943,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void UpdateFriendPsnData() {
         final Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
         calendar.add(Calendar.MONTH, -1);
-        final Calendar clr = Calendar.getInstance(Locale.TAIWAN);
-        clr.add(Calendar.DAY_OF_MONTH, -1);
+        final String oneMonthDateStr = myDateSFormat.getFrmt_yMdHm().format(calendar.getTime());
+        Date oneMonthDate = calendar.getTime();
+        try {
+            oneMonthDate = myDateSFormat.getFrmt_yMdHm().parse(oneMonthDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         /**
          * end[-9~-11]
          * 1.取得是遠距會員的好友sid
@@ -1961,7 +1965,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<FRow> fRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
                 .whereEquals(FRow.F_RELATION_FLAG, 0)
                 .whereAppendAnd()
-                .whereEquals(FRow.F_MEMBER_FLAG, "Y"));
+                .whereEquals(FRow.F_MEMBER_FLAG, "Y")
+                .whereAppendAnd()
+                .whereEquals(FRow.F_RELATION_FLAG, 0)
+                .whereAppendAnd()
+                .whereEquals(FRow.F_RELATION_FLAG_FRI, 0));
         if (fRows.size() != 0) {  //有遠距會員好友
             ArrayList<String> friMemberSIDs = new ArrayList<>();
             for (int i = 0; i < fRows.size(); i++) {
@@ -2016,23 +2024,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }.execute(friMemberSIDs);
 
             //好友血壓流水資料
-            ArrayList<PreDataRow> preDataRowArrayList = mainDB.query(
-                    new QueryBuilder<PreDataRow>(PreDataRow.class).groupBy(PreDataRow.PDATA_SID)
-                            .whereNoEquals(PreDataRow.PDATA_SID, signInShrPref.getSID()));
-            ArrayList<String> fPreDataSids = new ArrayList<>();
             ArrayList<String> fPreDataLastTime = new ArrayList<>();
-            if (preDataRowArrayList.size() != 0) {
-                for (int fPreDataCount = 0; fPreDataCount < preDataRowArrayList.size(); fPreDataCount++) {
-                    fPreDataSids.add(preDataRowArrayList.get(fPreDataCount).getPData_sid());
-                    fPreDataLastTime.add(preDataRowArrayList.get(fPreDataCount).getPData_datetime());
+            for (int i = 0; i < friMemberSIDs.size(); i++) {
+                ArrayList<PreDataRow> preDataRowArrayList = mainDB.query(
+                        new QueryBuilder<PreDataRow>(PreDataRow.class)
+                                .whereEquals(PreDataRow.PDATA_SID, friMemberSIDs.get(i))
+                                .appendOrderDescBy(PreDataRow.PDATA_DATETIME).limit(0,1)
+                );
+                String addDate;
+                if (preDataRowArrayList.size() != 0){
+                    String lastDateStr = preDataRowArrayList.get(0).getPData_datetime();
+                    Date lastDate = new Date();
+                    try {
+                        lastDate = myDateSFormat.getFrmt_yMdHm().parse(lastDateStr);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (lastDate.after(oneMonthDate)){
+                        addDate = lastDateStr;
+                    } else {
+                        addDate = oneMonthDateStr;
+                    }
+                } else {
+                    addDate = oneMonthDateStr;
                 }
-            } else {
-                fPreDataSids = friMemberSIDs;
-                for (int fRowCount = 0; fRowCount < fRows.size(); fRowCount++) {
-                    fPreDataLastTime.add(new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime()));
-                }
+                fPreDataLastTime.add(addDate);
             }
-            if (fPreDataSids.size() != 0) {
+            if (friMemberSIDs.size() != 0) {
                 new AsyncTask<ArrayList<?>, Void, ArrayList<PreDataRow>>() {
                     @Override
                     protected ArrayList<PreDataRow> doInBackground(ArrayList<?>... params) {
@@ -2060,8 +2078,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                                 mainDB.delete(new WhereBuilder(PreDataRow.class)
                                         .noEquals(PreDataRow.PDATA_SID, signInShrPref.getSID())
-                                        .lessThan(PreDataRow.PDATA_DATETIME,
-                                                new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                        .lessThan(PreDataRow.PDATA_DATETIME,oneMonthDateStr));
                                 LiteOrm.releaseMemory();
                             }
                         } else {
@@ -2080,30 +2097,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        //test
                         updateRnEndflagSetting(updateEndflag.length - 10);
                     }
-                }.execute(fPreDataSids, fPreDataLastTime);
+                }.execute(friMemberSIDs, fPreDataLastTime);
             } else {
                 updateRnEndflagSetting(updateEndflag.length - 10);
             }
 
 
             //好友血糖流水資料
-            ArrayList<GlyDataRow> glyDataRowArrayList = mainDB.query(
-                    new QueryBuilder<GlyDataRow>(GlyDataRow.class).groupBy(GlyDataRow.GDATA_SID)
-                            .whereNoEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID()));
-            ArrayList<String> fGlyDataSids = new ArrayList<>();
             ArrayList<String> fGlyDataLastTime = new ArrayList<>();
-            if (glyDataRowArrayList.size() != 0) {
-                for (int fGlyDataCount = 0; fGlyDataCount < glyDataRowArrayList.size(); fGlyDataCount++) {
-                    fGlyDataSids.add(glyDataRowArrayList.get(fGlyDataCount).getGData_sid());
-                    fGlyDataLastTime.add(glyDataRowArrayList.get(fGlyDataCount).getGData_datetime());
+            for (int i = 0; i < friMemberSIDs.size(); i++) {
+                ArrayList<GlyDataRow> glyDataRowArrayList = mainDB.query(
+                        new QueryBuilder<GlyDataRow>(GlyDataRow.class)
+                                .whereEquals(GlyDataRow.GDATA_SID, friMemberSIDs.get(i))
+                                .appendOrderDescBy(GlyDataRow.GDATA_DATETIME).limit(0,1)
+                );
+                String addDate;
+                if (glyDataRowArrayList.size() != 0){
+                    String lastDateStr = glyDataRowArrayList.get(0).getGData_datetime();
+                    Date lastDate = new Date();
+                    try {
+                        lastDate = myDateSFormat.getFrmt_yMdHm().parse(lastDateStr);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (lastDate.after(oneMonthDate)){
+                        addDate = lastDateStr;
+                    } else {
+                        addDate = oneMonthDateStr;
+                    }
+                } else {
+                    addDate = oneMonthDateStr;
                 }
-            } else {
-                fGlyDataSids = friMemberSIDs;
-                for (int fRowCount = 0; fRowCount < fRows.size(); fRowCount++) {
-                    fGlyDataLastTime.add(new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime()));
-                }
+                fGlyDataLastTime.add(addDate);
             }
-            if (fGlyDataSids.size() != 0) {
+            if (friMemberSIDs.size() != 0) {
                 new AsyncTask<ArrayList<?>, Void, ArrayList<GlyDataRow>>() {
                     @Override
                     protected ArrayList<GlyDataRow> doInBackground(ArrayList<?>... params) {
@@ -2131,8 +2158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                                 mainDB.delete(new WhereBuilder(GlyDataRow.class)
                                         .noEquals(GlyDataRow.GDATA_SID, signInShrPref.getSID())
-                                        .lessThan(GlyDataRow.GDATA_DATETIME,
-                                                new MyDateSFormat().getFrmt_yMdHm().format(calendar.getTime())));
+                                        .lessThan(GlyDataRow.GDATA_DATETIME,oneMonthDateStr));
                                 LiteOrm.releaseMemory();
                             }
                         } else {
@@ -2151,7 +2177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                        //test
                         updateRnEndflagSetting(updateEndflag.length - 11);
                     }
-                }.execute(fGlyDataSids, fGlyDataLastTime);
+                }.execute(friMemberSIDs, fGlyDataLastTime);
             } else {
                 updateRnEndflagSetting(updateEndflag.length - 11);
             }

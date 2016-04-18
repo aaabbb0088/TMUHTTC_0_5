@@ -25,13 +25,21 @@ public class FriendPersonalPressActivity extends AppCompatActivity {
     private MyInitReturnBar myInitReturnBar;
     private String[] tabs = {"近期血壓", "血壓趨勢圖", "血壓紀錄"};
 
+    public static String friAid;
+    public static String friSid;
+    private String nickName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_personal_press);
 
+        friAid = this.getIntent().getExtras().getString("friAid");
+        friSid = this.getIntent().getExtras().getString("friSid");
+        nickName = this.getIntent().getExtras().getString("nickName");
         initViews();
-        initBar();
+        initBar(nickName);
+
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
     }
 
@@ -56,8 +64,8 @@ public class FriendPersonalPressActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
     }
 
-    private void initBar() {
-        myInitReturnBar = new MyInitReturnBar(this, "會員暱稱", 2);
+    private void initBar(String nickName) {
+        myInitReturnBar = new MyInitReturnBar(this, "關心 " + nickName + " 的血壓", 2);
         actionBar = myInitReturnBar.getActionBar();
 
         if (actionBar != null) {

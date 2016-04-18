@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class PersonServiceMedicineActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,6 +48,10 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
     private int changeTextColor = Color.BLACK;
     private int warningTextColor = Color.RED;
 
+    private String todayDateStr;
+    private String oneWeekDateStr;
+    private String twoWeekDateStr;
+    private String fOneWeekDateStr;
     private ArrayList<SMedRow> oneWeekData;
     private ArrayList<SMedRow> twoWeekData;
     private ArrayList<SMedRow> fOneWeekData;
@@ -62,9 +65,9 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_service_medicine);
 
-        initBar();
-        initData();
         initView();
+        initData();
+        initBar();
         initBtn();
     }
 
@@ -115,13 +118,6 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         endDateTv.setOnClickListener(this);
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(this);
-
-        //<code>test code</code>
-        startDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
-        startDateTv.setTextColor(Color.GRAY);
-        endDateTv.setText(myDateSFormat.getFrmt_yMd().format(new Date()));
-        endDateTv.setTextColor(Color.GRAY);
-
         sevenDayBtn = (ToggleButton) findViewById(R.id.sevenDayBtn);
         sevenDayBtn.setOnClickListener(this);
         forteenDayDayBtn = (ToggleButton) findViewById(R.id.forteenDayDayBtn);
@@ -138,6 +134,11 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         setDateBtn(sevenDayBtn);
         sevenDayBtn.setChecked(true);
         searchBtn.setEnabled(false);
+
+        startDateTv.setText(oneWeekDateStr);
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setText(todayDateStr);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtn(ToggleButton Btn) {
@@ -151,6 +152,8 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
                 fOneWeekBtn.setChecked(false);
                 showResult(oneWeekData);
                 nowMedDataRows = oneWeekData;
+                startDateTv.setText(oneWeekDateStr);
+                endDateTv.setText(todayDateStr);
                 break;
             case R.id.forteenDayDayBtn:
                 sevenDayBtn.setChecked(false);
@@ -158,6 +161,8 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
                 fOneWeekBtn.setChecked(false);
                 showResult(twoWeekData);
                 nowMedDataRows = twoWeekData;
+                startDateTv.setText(twoWeekDateStr);
+                endDateTv.setText(todayDateStr);
                 break;
             case R.id.fOneWeekBtn:
                 sevenDayBtn.setChecked(false);
@@ -165,19 +170,12 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
                 fOneWeekBtn.setEnabled(false);
                 showResult(fOneWeekData);
                 nowMedDataRows = fOneWeekData;
+                startDateTv.setText(todayDateStr);
+                endDateTv.setText(fOneWeekDateStr);
                 break;
         }
-        if (nowMedDataRows.size() != 0) {
-            startDateTv.setText(nowMedDataRows.get(0).getSMed_datetime().substring(0, 10));
-            startDateTv.setTextColor(unChangeTextColor);
-            endDateTv.setText(nowMedDataRows.get(nowMedDataRows.size() - 1).getSMed_datetime().substring(0, 10));
-            endDateTv.setTextColor(unChangeTextColor);
-        } else {
-            startDateTv.setText("-");
-            startDateTv.setTextColor(unChangeTextColor);
-            endDateTv.setText("-");
-            endDateTv.setTextColor(unChangeTextColor);
-        }
+        startDateTv.setTextColor(unChangeTextColor);
+        endDateTv.setTextColor(unChangeTextColor);
     }
 
     private void setDateBtntrue() {
@@ -234,25 +232,25 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         DataBase mainDB = LiteOrm.newSingleInstance(this, signInShrPref.getAID());
 
         Calendar clr = Calendar.getInstance(Locale.TAIWAN);
-        String todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        todayDateStr = todayDateStr + " 00:00";
+        todayDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String todayDateTimeStr = todayDateStr + " 00:00";
         String todayDateEndStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
         todayDateEndStr = todayDateEndStr + " 23:59";
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        oneWeekDateStr = oneWeekDateStr + " 00:00";
+        oneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String oneWeekDateTimeStr = oneWeekDateStr + " 00:00";
         clr.add(Calendar.WEEK_OF_MONTH, -1);
-        String twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        twoWeekDateStr = twoWeekDateStr + " 00:00";
+        twoWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String twoWeekDateTimeStr = twoWeekDateStr + " 00:00";
         clr = Calendar.getInstance(Locale.TAIWAN);
         clr.add(Calendar.WEEK_OF_MONTH, +1);
-        String fOneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
-        fOneWeekDateStr = fOneWeekDateStr + " 23:59";
+        fOneWeekDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
+        String fOneWeekDateTimeStr = fOneWeekDateStr + " 23:59";
 
         oneWeekData = mainDB.query(new QueryBuilder<SMedRow>(SMedRow.class)
                 .whereEquals(SMedRow.SMED_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(SMedRow.SMED_DATETIME, oneWeekDateStr)
+                .whereGreaterThan(SMedRow.SMED_DATETIME, oneWeekDateTimeStr)
                 .whereAppendAnd()
                 .whereLessThan(SMedRow.SMED_DATETIME, todayDateEndStr)
                 .appendOrderAscBy(SMedRow.SMED_DATETIME));
@@ -260,7 +258,7 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         twoWeekData = mainDB.query(new QueryBuilder<SMedRow>(SMedRow.class)
                 .whereEquals(SMedRow.SMED_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereGreaterThan(SMedRow.SMED_DATETIME, twoWeekDateStr)
+                .whereGreaterThan(SMedRow.SMED_DATETIME, twoWeekDateTimeStr)
                 .whereAppendAnd()
                 .whereLessThan(SMedRow.SMED_DATETIME, todayDateEndStr)
                 .appendOrderAscBy(SMedRow.SMED_DATETIME));
@@ -268,9 +266,9 @@ public class PersonServiceMedicineActivity extends AppCompatActivity implements 
         fOneWeekData = mainDB.query(new QueryBuilder<SMedRow>(SMedRow.class)
                 .whereEquals(SMedRow.SMED_SID, signInShrPref.getSID())
                 .whereAppendAnd()
-                .whereLessThan(SMedRow.SMED_DATETIME, fOneWeekDateStr)
+                .whereLessThan(SMedRow.SMED_DATETIME, fOneWeekDateTimeStr)
                 .whereAppendAnd()
-                .whereGreaterThan(SMedRow.SMED_DATETIME, todayDateStr)
+                .whereGreaterThan(SMedRow.SMED_DATETIME, todayDateTimeStr)
                 .appendOrderAscBy(SMedRow.SMED_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();

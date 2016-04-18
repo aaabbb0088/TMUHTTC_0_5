@@ -10,7 +10,6 @@ import com.litesuits.orm.db.annotation.Table;
 @Table("FriendShareDataFlagTable")
 public class FShrDataFlagRow extends BaseModel  {
     public static final String FSHRDATA_FRI_AID = "FShrData_fri_aid";
-    public static final String FSHRDATA_FRI_SID = "FShrData_fri_sid";
     public static final String FSHRDATA_DATA_FLAG = "FShrData_data_flag";
     public static final String FSHRDATA_MEDICINE_FLAG = "FShrData_medicine_flag";
     public static final String FSHRDATA_PAY_FLAG = "FShrData_pay_flag";
@@ -20,8 +19,6 @@ public class FShrDataFlagRow extends BaseModel  {
 
     @NotNull
     private String FShrData_fri_aid;
-    @NotNull
-    private String FShrData_fri_sid;
     @NotNull
     @Default("Y")
     private String FShrData_data_flag;
@@ -44,12 +41,11 @@ public class FShrDataFlagRow extends BaseModel  {
     public FShrDataFlagRow() {
     }
 
-    public FShrDataFlagRow(String FShrData_fri_aid, String FShrData_fri_sid, String FShrData_data_flag,
+    public FShrDataFlagRow(String FShrData_fri_aid, String FShrData_data_flag,
                            String FShrData_medicine_flag, String FShrData_pay_flag,
                            String FShrData_report_flag, String FShrData_record_flag,
                            String FShrData_location_flag) {
         this.FShrData_fri_aid = FShrData_fri_aid;
-        this.FShrData_fri_sid = FShrData_fri_sid;
         this.FShrData_data_flag = FShrData_data_flag;
         this.FShrData_medicine_flag = FShrData_medicine_flag;
         this.FShrData_pay_flag = FShrData_pay_flag;
@@ -64,14 +60,6 @@ public class FShrDataFlagRow extends BaseModel  {
 
     public void setFShrData_fri_aid(String FShrData_fri_aid) {
         this.FShrData_fri_aid = FShrData_fri_aid;
-    }
-
-    public String getFShrData_fri_sid() {
-        return FShrData_fri_sid;
-    }
-
-    public void setFShrData_fri_sid(String FShrData_fri_sid) {
-        this.FShrData_fri_sid = FShrData_fri_sid;
     }
 
     public String getFShrData_data_flag() {

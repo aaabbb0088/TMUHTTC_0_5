@@ -534,8 +534,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="top|center_horizontal"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="-" />
+                        android:text="-"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -580,8 +580,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="top|center_horizontal"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="-" />
+                        android:text="-"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
                 <LinearLayout

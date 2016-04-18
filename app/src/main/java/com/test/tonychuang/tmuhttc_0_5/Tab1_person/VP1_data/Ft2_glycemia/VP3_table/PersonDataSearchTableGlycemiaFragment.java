@@ -88,7 +88,6 @@ public class PersonDataSearchTableGlycemiaFragment extends Fragment implements V
         initView();
         initData();
         initBtn();
-
         return view;
     }
 

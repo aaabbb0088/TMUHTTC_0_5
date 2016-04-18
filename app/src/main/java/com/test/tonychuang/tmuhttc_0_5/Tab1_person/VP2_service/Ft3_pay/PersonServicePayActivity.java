@@ -149,15 +149,29 @@ public class PersonServicePayActivity extends AppCompatActivity implements View.
         sixMounthDateStr = sixMounthDateStr + " 00:00";
 
         sixMounthData = mainDB.query(new QueryBuilder<SPayRow>(SPayRow.class)
-                .whereEquals(SPayRow.SPAY_SID, signInShrPref.getSID())
                 .where(new WhereBuilder(SPayRow.class)
+                        .equals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(SPayRow.SPAY_DATETIME, sixMounthDateStr)
                         .and()
-                        .lessThan(SPayRow.SPAY_DATETIME, todayDateStr))
+                        .lessThan(SPayRow.SPAY_DATETIME, todayDateStr)
+                        .or()
+                        .equals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                        .and()
+                        .greaterThan(SPayRow.SPAY_DATETIME, sixMounthDateStr)
+                        .and()
+                        .equals(SPayRow.SPAY_DATETIME, todayDateStr))
                 .appendOrderDescBy(SPayRow.SPAY_DATETIME));
         LiteOrm.releaseMemory();
         allData = mainDB.query(new QueryBuilder<SPayRow>(SPayRow.class)
-                .whereEquals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                .where(new WhereBuilder(SPayRow.class)
+                        .equals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                        .and()
+                        .lessThan(SPayRow.SPAY_DATETIME, todayDateStr)
+                        .or()
+                        .equals(SPayRow.SPAY_SID, signInShrPref.getSID())
+                        .and()
+                        .equals(SPayRow.SPAY_DATETIME, todayDateStr))
                 .appendOrderDescBy(SPayRow.SPAY_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();

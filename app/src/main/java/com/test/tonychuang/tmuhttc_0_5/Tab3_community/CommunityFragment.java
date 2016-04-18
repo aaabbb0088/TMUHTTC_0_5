@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.test.tonychuang.chat.ChatActivity;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
@@ -35,8 +37,11 @@ import me.grantland.widget.AutofitTextView;
  */
 public class CommunityFragment extends Fragment implements View.OnClickListener {
 
-
+    private final static String CALL = "android.intent.action.CALL";
     private LinearLayout chatLayout;
+    private LinearLayout callCenterLayout;
+    private LinearLayout nearlyHospitalLayout;
+    private LinearLayout call119Layout;
 
     private View view;
     private ActionBar actionBar;
@@ -64,6 +69,18 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
                 startActivity(intent);
 //                Toast.makeText(getActivity(), "Chat", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.callCenterLayout:
+                toast("正在為您撥號，請稍後");
+                Intent callCenter = new Intent(CALL, Uri.parse("tel:" + "0221765226"));
+                startActivity(callCenter);
+                break;
+            case R.id.nearlyHospitalLayout:
+                break;
+            case R.id.call119Layout:
+                toast("正在為您撥號，請稍後");
+                Intent call119 = new Intent(CALL, Uri.parse("tel:" + "119"));
+                startActivity(call119);
+                break;
         }
     }
 
@@ -77,6 +94,12 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     private void initView() {
         chatLayout = (LinearLayout) view.findViewById(R.id.chatLayout);
         chatLayout.setOnClickListener(this);
+        callCenterLayout = (LinearLayout) view.findViewById(R.id.callCenterLayout);
+        callCenterLayout.setOnClickListener(this);
+        nearlyHospitalLayout = (LinearLayout) view.findViewById(R.id.nearlyHospitalLayout);
+        nearlyHospitalLayout.setOnClickListener(this);
+        call119Layout = (LinearLayout) view.findViewById(R.id.call119Layout);
+        call119Layout.setOnClickListener(this);
     }
     public void initBar() {
         actionBar = MainActivity.actionBar;
@@ -112,6 +135,9 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     /**
      *
      */
+    private void toast(String msg){
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
 
 
 

@@ -60,7 +60,10 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyValidator;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.QRCode.MyQRCodeCreate;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FAddNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FGRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRecvNotSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrDataFlagRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FShrSetRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.FWLevelRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.GlyDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
@@ -90,6 +93,7 @@ public class FriendFragment extends Fragment {
 
     private ExpandableListView expandableListView;
     private GFExListViewAdapter gfExListViewAdapter;
+    private MySyncingDialog mySyncingDialog;
 
     private View view;  //Fragment的佈局
     private ActionBar actionBar;
@@ -119,6 +123,37 @@ public class FriendFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+
+        ArrayList<FGRow> fgRowArrayList = mainDB.query(new QueryBuilder<FGRow>(FGRow.class)
+                .groupBy(FGRow.FG_GROUP_NAME)
+                .appendOrderAscBy(FGRow.FG_GROUP_NAME));
+        LiteOrm.releaseMemory();
+        fgRows.clear();
+        fgRows.addAll(fgRowArrayList);
+
+        ArrayList<ArrayList<FGRow>> newFgRowsGroupList = new ArrayList<>();
+        for (int i = 0; i < fgRows.size(); i++) {
+            newFgRowsGroupList.add(mainDB.query(new QueryBuilder<FGRow>(FGRow.class)
+                    .whereEquals(FGRow.FG_GROUP_NAME, fgRows.get(i).getFG_group_name())
+                    .appendOrderAscBy(FGRow.ID)));
+        }
+        LiteOrm.releaseMemory();
+        fgRowsGroupList.clear();
+        fgRowsGroupList.addAll(newFgRowsGroupList);
+
+        ArrayList<FRow> newFRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                .whereEquals(FRow.F_RELATION_FLAG, 0)
+                .appendOrderAscBy(FRow.F_NAME));
+        fRows.clear();
+        fRows.addAll(newFRows);
+        LiteOrm.releaseMemory();
+        mainDB.close();
+        gfExListViewAdapter.notifyDataSetChanged();
+    }
 
     /**
      * v1
@@ -479,8 +514,16 @@ public class FriendFragment extends Fragment {
                                     }
 
                                     @Override
+                                    protected void onPreExecute() {
+                                        super.onPreExecute();
+                                        mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+                                        mySyncingDialog.show();
+                                    }
+
+                                    @Override
                                     protected void onPostExecute(final ArrayList<PsnDataSettingRow> psnDataSettingRows) {
                                         super.onPostExecute(psnDataSettingRows);
+                                        mySyncingDialog.dismiss();
                                         if (psnDataSettingRows != null) {
                                             if (psnDataSettingRows.size() != 0) {
                                                 nameTv.setText(psnDataSettingRows.get(0).getName());
@@ -600,8 +643,16 @@ public class FriendFragment extends Fragment {
                                 }
 
                                 @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+                                    mySyncingDialog.show();
+                                }
+
+                                @Override
                                 protected void onPostExecute(final ArrayList<PsnDataSettingRow> psnDataSettingRows) {
                                     super.onPostExecute(psnDataSettingRows);
+                                    mySyncingDialog.dismiss();
                                     if (psnDataSettingRows != null) {
                                         if (psnDataSettingRows.size() != 0) {
                                             nameTv.setText(psnDataSettingRows.get(0).getName());
@@ -719,8 +770,16 @@ public class FriendFragment extends Fragment {
                                 }
 
                                 @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+                                    mySyncingDialog.show();
+                                }
+
+                                @Override
                                 protected void onPostExecute(ArrayList<PsnDataSettingRow> psnDataSettingRows) {
                                     super.onPostExecute(psnDataSettingRows);
+                                    mySyncingDialog.dismiss();
                                     if (psnDataSettingRows != null) {
                                         if (psnDataSettingRows.size() != 0) {
                                             qrNameTv.setText(psnDataSettingRows.get(0).getName());
@@ -913,18 +972,60 @@ public class FriendFragment extends Fragment {
     private void deletedFriendListAlertDialog() {
         View dialogTitleView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_deleted_friend_list_title, null);
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_deleted_friend_list_body, null);
-        TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
+        final TextView countTv = (TextView) dialogView.findViewById(R.id.countTv);
+        ListView delFriLv = (ListView) dialogView.findViewById(R.id.delFriLv);
+        final TextView confirmTv = (TextView) dialogView.findViewById(R.id.confirmTv);
         TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
+
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setCustomTitle(dialogTitleView)
                 .setView(dialogView)
                 .setOnKeyListener(getOnKeyListener())
                 .setCancelable(false).create();
+
+        confirmTv.setEnabled(false);
+        DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+        final ArrayList<FRow> delFRows = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                .whereEquals(FRow.F_RELATION_FLAG, 1)
+                .appendOrderAscBy(FRow.F_NAME));
+        LiteOrm.releaseMemory();
+        mainDB.close();
+        final DelFriendListAdapter delFriendListAdapter = new DelFriendListAdapter(getActivity(), delFRows);
+        delFriLv.setAdapter(delFriendListAdapter);
+        final int[] checkNum = {0};
+        delFriLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 取得ViewHolder對象，這樣就省去了通過層層的findViewById去實例化我們需要的cb實例的步驟
+                DelFriendListAdapter.ViewHolder holder = (DelFriendListAdapter.ViewHolder) view.getTag();
+
+                // 改變CheckBox的狀態
+                holder.item_cb.toggle();
+                // 將CheckBox的選中狀況記錄下來
+                delFriendListAdapter.getIsSelected().put(position, holder.item_cb.isChecked());
+                // 調整選定條目
+                if (holder.item_cb.isChecked()) {
+                    checkNum[0]++;
+                } else {
+                    checkNum[0]--;
+                }
+                // 用TextView顯示
+                countTv.setText("已選中" + checkNum[0] + "項");
+                if (checkNum[0] == 0) {
+                    confirmTv.setEnabled(false);
+                } else {
+                    confirmTv.setEnabled(true);
+                }
+            }
+        });
+
         alertDialog.show();
 
         confirmTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                restoreDelFriAndUpdateView(delFRows, delFriendListAdapter.getIsSelected());
                 alertDialog.dismiss();
             }
         });
@@ -1222,6 +1323,7 @@ public class FriendFragment extends Fragment {
     }
 
     private void addGroupAndUpdateView(final String groupName, HashMap<Integer, Boolean> isSelected) {
+        final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
         String aids = "";
         final ArrayList<String> groupAidsList = new ArrayList<>();
         for (int i = 0; i < isSelected.size(); i++) {
@@ -1249,8 +1351,15 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog.show();
+            }
+
+            @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
                 if (aBoolean) {
                     DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
                     for (int i = 0; i < groupAidsList.size(); i++) {
@@ -1271,13 +1380,15 @@ public class FriendFragment extends Fragment {
                     LiteOrm.releaseMemory();
                     mainDB.close();
                     gfExListViewAdapter.notifyDataSetChanged();
-                    int count;
-                    for (count = 0; count < fgRows.size(); count++) {
-                        if (fgRows.get(count).getFG_group_name().equals(groupName)) {
-                            break;
+                    int count = 0;
+                    for (int i = 0; i < fgRows.size(); i++) {
+                        if (fgRows.get(i).getFG_group_name().equals(groupName)) {
+                            expandableListView.expandGroup(i);
+                            count = i;
+                        } else {
+                            expandableListView.collapseGroup(i);
                         }
                     }
-                    expandableListView.expandGroup(count);
                     expandableListView.setSelectedGroup(count);
                 } else {
                     Toast.makeText(getActivity(), "系統發生錯誤，請稍後在嘗試", Toast.LENGTH_SHORT).show();
@@ -1287,6 +1398,7 @@ public class FriendFragment extends Fragment {
     }
 
     private void editGroupAndUpdateView(final String beforeChangeName, final String afterChangeName, HashMap<Integer, Boolean> isSelected) {
+        final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
         String aids = "";
         final ArrayList<String> groupAidsList = new ArrayList<>();
         for (int i = 0; i < isSelected.size(); i++) {
@@ -1296,7 +1408,6 @@ public class FriendFragment extends Fragment {
             }
         }
         aids = aids.substring(0, aids.length() - 1);
-        final String finalAids = aids;
         new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
@@ -1315,8 +1426,15 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog.show();
+            }
+
+            @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
                 if (aBoolean) {
                     DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
                     mainDB.delete(new WhereBuilder(FGRow.class).andEquals(FGRow.FG_GROUP_NAME, beforeChangeName));
@@ -1353,6 +1471,69 @@ public class FriendFragment extends Fragment {
         }.execute(signInShrPref.getAID(), beforeChangeName, afterChangeName, aids);
     }
 
+    private void restoreDelFriAndUpdateView(ArrayList<FRow> delFRows, HashMap<Integer, Boolean> isSelected) {
+        final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+        final ArrayList<String> delFriAids = new ArrayList<>();
+        for (int i = 0; i < isSelected.size(); i++) {
+            if (isSelected.get(i)) {
+                delFriAids.add(delFRows.get(i).getF_fri_aid());
+            }
+        }
+        new AsyncTask<Object, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Object... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                Boolean aboolean = false;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.RestoreDelFriAnd((String) params[0],(ArrayList<String>) params[1]);
+                    aboolean = jsonParser.parseBoolean(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return aboolean;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog.show();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
+                if (aBoolean) {
+                    DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
+                    ArrayList<FRow> delFRowItem;
+                    ArrayList<FRow> delFRows = new ArrayList<FRow>();
+                    for (int i = 0; i < delFriAids.size(); i++) {
+                        delFRowItem = mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                                .whereEquals(FRow.F_FRI_AID, delFriAids.get(i)));
+                        delFRowItem.get(0).setF_relation_flag(0);
+                        delFRows.add(delFRowItem.get(0));
+                    }
+                    mainDB.update(delFRows);
+                    LiteOrm.releaseMemory();
+                    fRows.clear();
+                    fRows.addAll(mainDB.query(new QueryBuilder<FRow>(FRow.class)
+                            .whereEquals(FRow.F_RELATION_FLAG, 0)
+                            .appendOrderAscBy(FRow.F_NAME)));
+                    LiteOrm.releaseMemory();
+                    mainDB.close();
+                    gfExListViewAdapter.notifyDataSetChanged();
+                    expandableListView.expandGroup(expandableListView.getCount() - 3);
+                    expandableListView.setSelectedGroup(expandableListView.getCount() - 3);
+                } else {
+                    Toast.makeText(getActivity(), "系統發生錯誤，請稍後在嘗試", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute(signInShrPref.getAID(), delFriAids);
+    }
+
     private void deleteGroupAndUpdateView(final String groupName) {
         new AsyncTask<String, Void, Boolean>() {
             @Override
@@ -1372,8 +1553,16 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+                mySyncingDialog.show();
+            }
+
+            @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
                 if (aBoolean) {
                     DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
                     mainDB.delete(new WhereBuilder(FGRow.class).andEquals(FGRow.FG_GROUP_NAME, groupName));
@@ -1421,8 +1610,16 @@ public class FriendFragment extends Fragment {
             }
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料處理中，請稍後");
+                mySyncingDialog.show();
+            }
+
+            @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
+                mySyncingDialog.dismiss();
                 if (aBoolean) {
                     DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
                     ArrayList<FRow> fRowsTmp = mainDB.query(new QueryBuilder<FRow>(FRow.class).whereEquals(FRow.F_FRI_AID, friAid));
@@ -1670,7 +1867,6 @@ public class FriendFragment extends Fragment {
                     } else {
                         expandableListView.expandGroup(groupPosition);
                     }
-                    notifyDataSetChanged();
                 }
             });
 
@@ -1688,6 +1884,7 @@ public class FriendFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     deletGroupCheckAlertDialog(groupName);
+                    holder.swipeLayout.close();
                 }
             });
 
@@ -1726,12 +1923,17 @@ public class FriendFragment extends Fragment {
 
             boolean memberFlag = false;
             String lastDateStr = "";
+            final String friName;
             final String friendNickName;
+            String friAid = "";
             if (groupPosition < fgRows.size()) { //群組部分
                 DataBase mainDB = LiteOrm.newSingleInstance(context, signInShrPref.getAID());
                 ArrayList<FRow> fRowArrayList = mainDB.query(new QueryBuilder<FRow>(FRow.class)
                         .whereEquals(FRow.F_FRI_AID, fgRowsGroupList.get(groupPosition).get(childPosition).getFG_fri_aid()));
                 LiteOrm.releaseMemory();
+                if (fRowArrayList.size() != 0) {
+                    friAid = fRowArrayList.get(0).getF_fri_aid();
+                }
                 if (fRowArrayList.get(0).getF_member_flag().equals("Y")) { //群組部分，是遠距會員，可能有最後量測時間
                     memberFlag = true;
                     ArrayList<PreDataRow> preDataRows = mainDB.query(new QueryBuilder<PreDataRow>(PreDataRow.class)
@@ -1780,18 +1982,21 @@ public class FriendFragment extends Fragment {
                     if (!"".equals(lastDateStr)) {
                         lastDateStr = "最近量測時間 " + lastDateStr;
                     }
-                    listener.setOnClick("groupSelf", true, childPosition);
+                    listener.setOnClick("groupSelf", true, childPosition, fRowArrayList.get(0).getF_fri_aid());
                     viewHolder.item_surface.setEnabled(true);
                 } else { //群組部分，非遠距會員
-                    listener.setOnClick("groupSelf", false, childPosition);
+                    listener.setOnClick("groupSelf", false, childPosition, fRowArrayList.get(0).getF_fri_aid());
                     viewHolder.item_surface.setEnabled(false);
                 }
                 mainDB.close();
+                friName = fRowArrayList.get(0).getF_name();
                 friendNickName = fRowArrayList.get(0).getF_nickname();
                 viewHolder.iv_trash.setVisibility(View.GONE);
                 viewHolder.swipeLayout.setSwipeEnabled(true);
             } else if (groupPosition == fgRows.size()) { //所有好友部分
+                friName = fRows.get(childPosition).getF_name();
                 friendNickName = fRows.get(childPosition).getF_nickname();
+                friAid = fRows.get(childPosition).getF_fri_aid();
                 if (fRows.get(childPosition).getF_member_flag().equals("Y")) { //所有好友部分，是遠距會員
                     memberFlag = true;
                     DataBase mainDB = LiteOrm.newSingleInstance(context, signInShrPref.getAID());
@@ -1842,21 +2047,23 @@ public class FriendFragment extends Fragment {
                     if (!"".equals(lastDateStr.trim())) {
                         lastDateStr = "最近量測時間 " + lastDateStr;
                     }
-                    listener.setOnClick("allFriend", true, childPosition);
+                    listener.setOnClick("allFriend", true, childPosition, fRows.get(childPosition).getF_fri_aid());
                     viewHolder.item_surface.setEnabled(true);
                 } else { //所有好友部分，非遠距會員
-                    listener.setOnClick("allFriend", false, childPosition);
+                    listener.setOnClick("allFriend", false, childPosition, fRows.get(childPosition).getF_fri_aid());
                     viewHolder.item_surface.setEnabled(false);
                 }
                 viewHolder.iv_trash.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        viewHolder.swipeLayout.close();
                         deletfriendCheckAlertDialog(friendNickName, fRows.get(childPosition).getF_fri_aid());
                     }
                 });
                 viewHolder.iv_trash.setVisibility(View.VISIBLE);
                 viewHolder.swipeLayout.setSwipeEnabled(true);
             } else if (groupPosition == fgRows.size() + 1) { //自己邀請的好友
+                friName = fAddSendRows.get(childPosition).getFAddNot_recv_name();
                 friendNickName = fAddSendRows.get(childPosition).getFAddNot_recv_name();
                 switch (fAddSendRows.get(childPosition).getFAddNot_add_way()) {
                     case 0:
@@ -1872,6 +2079,7 @@ public class FriendFragment extends Fragment {
                 viewHolder.item_surface.setEnabled(false);
                 viewHolder.swipeLayout.setSwipeEnabled(false);
             } else { //邀請自己的好友
+                friName = fAddRecvRows.get(childPosition).getFAddNot_send_name();
                 friendNickName = fAddRecvRows.get(childPosition).getFAddNot_send_name();
                 switch (fAddRecvRows.get(childPosition).getFAddNot_add_way()) {
                     case 0:
@@ -1884,7 +2092,7 @@ public class FriendFragment extends Fragment {
                         lastDateStr = "透過 QRCode 邀請您成為好友";
                         break;
                 }
-                listener.setOnClick("inviteSlef", true, childPosition);
+                listener.setOnClick("inviteSlef", true, childPosition, fAddRecvRows.get(childPosition).getFAddNot_send_aid());
                 viewHolder.item_surface.setEnabled(true);
                 viewHolder.swipeLayout.setSwipeEnabled(false);
             }
@@ -1905,15 +2113,19 @@ public class FriendFragment extends Fragment {
 
 
             /*****設定Btn*****/
+            final String finalFriAid = friAid;
+            final boolean finalMemberFlag = memberFlag;
             viewHolder.iv_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    toast("click edit");
-                    //do something
                     new AsyncTask<Class<?>, Void, String>() {
                         @Override
                         protected String doInBackground(Class<?>... params) {
                             Intent intent = new Intent(context, params[0]);
+                            intent.putExtra("friAid", finalFriAid);
+                            intent.putExtra("friName", friName);
+                            intent.putExtra("friendNickName", friendNickName);
+                            intent.putExtra("memberFlag", finalMemberFlag);
                             context.startActivity(intent);
                             return "finish";
                         }
@@ -1976,11 +2188,13 @@ public class FriendFragment extends Fragment {
             String groupKind;
             boolean memberFlag;
             int childPosition;
+            String friAid;
 
-            public void setOnClick(String groupKind, boolean memberFlag, int childPosition) {
+            public void setOnClick(String groupKind, boolean memberFlag, int childPosition, String friAid) {
                 this.groupKind = groupKind;
                 this.memberFlag = memberFlag;
                 this.childPosition = childPosition;
+                this.friAid = friAid;
             }
 
             @Override
@@ -1990,6 +2204,7 @@ public class FriendFragment extends Fragment {
                         if (memberFlag) {
 //                            toast("自訂群組");
                             Intent intent = new Intent(context, FriendPersonalActivity.class);
+                            intent.putExtra("friAid", friAid);
                             context.startActivity(intent);
                         } else {
                             toast("非遠距會員");
@@ -1999,6 +2214,7 @@ public class FriendFragment extends Fragment {
                         if (memberFlag) {
 //                            toast("所有好友");
                             Intent intent = new Intent(context, FriendPersonalActivity.class);
+                            intent.putExtra("friAid", friAid);
                             context.startActivity(intent);
                         } else {
                             toast("非遠距會員");
@@ -2015,7 +2231,6 @@ public class FriendFragment extends Fragment {
 
         private void toast(String msg) {
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -2073,7 +2288,7 @@ public class FriendFragment extends Fragment {
                 // 獲得ViewHolder對象
                 holder = new ViewHolder();
                 // 導入佈局並賦值給convertview
-                convertView = inflater.inflate(R.layout.dialog_add_group_listview_item, null);
+                convertView = inflater.inflate(R.layout.dialog_add_edit_group_delete_friend_listview_item, null);
                 holder.avatarIv = (CircleImageView) convertView.findViewById(R.id.avatarIv);
                 holder.nameTv = (TextView) convertView.findViewById(R.id.nameTv);
                 holder.nickNameTv = (TextView) convertView.findViewById(R.id.nickNameTv);
@@ -2178,7 +2393,7 @@ public class FriendFragment extends Fragment {
                 // 獲得ViewHolder對象
                 holder = new ViewHolder();
                 // 導入佈局並賦值給convertview
-                convertView = inflater.inflate(R.layout.dialog_add_group_listview_item, null);
+                convertView = inflater.inflate(R.layout.dialog_add_edit_group_delete_friend_listview_item, null);
                 holder.avatarIv = (CircleImageView) convertView.findViewById(R.id.avatarIv);
                 holder.nameTv = (TextView) convertView.findViewById(R.id.nameTv);
                 holder.nickNameTv = (TextView) convertView.findViewById(R.id.nickNameTv);
@@ -2195,6 +2410,95 @@ public class FriendFragment extends Fragment {
 //            holder.avatarIv.setImageResource();
             holder.nameTv.setText(fRows.get(position).getF_name());
             holder.nickNameTv.setText(fRows.get(position).getF_nickname());
+            // 根據isSelected來設置checkbox的選中狀況
+            holder.item_cb.setChecked(getIsSelected().get(position));
+            return convertView;
+        }
+
+        public HashMap<Integer, Boolean> getIsSelected() {
+            return isSelected;
+        }
+
+        public void setIsSelected(HashMap<Integer, Boolean> isSelected) {
+            this.isSelected = isSelected;
+        }
+
+        public class ViewHolder {
+            public CircleImageView avatarIv;
+            public TextView nameTv, nickNameTv;
+            public CheckBox item_cb;
+        }
+    }
+
+    public class DelFriendListAdapter extends BaseAdapter {
+        // 上下文
+        private Context context;
+        // 填充數據的list
+        private ArrayList<FRow> delFRows;
+
+        private int[] checkNum;
+        // 用來控制CheckBox的選中狀況
+        private HashMap<Integer, Boolean> isSelected;
+        // 用來導入佈局
+        private LayoutInflater inflater = null;
+
+        // 構造器
+        @SuppressLint("UseSparseArrays")
+        public DelFriendListAdapter(Context context, ArrayList<FRow> delFRows) {
+            this.context = context;
+            this.delFRows = delFRows;
+            inflater = LayoutInflater.from(context);
+            isSelected = new HashMap<Integer, Boolean>();
+            // 初始化數據
+            initDate();
+        }
+
+        // 初始化isSelected的數據
+        private void initDate() {
+            for (int i = 0; i < delFRows.size(); i++) {
+                getIsSelected().put(i, false);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return delFRows.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return delFRows.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                // 獲得ViewHolder對象
+                holder = new ViewHolder();
+                // 導入佈局並賦值給convertview
+                convertView = inflater.inflate(R.layout.dialog_add_edit_group_delete_friend_listview_item, null);
+                holder.avatarIv = (CircleImageView) convertView.findViewById(R.id.avatarIv);
+                holder.nameTv = (TextView) convertView.findViewById(R.id.nameTv);
+                holder.nickNameTv = (TextView) convertView.findViewById(R.id.nickNameTv);
+                holder.item_cb = (CheckBox) convertView.findViewById(R.id.item_cb);
+                // 為view設置標籤
+                convertView.setTag(holder);
+            } else {
+                // 取出holder
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+
+            // 設置list顯示
+//            holder.avatarIv.setImageResource();
+            holder.nameTv.setText(delFRows.get(position).getF_name());
+            holder.nickNameTv.setText(delFRows.get(position).getF_nickname());
             // 根據isSelected來設置checkbox的選中狀況
             holder.item_cb.setChecked(getIsSelected().get(position));
             return convertView;
@@ -2317,7 +2621,7 @@ public class FriendFragment extends Fragment {
                     LiteOrm.releaseMemory();
                     mainDB.close();
                     if ("Y".equals(arrayList.get(0).getF_member_flag())) {
-                        updateFriendData(arrayList.get(0).getF_fri_sid());
+                        updateFriendData(arrayList.get(0).getF_fri_sid(), arrayList.get(0).getF_fri_aid());
                     } else {
                         gfExListViewAdapter.notifyDataSetChanged();
                         expandableListView.expandGroup(expandableListView.getCount() - 3);
@@ -2330,9 +2634,9 @@ public class FriendFragment extends Fragment {
         }.execute(aid, friAid);
     }
 
-    private void updateFriendData(String sid) {
+    private void updateFriendData(String friSid, String friAid) { //警戒值、血壓流水、血糖流水、個人資料分享設定表、好友訊息接受設定表、好友訊息分享設定表
         final DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
-        final Boolean[] updateEndflag = new Boolean[]{false, false, false};
+        final Boolean[] updateEndflag = new Boolean[]{false, false, false, false, false, false};
 
         final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "同步好友資料中，請稍後");
         mySyncingDialog.show();
@@ -2367,7 +2671,7 @@ public class FriendFragment extends Fragment {
                 }
                 updateFriendDataEndflagSetting(updateEndflag, 0, mainDB, mySyncingDialog);
             }
-        }.execute(sid);
+        }.execute(friSid);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
@@ -2405,7 +2709,7 @@ public class FriendFragment extends Fragment {
                 }
                 updateFriendDataEndflagSetting(updateEndflag, 1, mainDB, mySyncingDialog);
             }
-        }.execute(sid, dateStr);
+        }.execute(friSid, dateStr);
 
         new AsyncTask<String, Void, ArrayList<GlyDataRow>>() {
             @Override
@@ -2439,12 +2743,147 @@ public class FriendFragment extends Fragment {
                 }
                 updateFriendDataEndflagSetting(updateEndflag, 2, mainDB, mySyncingDialog);
             }
-        }.execute(sid, dateStr);
+        }.execute(friSid, dateStr);
+
+        new AsyncTask<String, Void, ArrayList<FShrSetRow>>() {
+            @Override
+            protected ArrayList<FShrSetRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FShrSetRow> fShrSetRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateNewFriendShareSettingTable(params[0], params[1]);
+                    fShrSetRows = jsonParser.parseFShrSetRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fShrSetRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FShrSetRow> fShrSetRows) {
+                super.onPostExecute(fShrSetRows);
+                if (fShrSetRows != null) {
+                    if (fShrSetRows.size() != 0) {
+                        for (int i = 0; i < fShrSetRows.size(); i++) {
+                            mainDB.save(fShrSetRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "個人資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                    //test
+//                    long count = mainDB.queryCount(FShrSetRow.class);
+//                    ArrayList<FShrSetRow> list1 = mainDB.query(FShrSetRow.class);
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFShrSet_fri_aid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
+//                    //test
+                updateFriendDataEndflagSetting(updateEndflag, 3, mainDB, mySyncingDialog);
+            }
+        }.execute(signInShrPref.getAID(), friAid);
+
+        new AsyncTask<String, Void, ArrayList<FRecvNotSetRow>>() {
+            @Override
+            protected ArrayList<FRecvNotSetRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FRecvNotSetRow> fRecvNotSetRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateNewFriendReceiveNoticeSettingTable(params[0], params[1]);
+                    fRecvNotSetRows = jsonParser.parseFRecvNotSetRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fRecvNotSetRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FRecvNotSetRow> fRecvNotSetRows) {
+                super.onPostExecute(fRecvNotSetRows);
+                if (fRecvNotSetRows != null) {
+                    if (fRecvNotSetRows.size() != 0) {
+                        for (int i = 0; i < fRecvNotSetRows.size(); i++) {
+                            mainDB.save(fRecvNotSetRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "個人訊息分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                    //test
+//                    long count = mainDB.queryCount(FRecvNotSetRow.class);
+//                    ArrayList<FRecvNotSetRow> list1 = mainDB.query(FRecvNotSetRow.class);
+//                    if (list1.size() != 0){
+//                        String str = String.valueOf(count) + "\n" + list1.get(0).getFRecvNotSet_fri_aid();
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    } else {
+//                        String str = String.valueOf(count);
+//                        Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                    }
+//                    //test
+                updateFriendDataEndflagSetting(updateEndflag, 4, mainDB, mySyncingDialog);
+            }
+        }.execute(signInShrPref.getAID(), friAid);
+
+        new AsyncTask<String, Void, ArrayList<FShrDataFlagRow>>() {
+            @Override
+            protected ArrayList<FShrDataFlagRow> doInBackground(String... params) {
+                HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                JSONParser jsonParser = new JSONParser();
+                ArrayList<FShrDataFlagRow> fShrDataFlagRows = null;
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = httcjsonapi.UpdateNewFriendShareDataFlagTable(params[0], params[1]);
+                    fShrDataFlagRows = jsonParser.parseFShrDataFlagRow(jsonObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return fShrDataFlagRows;
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<FShrDataFlagRow> fShrDataFlagRows) {
+                super.onPostExecute(fShrDataFlagRows);
+                if (fShrDataFlagRows != null) {
+                    if (fShrDataFlagRows.size() != 0) {
+                        for (int i = 0; i < fShrDataFlagRows.size(); i++) {
+                            mainDB.save(fShrDataFlagRows.get(i));
+                        }
+                        LiteOrm.releaseMemory();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "好友資料分享設定表更新失敗", Toast.LENGTH_SHORT).show();
+                }
+//                //test
+//                long count = mainDB.queryCount(FShrDataFlagRow.class);
+//                ArrayList<FShrDataFlagRow> list1 = mainDB.query(FShrDataFlagRow.class);
+//                if (list1.size() != 0){
+//                    String str = String.valueOf(count) + "\n" + list1.get(0).getFShrData_fri_aid();
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                } else {
+//                    String str = String.valueOf(count);
+//                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+//                }
+//                //test
+                updateFriendDataEndflagSetting(updateEndflag, 5, mainDB, mySyncingDialog);
+            }
+        }.execute(signInShrPref.getAID(), friAid);
     }
 
     private void updateFriendDataEndflagSetting(Boolean[] updateEndflag, int i, DataBase mainDB, MySyncingDialog mySyncingDialog) {
         updateEndflag[i] = true;
-        if (updateEndflag[0] && updateEndflag[1] && updateEndflag[2]) {
+        if (updateEndflag[0] && updateEndflag[1] && updateEndflag[2] && updateEndflag[3] && updateEndflag[4] && updateEndflag[5]) {
             mainDB.close();
             gfExListViewAdapter.notifyDataSetChanged();
             expandableListView.expandGroup(expandableListView.getCount() - 3);

@@ -83,10 +83,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default"
+                        android:id="@+id/shrDataSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -111,10 +112,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default2"
+                        android:id="@+id/shrMedSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -139,10 +141,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default3"
+                        android:id="@+id/shrPaySw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -167,10 +170,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default4"
+                        android:id="@+id/shrRprtSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -195,10 +199,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default5"
+                        android:id="@+id/shrRcrdSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -223,10 +228,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default6"
+                        android:id="@+id/shrLctSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
@@ -438,10 +444,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default12"
+                        android:id="@+id/recDataSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -466,10 +473,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default13"
+                        android:id="@+id/recMedSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -494,10 +502,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default14"
+                        android:id="@+id/recPaySw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -522,10 +531,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default15"
+                        android:id="@+id/recRprtSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -550,10 +560,11 @@
                     android:layout_weight="1">
 
                     <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sb_default16"
+                        android:id="@+id/recRcrdSw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" />
+                        android:layout_gravity="right|center_vertical"
+                        android:checked="false" />
                 </FrameLayout>
             </LinearLayout>
 

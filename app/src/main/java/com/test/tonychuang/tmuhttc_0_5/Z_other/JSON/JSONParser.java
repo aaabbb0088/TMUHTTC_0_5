@@ -421,6 +421,7 @@ public class JSONParser {
                         jsonObj.getString("F_fri_sid"),
                         jsonObj.getString("F_fri_pid"),
                         jsonObj.getInt("F_relation_flag"),
+                        jsonObj.getInt("F_relation_flag_fri"),
                         jsonObj.getString("F_active_datetime"),
                         jsonObj.getString("F_member_flag"),
                         jsonObj.getString("F_avatar"),
@@ -636,7 +637,6 @@ public class JSONParser {
                 jsonObj = jsonArray.getJSONObject(i);
                 arrayList.add(new FShrDataFlagRow(
                         jsonObj.getString("FShrData_fri_aid"),
-                        jsonObj.getString("FShrData_fri_sid"),
                         jsonObj.getString("FShrData_data_flag"),
                         jsonObj.getString("FShrData_medicine_flag"),
                         jsonObj.getString("FShrData_pay_flag"),

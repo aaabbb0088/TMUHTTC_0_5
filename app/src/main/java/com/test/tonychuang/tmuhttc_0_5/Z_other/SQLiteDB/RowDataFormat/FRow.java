@@ -16,6 +16,7 @@ public class FRow extends BaseModel {
     public static final String F_FRI_SID = "F_fri_sid";
     public static final String F_FRI_PID = "F_fri_pid";
     public static final String F_RELATION_FLAG = "F_relation_flag";
+    public static final String F_RELATION_FLAG_FRI = "F_relation_flag_fri";
     public static final String F_ACTIVE_DATETIME = "F_active_datetime";
     public static final String F_MEMBER_FLAG = "F_member_flag";
     public static final String F_AVATAR = "F_avatar";
@@ -37,6 +38,8 @@ public class FRow extends BaseModel {
     private String F_fri_pid;
     @NotNull
     private int F_relation_flag;
+    @NotNull
+    private int F_relation_flag_fri;
     @NotNull
     private String F_active_datetime;
     @NotNull
@@ -62,7 +65,7 @@ public class FRow extends BaseModel {
     }
 
     public FRow(long f_table_id, String f_fri_aid, String f_fri_sid, String f_fri_pid,int f_relation_flag,
-                String f_active_datetime, String f_member_flag, String f_avatar,
+                int f_relation_flag_fri, String f_active_datetime, String f_member_flag, String f_avatar,
                 String f_name, String f_nickname, String f_nickname_flag,
                 int f_sex, String f_birthday, String f_phone, String f_email) {
         F_table_id = f_table_id;
@@ -70,6 +73,7 @@ public class FRow extends BaseModel {
         F_fri_sid = f_fri_sid;
         F_fri_pid = f_fri_pid;
         F_relation_flag = f_relation_flag;
+        F_relation_flag_fri = f_relation_flag_fri;
         F_active_datetime = f_active_datetime;
         F_member_flag = f_member_flag;
         F_avatar = f_avatar;
@@ -120,6 +124,14 @@ public class FRow extends BaseModel {
 
     public void setF_relation_flag(int f_relation_flag) {
         F_relation_flag = f_relation_flag;
+    }
+
+    public int getF_relation_flag_fri() {
+        return F_relation_flag_fri;
+    }
+
+    public void setF_relation_flag_fri(int f_relation_flag_fri) {
+        F_relation_flag_fri = f_relation_flag_fri;
     }
 
     public String getF_active_datetime() {
@@ -209,6 +221,7 @@ public class FRow extends BaseModel {
         arrayList.add("F_fri_sid");
         arrayList.add("F_fri_pid");
         arrayList.add("F_relation_flag");
+        arrayList.add("F_relation_flag_fri");
         arrayList.add("F_active_datetime");
         arrayList.add("F_member_flag");
         arrayList.add("F_avatar");
@@ -228,6 +241,7 @@ public class FRow extends BaseModel {
         arrayList.add("TEXT");
         arrayList.add("TEXT");
         arrayList.add("TEXT");
+        arrayList.add("INTEGER");
         arrayList.add("INTEGER");
         arrayList.add("TEXT");
         arrayList.add("TEXT");

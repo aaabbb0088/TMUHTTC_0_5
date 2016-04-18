@@ -40,7 +40,7 @@
             android:textSize="17sp" />
 
         <ToggleButton
-            android:id="@+id/thirtyDayBtn"
+            android:id="@+id/fOneWeekBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -48,7 +48,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="未來一周"
             android:textOn="未來一周"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
     </LinearLayout>
 
     <LinearLayout
@@ -117,16 +118,6 @@
             android:src="@mipmap/chartsearch_wi_g" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/loadStatus"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="載入中"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/darker_gray"
-        android:visibility="gone" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -142,6 +133,17 @@
             android:id="@+id/listViewData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/background_listview_data" />
+
+        <TextView
+            android:id="@+id/loadStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="載入中"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
             android:background="@drawable/background_listview_data" />
     </LinearLayout>
 

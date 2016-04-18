@@ -8,9 +8,9 @@
     tools:context="com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgGlycemiaActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/scrollView2"
         android:layout_weight="1"
         android:fillViewport="true">
 

@@ -58,7 +58,6 @@ import java.util.Locale;
  */
 public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements View.OnClickListener {
 
-
     private View view;
     private TextView startDateTv;
     private TextView endDateTv;
@@ -92,12 +91,10 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
     private WLevelShrPref wLevelShrPref;
     private SignInShrPref signInShrPref;
 
-
     private int BG_BM_Max;
     private int BG_BM_Min;
     private int BG_AM_Max;
     private int BG_AM_Min;
-
 
     /**
      * Charts的LimitLine
@@ -498,6 +495,10 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
     private void initData() {
         myDateSFormat = new MyDateSFormat();
         wLevelShrPref = new WLevelShrPref(getActivity());
+        BG_BM_Max = wLevelShrPref.getBG_BM_Max();
+        BG_BM_Min = wLevelShrPref.getBG_BM_Min();
+        BG_AM_Max = wLevelShrPref.getBG_AM_Max();
+        BG_AM_Min = wLevelShrPref.getBG_AM_Min();
         signInShrPref = new SignInShrPref(getActivity());
 
         DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
@@ -513,38 +514,39 @@ public class PersonDataSearchDrawGlycemiaFragment extends Fragment implements Vi
         oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
 
         oneWeekData = mainDB.query(new QueryBuilder<GlyAvgRow>(GlyAvgRow.class)
-                .whereEquals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
-                .where(new WhereBuilder(GlyAvgRow.class)
+                .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(GlyAvgRow.GAVG_DATETIME, oneWeekDateStr)
                         .or()
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(GlyAvgRow.GAVG_DATETIME, oneWeekDateStr))
                 .appendOrderAscBy(GlyAvgRow.GAVG_DATETIME));
         LiteOrm.releaseMemory();
         twoWeekData = mainDB.query(new QueryBuilder<GlyAvgRow>(GlyAvgRow.class)
-                .whereEquals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
-                .where(new WhereBuilder(GlyAvgRow.class)
+                .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(GlyAvgRow.GAVG_DATETIME, twoWeekDateStr)
                         .or()
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(GlyAvgRow.GAVG_DATETIME, twoWeekDateStr))
                 .appendOrderAscBy(GlyAvgRow.GAVG_DATETIME));
         LiteOrm.releaseMemory();
         oneMounthData = mainDB.query(new QueryBuilder<GlyAvgRow>(GlyAvgRow.class)
-                .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
-                .where(new WhereBuilder(GlyAvgRow.class)
+                .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(GlyAvgRow.GAVG_DATETIME, oneMounthDateStr)
                         .or()
+                        .equals(GlyAvgRow.GAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(GlyAvgRow.GAVG_DATETIME, oneMounthDateStr))
                 .appendOrderAscBy(GlyAvgRow.GAVG_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();
-
-        BG_BM_Max = wLevelShrPref.getBG_BM_Max();
-        BG_BM_Min = wLevelShrPref.getBG_BM_Min();
-        BG_AM_Max = wLevelShrPref.getBG_AM_Max();
-        BG_AM_Min = wLevelShrPref.getBG_AM_Min();
 
         initLimitLines();
     }

@@ -116,7 +116,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_table_layout"
@@ -171,31 +170,48 @@
 
         </RadioGroup>
 
-        <ListView
-            android:id="@+id/listViewItemName"
+        <LinearLayout
+            android:id="@+id/tableLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/listViewData"
+            <ListView
+                android:id="@+id/listViewItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp" />
+
+            <ImageView
+                android:id="@+id/imageView30"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary" />
+
+            <ListView
+                android:id="@+id/listViewData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:overScrollMode="never" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/loadStatusText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="資料載入中"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone" />
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/loadStatusText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="資料載入中"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/darker_gray"
-        android:visibility="gone" />
 
 </LinearLayout>

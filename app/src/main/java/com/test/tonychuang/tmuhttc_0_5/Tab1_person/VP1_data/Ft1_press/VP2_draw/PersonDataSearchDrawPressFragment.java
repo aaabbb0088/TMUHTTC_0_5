@@ -301,7 +301,7 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                             rightAxis.setDrawGridLines(true);
                             rightAxis.enableGridDashedLine(10f, 10f, 0f);
 
-                            yMax = Math.max(Math.max(Float.valueOf(BP_SY_Max), lineData.getYMax()), barData.getYMax());
+                            yMax = Math.max(Math.max((float) BP_SY_Max, lineData.getYMax()), barData.getYMax());
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(0f);
                             rightAxis.setDrawGridLines(true);
@@ -315,8 +315,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                             leftAxis.addLimitLine(hULimitLine);
                             leftAxis.addLimitLine(hLLimitLine);
 
-                            yMax = Math.max(Float.valueOf(BP_SY_Max), lineData.getYMax());
-                            yMin = Math.min(Float.valueOf(BP_SY_Min), lineData.getYMax());
+                            yMax = Math.max((float) BP_SY_Max, lineData.getYMax());
+                            yMin = Math.min((float) BP_SY_Min, lineData.getYMax());
                             leftAxis.setDrawGridLines(false);
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(yMin - 30f);
@@ -330,8 +330,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                             leftAxis.addLimitLine(lULimitLine);
                             leftAxis.addLimitLine(lLLimitLine);
 
-                            yMax = Math.max(Float.valueOf(BP_DI_Max), lineData.getYMax());
-                            yMin = Math.min(Float.valueOf(BP_DI_Min), lineData.getYMax());
+                            yMax = Math.max((float) BP_DI_Max, lineData.getYMax());
+                            yMin = Math.min((float) BP_DI_Min, lineData.getYMax());
                             leftAxis.setDrawGridLines(false);
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(yMin - 30f);
@@ -345,8 +345,8 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
                             leftAxis.addLimitLine(hrULimitLine);
                             leftAxis.addLimitLine(hrLLimitLine);
 
-                            yMax = Math.max(Float.valueOf(BP_HR_Max), barData.getYMax());
-                            yMin = Math.min(Float.valueOf(BP_HR_Min), barData.getYMax());
+                            yMax = Math.max((float) BP_HR_Max, barData.getYMax());
+                            yMin = Math.min((float) BP_HR_Min, barData.getYMax());
                             leftAxis.setDrawGridLines(false);
                             leftAxis.setAxisMaxValue(yMax + 30f);
                             leftAxis.setAxisMinValue(yMin - 30f);
@@ -541,6 +541,12 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
     private void initData() {
         myDateSFormat = new MyDateSFormat();
         wLevelShrPref = new WLevelShrPref(getActivity());
+        BP_SY_Max = wLevelShrPref.getBP_SY_Max();
+        BP_SY_Min = wLevelShrPref.getBP_SY_Min();
+        BP_DI_Max = wLevelShrPref.getBP_DI_Max();
+        BP_DI_Min = wLevelShrPref.getBP_DI_Min();
+        BP_HR_Max = wLevelShrPref.getBP_HR_Max();
+        BP_HR_Min = wLevelShrPref.getBP_HR_Min();
         signInShrPref = new SignInShrPref(getActivity());
 
         DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
@@ -556,40 +562,39 @@ public class PersonDataSearchDrawPressFragment extends Fragment implements View.
         oneMounthDateStr = myDateSFormat.getFrmt_yMd().format(clr.getTime());
 
         oneWeekData = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
-                .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
                 .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(PreAvgRow.PAVG_DATETIME, oneWeekDateStr)
                         .or()
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(PreAvgRow.PAVG_DATETIME, oneWeekDateStr))
                 .appendOrderAscBy(PreAvgRow.PAVG_DATETIME));
         LiteOrm.releaseMemory();
         twoWeekData = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
-                .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
                 .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(PreAvgRow.PAVG_DATETIME, twoWeekDateStr)
                         .or()
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(PreAvgRow.PAVG_DATETIME, twoWeekDateStr))
                 .appendOrderAscBy(PreAvgRow.PAVG_DATETIME));
         LiteOrm.releaseMemory();
         oneMounthData = mainDB.query(new QueryBuilder<PreAvgRow>(PreAvgRow.class)
-                .whereEquals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
-                .whereAppendAnd()
                 .where(new WhereBuilder(PreAvgRow.class)
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .greaterThan(PreAvgRow.PAVG_DATETIME, oneMounthDateStr)
                         .or()
+                        .equals(PreAvgRow.PAVG_SID, signInShrPref.getSID())
+                        .and()
                         .equals(PreAvgRow.PAVG_DATETIME, oneMounthDateStr))
                 .appendOrderAscBy(PreAvgRow.PAVG_DATETIME));
         LiteOrm.releaseMemory();
         mainDB.close();
-
-        BP_SY_Max = wLevelShrPref.getBP_SY_Max();
-        BP_SY_Min = wLevelShrPref.getBP_SY_Min();
-        BP_DI_Max = wLevelShrPref.getBP_DI_Max();
-        BP_DI_Min = wLevelShrPref.getBP_DI_Min();
-        BP_HR_Max = wLevelShrPref.getBP_HR_Max();
-        BP_HR_Min = wLevelShrPref.getBP_HR_Min();
 
         initLimitLines();
     }

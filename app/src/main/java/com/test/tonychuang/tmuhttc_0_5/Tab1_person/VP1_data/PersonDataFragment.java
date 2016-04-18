@@ -174,7 +174,6 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     /**
      * List選單 對話框
      */
-    //之後改成加入參數(要塞入listView的資料)
     private void thumbAlertDialog(String Flag) {
         //之後把Layout改成listView(頭像+暱稱)，處理完按讚資料後，塞入listView
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_thumd_aids, null);
@@ -204,13 +203,6 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
         });
     }
 
-
-    /**
-     * v2
-     */
-    /**
-     *
-     */
     private DialogInterface.OnKeyListener getOnKeyListener() {
         return new DialogInterface.OnKeyListener() {
             @Override
@@ -222,6 +214,14 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
             }
         };
     }
+
+    /**
+     * v2
+     */
+    /**
+     *
+     */
+
 
 
     /**
@@ -443,6 +443,11 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    private void setThbBtnFalseBackground(LinearLayout linearLayout) {
+        linearLayout.setBackgroundResource(R.drawable.background_person_data_thumb_true);
+        linearLayout.setTag(R.drawable.background_person_data_thumb_true);
+    }
+
     private void pressThbPlus() {
         if (getDrawableId(pressThbBtn) != R.drawable.background_person_data_thumb_true) {
             new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
@@ -525,11 +530,6 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 }
             }.execute(String.valueOf(glyThumbRows.get(0).getGData_thumb_table_id()), signInShrPref.getAID());
         }
-    }
-
-    private void setThbBtnFalseBackground(LinearLayout linearLayout) {
-        linearLayout.setBackgroundResource(R.drawable.background_person_data_thumb_true);
-        linearLayout.setTag(R.drawable.background_person_data_thumb_true);
     }
 
     private int getDrawableId(LinearLayout linearLayout) {

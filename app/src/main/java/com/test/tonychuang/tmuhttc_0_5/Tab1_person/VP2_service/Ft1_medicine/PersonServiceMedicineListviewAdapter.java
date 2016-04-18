@@ -67,7 +67,7 @@ public class PersonServiceMedicineListviewAdapter extends BaseAdapter {
         }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        SimpleDateFormat DateFormat = new SimpleDateFormat("M月d日", Locale.getDefault());
+        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy年\nM月d日", Locale.getDefault());
         SimpleDateFormat TimeFormat = new SimpleDateFormat("a h:mm ", Locale.getDefault());
         Date date = null;
         try {

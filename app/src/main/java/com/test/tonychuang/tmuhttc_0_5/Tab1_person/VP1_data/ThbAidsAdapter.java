@@ -1,11 +1,11 @@
 package com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.DataBase;
@@ -19,6 +19,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.grantland.widget.AutofitTextView;
 
 /**
  * Created by TonyChuang on 2016/4/6.
@@ -58,6 +59,7 @@ public class ThbAidsAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
@@ -65,7 +67,7 @@ public class ThbAidsAdapter extends BaseAdapter {
             //取得listItem容器 view
             convertView = myInflater.inflate(R.layout.listview_item_thumb, null);
             holder = new Holder();
-            holder.nickNameTv = (TextView) convertView.findViewById(R.id.nickNameTv);
+            holder.nickNameTv = (AutofitTextView) convertView.findViewById(R.id.nickNameTv);
             holder.avatarIv = (CircleImageView) convertView.findViewById(R.id.avatarIv);
             convertView.setTag(holder);
         } else {
@@ -82,7 +84,7 @@ public class ThbAidsAdapter extends BaseAdapter {
             if (fRows.size() != 0) {
                 holder.nickNameTv.setText(fRows.get(0).getF_nickname());
             } else {
-                holder.nickNameTv.setText(aids[position]);
+                holder.nickNameTv.setText(aids[position] + "\n(尚未與該會員成為好友)");
             }
             LiteOrm.releaseMemory();
             mainDB.close();
@@ -91,7 +93,7 @@ public class ThbAidsAdapter extends BaseAdapter {
     }
 
     class Holder {
-        TextView nickNameTv;
+        AutofitTextView nickNameTv;
         CircleImageView avatarIv;
     }
 }

@@ -65,7 +65,7 @@ public class FriendPersonalReportActivity extends AppCompatActivity implements P
      *
      */
     private void initBar() {
-        myInitReturnBar = new MyInitReturnBar(this, "會員暱稱 健康報告書", 0);
+        myInitReturnBar = new MyInitReturnBar(this, "健康報告書", 0);
     }
     private void testDownloadBtn() {
 

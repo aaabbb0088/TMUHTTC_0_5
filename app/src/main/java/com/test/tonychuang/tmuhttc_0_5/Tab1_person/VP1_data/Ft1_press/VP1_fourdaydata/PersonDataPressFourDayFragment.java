@@ -98,7 +98,6 @@ public class PersonDataPressFourDayFragment extends Fragment {
     /**
      *
      */
-
     private void initViews() {
         today_3WeekText = (TextView) view.findViewById(R.id.today_3WeekText);
         today_2WeekText = (TextView) view.findViewById(R.id.today_2WeekText);

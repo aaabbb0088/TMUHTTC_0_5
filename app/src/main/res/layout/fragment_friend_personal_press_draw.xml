@@ -24,7 +24,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近一周"
             android:textOn="近一周"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
 
         <ToggleButton
             android:id="@+id/forteenDayDayBtn"
@@ -35,7 +36,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近二周"
             android:textOn="近二周"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
 
         <ToggleButton
             android:id="@+id/thirtyDayBtn"
@@ -46,7 +48,8 @@
             android:textColor="@color/color_radiobutton"
             android:textOff="近一個月"
             android:textOn="近一個月"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:checked="false" />
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +119,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/drawLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_draw_layout"
@@ -188,15 +190,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:id="@+id/drawLayout">
 
             <com.github.mikephil.charting.charts.CombinedChart
                 android:id="@+id/chartView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="15dp"
-                android:layout_weight="1" />
+                android:layout_margin="15dp" />
 
             <Button
                 android:id="@+id/resetChartBtn"
@@ -211,17 +213,16 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/loadStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="資料載入中"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/loadStatusText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_draw_layout"
-        android:gravity="center"
-        android:text="資料載入中"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/darker_gray"
-        android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>
