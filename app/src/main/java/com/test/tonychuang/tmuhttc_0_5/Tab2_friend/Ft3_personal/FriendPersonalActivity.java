@@ -192,12 +192,12 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.pressThbBtn:
-                if (preThumbRows.get(0).getPData_thumb_count() != 0){
+                if (preThumbRows.get(0).getPData_thumb_count() != 0) {
                     thumbAlertDialog("P");
                 }
                 break;
             case R.id.glycemiaThbBtn:
-                if (glyThumbRows.get(0).getGData_thumb_count() != 0){
+                if (glyThumbRows.get(0).getGData_thumb_count() != 0) {
                     thumbAlertDialog("G");
                 }
                 break;
@@ -271,7 +271,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
         View dialogView = LayoutInflater.from(FriendPersonalActivity.this).inflate(R.layout.dialog_thumd_aids, null);
         TextView cancelTv = (TextView) dialogView.findViewById(R.id.cancelTv);
         ListView aidsListView = (ListView) dialogView.findViewById(R.id.aidsListView);
-        switch (Flag){
+        switch (Flag) {
             case "P":
                 aidsListView.setAdapter(new ThbAidsAdapter(FriendPersonalActivity.this, preThumbRows, Flag));
                 break;
@@ -355,7 +355,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
 
         ArrayList<FWLevelRow> fwLevelRows = mainDB.query(new QueryBuilder<FWLevelRow>(FWLevelRow.class)
                 .whereEquals(FWLevelRow.FWLEVEL_SID, friSid));
-        if (fwLevelRows.size() != 0){
+        if (fwLevelRows.size() != 0) {
             fwLevelRow = fwLevelRows.get(0);
         } else {
             fwLevelRow.setFWLevel_Sid(friSid);
@@ -392,9 +392,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
             noShareRprt();
             noSharePay();
             noShareRcrd();
-        }
-        //對方與自己是好友關係
-        else {
+        } else { //對方與自己是好友關係
             updateEndflag
                     = new Boolean[]{false, false, false, false, false,
                     false, false, false, false, false}; //重新啟動時初始化更新旗標 共10個
@@ -1248,7 +1246,9 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
 
         if (endFlagCount >= updateEndflag.length) {
             mySyncingDialog.dismiss();
-            initShowData();
+            if (fShrDataFlagRows.get(0).getFShrData_data_flag().equals("Y")) {
+                initShowData();
+            }
         }
     }
 
@@ -1464,6 +1464,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
 
     private void pressThbPlus() {
         if (getDrawableId(pressThbBtn) != R.drawable.background_person_data_thumb_true) {
+            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, FriendPersonalActivity.this, "按讚中，請稍後");
             new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
                 @Override
                 protected ArrayList<PreThumbRow> doInBackground(String... params) {
@@ -1482,10 +1483,17 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
                 }
 
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mySyncingDialog.show();
+                }
+
+                @Override
                 protected void onPostExecute(ArrayList<PreThumbRow> preThumbRows) {
                     super.onPostExecute(preThumbRows);
+                    mySyncingDialog.dismiss();
                     if (preThumbRows != null) {
-                        if (preThumbRows.size() != 0){
+                        if (preThumbRows.size() != 0) {
                             DataBase mainDB = LiteOrm.newSingleInstance(FriendPersonalActivity.this, signInShrPref.getAID());
                             mainDB.update(preThumbRows.get(0));
                             pressThumbTv.setText(String.valueOf(preThumbRows.get(0).getPData_thumb_count()));
@@ -1506,6 +1514,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
 
     private void glycemiaThbPlus() {
         if (getDrawableId(glycemiaThbBtn) != R.drawable.background_person_data_thumb_true) {
+            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, FriendPersonalActivity.this, "按讚中，請稍後");
             new AsyncTask<String, Void, ArrayList<GlyThumbRow>>() {
                 @Override
                 protected ArrayList<GlyThumbRow> doInBackground(String... params) {
@@ -1524,10 +1533,17 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
                 }
 
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mySyncingDialog.show();
+                }
+
+                @Override
                 protected void onPostExecute(ArrayList<GlyThumbRow> glyThumbRows) {
                     super.onPostExecute(glyThumbRows);
+                    mySyncingDialog.dismiss();
                     if (glyThumbRows != null) {
-                        if (glyThumbRows.size() != 0){
+                        if (glyThumbRows.size() != 0) {
                             DataBase mainDB = LiteOrm.newSingleInstance(FriendPersonalActivity.this, signInShrPref.getAID());
                             mainDB.update(glyThumbRows.get(0));
                             glycemiaThumbTv.setText(String.valueOf(glyThumbRows.get(0).getGData_thumb_count()));
@@ -1548,7 +1564,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
 
     private int getDrawableId(LinearLayout linearLayout) {
         int result = 0;
-        if(linearLayout.getTag() != null){
+        if (linearLayout.getTag() != null) {
             result = (Integer) linearLayout.getTag();
         }
         return result;

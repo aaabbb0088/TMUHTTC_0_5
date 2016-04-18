@@ -27,6 +27,7 @@ import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgGly
 import com.test.tonychuang.tmuhttc_0_5.Tab1_person.VP1_data.Ft3_msg.PersonMsgPressActivity;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyGlycemiaPsnJudgment;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyPressPsnJudgment;
@@ -450,6 +451,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
 
     private void pressThbPlus() {
         if (getDrawableId(pressThbBtn) != R.drawable.background_person_data_thumb_true) {
+            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "按讚中，請稍後");
             new AsyncTask<String, Void, ArrayList<PreThumbRow>>() {
                 @Override
                 protected ArrayList<PreThumbRow> doInBackground(String... params) {
@@ -468,8 +470,15 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 }
 
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mySyncingDialog.show();
+                }
+
+                @Override
                 protected void onPostExecute(ArrayList<PreThumbRow> preThumbRows) {
                     super.onPostExecute(preThumbRows);
+                    mySyncingDialog.dismiss();
                     if (preThumbRows != null) {
                         if (preThumbRows.size() != 0){
                             DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
@@ -492,6 +501,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
 
     private void glycemiaThbPlus() {
         if (getDrawableId(glycemiaThbBtn) != R.drawable.background_person_data_thumb_true) {
+            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "按讚中，請稍後");
             new AsyncTask<String, Void, ArrayList<GlyThumbRow>>() {
                 @Override
                 protected ArrayList<GlyThumbRow> doInBackground(String... params) {
@@ -510,8 +520,15 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                 }
 
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mySyncingDialog.show();
+                }
+
+                @Override
                 protected void onPostExecute(ArrayList<GlyThumbRow> glyThumbRows) {
                     super.onPostExecute(glyThumbRows);
+                    mySyncingDialog.dismiss();
                     if (glyThumbRows != null) {
                         if (glyThumbRows.size() != 0){
                             DataBase mainDB = LiteOrm.newSingleInstance(getActivity(), signInShrPref.getAID());
