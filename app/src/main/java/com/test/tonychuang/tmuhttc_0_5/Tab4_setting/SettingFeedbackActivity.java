@@ -95,6 +95,7 @@ public class SettingFeedbackActivity extends AppCompatActivity implements View.O
                 alertDialog.dismiss();
                 feedbackEd.setText("");
                 Toast.makeText(SettingFeedbackActivity.this, "您的寶貴意見已送出，感謝您。", Toast.LENGTH_SHORT).show();
+                SettingFeedbackActivity.this.onBackPressed();
             }
         });
         cancelTv.setOnClickListener(new View.OnClickListener() {

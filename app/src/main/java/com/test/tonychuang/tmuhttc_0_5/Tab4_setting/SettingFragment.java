@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -23,8 +24,14 @@ import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
+
+import org.json.JSONObject;
 
 import me.grantland.widget.AutofitTextView;
 
@@ -39,9 +46,9 @@ import me.grantland.widget.AutofitTextView;
  * 服務歷程推撥flag
  * 健康公佈欄推撥flag
  * 遠距中心留言板回覆推撥flag
- * <p>
+ * <p/>
  * 開啟自身定位紀錄flag
- * <p>
+ * <p/>
  * 3.問題回報鍵 -> 問題回報頁面
  */
 
@@ -64,6 +71,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     private SignInShrPref signInShrPref;
     private PsnDataSettingShrPref psnDataSettingShrPref;
+    private PsnSettingShrPref psnSettingShrPref;
 
     private static DialogPlus dialog; //MainActivity 需要利用這個dialog做判斷
 
@@ -80,6 +88,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         initBar();
         initView();
         initData();
+        showInitData();
         return view;
     }
 
@@ -142,6 +151,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
     }
+
     private void initView() {
         personalDataSettingLayout = (LinearLayout) view.findViewById(R.id.personalDataSettingLayout);
         personalDataSettingLayout.setOnClickListener(SettingFragment.this);
@@ -157,6 +167,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         NickNameTv = (TextView) view.findViewById(R.id.NickNameTv);
 
     }
+
+    private void showInitData() {
+        if (psnSettingShrPref.getLOCATION_FLAG().equals("Y")) {
+            setGPSTv(true);
+        } else {
+            setGPSTv(false);
+        }
+    }
+
     private void settingGPSBottomDialog() {
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_gps_setting, null);
         dialog = DialogPlus
@@ -171,7 +190,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
     /**
      * v2
      */
@@ -184,21 +202,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             public void onClick(DialogPlus dialog, View view) {
                 switch (view.getId()) {
                     case R.id.gpsOnText:
-                        gpsSettingTv.setText("開啟");
-                        gpsSettingImv.setImageResource(R.mipmap.setting_gps_on);
-                        Toast.makeText(getActivity(), "GPS ON", Toast.LENGTH_SHORT).show();
+                        upDateSetting("Y");
                         dialog.dismiss();
                         break;
                     case R.id.gpsOffText:
-                        gpsSettingTv.setText("關閉");
-                        gpsSettingImv.setImageResource(R.mipmap.setting_gps_off);
-                        Toast.makeText(getActivity(), "GPS OFF", Toast.LENGTH_SHORT).show();
+                        upDateSetting("N");
                         dialog.dismiss();
                         break;
                 }
             }
         };
     }
+
     private OnBackPressListener getOnBackPressListener() {
         return new OnBackPressListener() {
             @Override
@@ -207,10 +222,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             }
         };
     }
+
     public static DialogPlus getDialog() {
         return dialog;
     }
 
+    private void setGPSTv(boolean bool) {
+        if (bool) {
+            gpsSettingTv.setText("開啟");
+            gpsSettingImv.setImageResource(R.mipmap.setting_gps_on);
+        } else {
+            gpsSettingTv.setText("關閉");
+            gpsSettingImv.setImageResource(R.mipmap.setting_gps_off);
+        }
+    }
 
 
     /**
@@ -222,8 +247,54 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private void initData() {
         signInShrPref = new SignInShrPref(getActivity());
         psnDataSettingShrPref = new PsnDataSettingShrPref(getActivity(), signInShrPref.getAID());
+        psnSettingShrPref = new PsnSettingShrPref(getActivity(), signInShrPref.getAID());
         NameTv.setText(psnDataSettingShrPref.getNAME());
         NickNameTv.setText(psnDataSettingShrPref.getNICKNAME());
+    }
+
+    private void upDateSetting(final String GPSSettingStr) {
+        if (!GPSSettingStr.equals(psnSettingShrPref.getLOCATION_FLAG())){
+            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, getActivity(), "資料同步中，請稍後");
+            new AsyncTask<String, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(String... params) {
+                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                    JSONParser jsonParser = new JSONParser();
+                    Boolean aBoolean = false;
+
+                    JSONObject jsonObject;
+                    try {
+                        jsonObject = httcjsonapi.EditPsnGPSSetting(params[0], params[1]);
+                        aBoolean = jsonParser.parseBoolean(jsonObject);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return aBoolean;
+                }
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mySyncingDialog.show();
+                }
+
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    super.onPostExecute(aBoolean);
+                    mySyncingDialog.dismiss();
+                    if (aBoolean) {
+                        psnSettingShrPref.setLOCATION_FLAG(GPSSettingStr);
+                        if (GPSSettingStr.equals("Y")){
+                            setGPSTv(true);
+                        } else {
+                            setGPSTv(false);
+                        }
+                    } else {
+                        toast("系統發生錯誤，請稍後再嘗試");
+                    }
+                }
+            }.execute(signInShrPref.getAID(), GPSSettingStr);
+        }
     }
 
 
@@ -233,5 +304,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     /**
      *
      */
+    private void toast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
 
 }

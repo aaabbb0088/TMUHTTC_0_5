@@ -162,8 +162,8 @@ public class FriendPersonalRecordActivity extends AppCompatActivity implements V
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowRcdDataRows = oneMounthData;
-                startDateTv.setText(todayDateStr);
-                endDateTv.setText(oneMounthDateStr);
+                startDateTv.setText(oneMounthDateStr);
+                endDateTv.setText(todayDateStr);
                 break;
         }
         startDateTv.setTextColor(unChangeTextColor);

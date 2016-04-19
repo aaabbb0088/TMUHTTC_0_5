@@ -151,8 +151,8 @@ public class PersonServiceRecordActivity extends AppCompatActivity implements Vi
                 thirtyDayBtn.setEnabled(false);
                 showResult(oneMounthData);
                 nowRcdDataRows = oneMounthData;
-                startDateTv.setText(todayDateStr);
-                endDateTv.setText(oneMounthDateStr);
+                startDateTv.setText(oneMounthDateStr);
+                endDateTv.setText(todayDateStr);
                 break;
         }
         startDateTv.setTextColor(unChangeTextColor);

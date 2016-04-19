@@ -33,6 +33,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyInitReturnBar;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
 import org.json.JSONObject;
@@ -54,6 +55,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     private TextView myNickNameTv;
     private TextView mySexTv;
     private TextView myBirthdayTv;
+    private TextView myAidTv;
 
     private DialogPlus dialog;
     private MaterialEditText editNickNameEd;
@@ -63,6 +65,8 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     private InputMethodManager imm;
 
     private SignInShrPref signInShrPref;
+    private PsnDataSettingShrPref psnDataSettingShrPref;
+    private MyDateSFormat myDateSFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
         initBar();
         initView();
         initData();
+        updateView();
     }
 
     @Override
@@ -146,7 +151,26 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
         myNickNameTv = (TextView) findViewById(R.id.myNickNameTv);
         mySexTv = (TextView) findViewById(R.id.mySexTv);
         myBirthdayTv = (TextView) findViewById(R.id.myBirthdayTv);
+        myAidTv = (TextView) findViewById(R.id.myAidTv);
+    }
 
+    private void updateView() {
+        myNickNameTv.setText(psnDataSettingShrPref.getNICKNAME());
+        switch (psnDataSettingShrPref.getSEX()) {
+            case 0:
+                mySexTv.setText("女");
+                break;
+            case 1:
+                mySexTv.setText("男");
+                break;
+            default:
+                break;
+        }
+        String birthday = psnDataSettingShrPref.getBIRTHDAY();
+        if (!birthday.equals("1900-01-01")) {
+            myBirthdayTv.setText(birthday);
+        }
+        myAidTv.setText(signInShrPref.getAID());
     }
 
     private void editNickNameDialog() {
@@ -161,7 +185,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 .setContentHolder(new ViewHolder(dialogView))
                 .setGravity(Gravity.BOTTOM)
                 .setCancelable(false)                       //按主畫面不要縮下去
-                .setOnClickListener(getOnClickListener_editNickName(dialogView))   //確認鍵、取消鍵、按返回鍵鍵盤會縮下去
+                .setOnClickListener(getOnClickListener_editNickName(dialogView, editNickNameEd))   //確認鍵、取消鍵、按返回鍵鍵盤會縮下去
                 .create();
         dialog.show();
 
@@ -205,19 +229,14 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     }
 
     private void editBirthdayTimeWheel() {
-        String initDate;
-        if (myBirthdayTv.getText().toString().equals("yyyy-MM-dd")) {
+        String initDate = psnDataSettingShrPref.getBIRTHDAY();
+        if (initDate.equals("1900-01-01")) {
             initDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        } else {
-            initDate = myBirthdayTv.getText().toString();
         }
         DatePickerPopWin datePickerPopWin;
-        datePickerPopWin = new DatePickerPopWin.Builder(this, new DatePickerPopWin.OnDatePickedListener() {
-            @Override
-            public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
-                myBirthdayTv.setText(dateDesc);
-            }
-        }).textConfirm("確定") //text of confirm button
+        datePickerPopWin = new DatePickerPopWin
+                .Builder(this, getOnDatePickedListener())
+                .textConfirm("確定") //text of confirm button
                 .textCancel("取消") //text of cancel button
                 .btnTextSize(16) // button text size
                 .viewTextSize(25) // pick view text size
@@ -245,7 +264,7 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 .setContentHolder(new ViewHolder(dialogView))
                 .setGravity(Gravity.BOTTOM)
                 .setCancelable(false)                       //按主畫面不要縮下去
-                .setOnClickListener(getOnClickListener_changePwd(dialogView))   //確認鍵、取消鍵、按返回鍵鍵盤會縮下去
+                .setOnClickListener(getOnClickListener_changePwd(dialogView, oldPasswordEd, newPasswordEd, checkPasswordEd))   //確認鍵、取消鍵、按返回鍵鍵盤會縮下去
                 .create();
         dialog.show();
 
@@ -265,24 +284,57 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
     /**
      *
      */
-    private OnClickListener getOnClickListener_editNickName(final View dialogView) {
+    private OnClickListener getOnClickListener_editNickName(final View dialogView, final MaterialEditText editNickNameEd) {
         return new OnClickListener() {
             @Override
-            public void onClick(DialogPlus dialog, View view) {
+            public void onClick(DialogPlus dialog1, View view) {
                 switch (view.getId()) {
                     case R.id.confirmTv:
-                        Toast.makeText(SettingPersonalDataActivity.this, "confirm : "
-                                + editNickNameEd.getText().toString(), Toast.LENGTH_SHORT).show();
-                        imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
-                        if (!"".equals(editNickNameEd.getText().toString().trim())) {
-                            myNickNameTv.setText(editNickNameEd.getText().toString());
+                        final String nickName = editNickNameEd.getText().toString();
+                        if (!psnDataSettingShrPref.getNICKNAME().equals(nickName)) {
+                            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, SettingPersonalDataActivity.this, "資料同步中，請稍後");
+                            new AsyncTask<String, Void, Boolean>() {
+                                @Override
+                                protected Boolean doInBackground(String... params) {
+                                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                    JSONParser jsonParser = new JSONParser();
+                                    Boolean aBoolean = false;
+
+                                    JSONObject jsonObject;
+                                    try {
+                                        jsonObject = httcjsonapi.EditPsnNickName(params[0], params[1]);
+                                        aBoolean = jsonParser.parseBoolean(jsonObject);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    return aBoolean;
+                                }
+
+                                @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mySyncingDialog.show();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Boolean aBoolean) {
+                                    super.onPostExecute(aBoolean);
+                                    mySyncingDialog.dismiss();
+                                    if (aBoolean) {
+                                        psnDataSettingShrPref.setNICKNAME(nickName);
+                                        myNickNameTv.setText(nickName);
+                                    } else {
+                                        toast("系統發生錯誤，請稍後再嘗試");
+                                    }
+                                }
+                            }.execute(signInShrPref.getAID(), nickName);
                         }
-                        dialog.dismiss();
+                        imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
+                        dialog1.dismiss();
                         break;
                     case R.id.cancelTv:
-                        Toast.makeText(SettingPersonalDataActivity.this, "cancel", Toast.LENGTH_SHORT).show();
                         imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
-                        dialog.dismiss();
+                        dialog1.dismiss();
                         break;
                 }
             }
@@ -295,13 +347,85 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             public void onClick(DialogPlus dialog, View view) {
                 switch (view.getId()) {
                     case R.id.sexOnText:
-                        Toast.makeText(SettingPersonalDataActivity.this, "male", Toast.LENGTH_SHORT).show();
-                        mySexTv.setText("男");
+                        if (psnDataSettingShrPref.getSEX() != 1) {
+                            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, SettingPersonalDataActivity.this, "資料同步中，請稍後");
+                            new AsyncTask<String, Void, Boolean>() {
+                                @Override
+                                protected Boolean doInBackground(String... params) {
+                                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                    JSONParser jsonParser = new JSONParser();
+                                    Boolean aBoolean = false;
+
+                                    JSONObject jsonObject;
+                                    try {
+                                        jsonObject = httcjsonapi.EditPsnSex(params[0], params[1]);
+                                        aBoolean = jsonParser.parseBoolean(jsonObject);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    return aBoolean;
+                                }
+
+                                @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mySyncingDialog.show();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Boolean aBoolean) {
+                                    super.onPostExecute(aBoolean);
+                                    mySyncingDialog.dismiss();
+                                    if (aBoolean) {
+                                        psnDataSettingShrPref.setSEX(1);
+                                        mySexTv.setText("男");
+                                    } else {
+                                        toast("系統發生錯誤，請稍後再嘗試");
+                                    }
+                                }
+                            }.execute(signInShrPref.getAID(), "1");
+                        }
                         dialog.dismiss();
                         break;
                     case R.id.sexOffText:
-                        Toast.makeText(SettingPersonalDataActivity.this, "female", Toast.LENGTH_SHORT).show();
-                        mySexTv.setText("女");
+                        if (psnDataSettingShrPref.getSEX() != 0) {
+                            final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, SettingPersonalDataActivity.this, "資料同步中，請稍後");
+                            new AsyncTask<String, Void, Boolean>() {
+                                @Override
+                                protected Boolean doInBackground(String... params) {
+                                    HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                    JSONParser jsonParser = new JSONParser();
+                                    Boolean aBoolean = false;
+
+                                    JSONObject jsonObject;
+                                    try {
+                                        jsonObject = httcjsonapi.EditPsnSex(params[0], params[1]);
+                                        aBoolean = jsonParser.parseBoolean(jsonObject);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    return aBoolean;
+                                }
+
+                                @Override
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mySyncingDialog.show();
+                                }
+
+                                @Override
+                                protected void onPostExecute(Boolean aBoolean) {
+                                    super.onPostExecute(aBoolean);
+                                    mySyncingDialog.dismiss();
+                                    if (aBoolean) {
+                                        psnDataSettingShrPref.setSEX(0);
+                                        mySexTv.setText("女");
+                                    } else {
+                                        toast("系統發生錯誤，請稍後再嘗試");
+                                    }
+                                }
+                            }.execute(signInShrPref.getAID(), "0");
+                        }
                         dialog.dismiss();
                         break;
                 }
@@ -314,6 +438,53 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
             @Override
             public void onBackPressed(DialogPlus dialogPlus) {
                 dialogPlus.dismiss();
+            }
+        };
+    }
+
+    private DatePickerPopWin.OnDatePickedListener getOnDatePickedListener() {
+        return new DatePickerPopWin.OnDatePickedListener() {
+            @Override
+            public void onDatePickCompleted(int year, int month, int day, final String dateDesc) {
+                if ("-".equals(myBirthdayTv.getText().toString().trim())
+                        || !myBirthdayTv.getText().toString().equals(dateDesc)) {
+                    final MySyncingDialog mySyncingDialog = new MySyncingDialog(false, SettingPersonalDataActivity.this, "資料同步中，請稍後");
+                    new AsyncTask<String, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(String... params) {
+                            HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                            JSONParser jsonParser = new JSONParser();
+                            Boolean aBoolean = false;
+
+                            JSONObject jsonObject;
+                            try {
+                                jsonObject = httcjsonapi.EditPsnBirthday(params[0], params[1]);
+                                aBoolean = jsonParser.parseBoolean(jsonObject);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return aBoolean;
+                        }
+
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            mySyncingDialog.show();
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean aBoolean) {
+                            super.onPostExecute(aBoolean);
+                            mySyncingDialog.dismiss();
+                            if (aBoolean) {
+                                psnDataSettingShrPref.setBIRTHDAY(dateDesc);
+                                myBirthdayTv.setText(dateDesc);
+                            } else {
+                                toast("系統發生錯誤，請稍後再嘗試");
+                            }
+                        }
+                    }.execute(signInShrPref.getAID(), dateDesc);
+                }
             }
         };
     }
@@ -343,7 +514,10 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
         };
     }
 
-    private OnClickListener getOnClickListener_changePwd(final View dialogView) {
+    private OnClickListener getOnClickListener_changePwd(final View dialogView,
+                                                         final PasswordEditText oldPasswordEd,
+                                                         final PasswordEditText newPasswordEd,
+                                                         final PasswordEditText checkPasswordEd) {
         return new OnClickListener() {
             @Override
             public void onClick(DialogPlus dialog, View view) {
@@ -354,22 +528,71 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                          * 1.先判斷原密碼是否輸入正確(from SQLiteDB)
                          * 2.判斷新密碼是否輸入一致
                          */
-                        String resutltpwd = "原密碼 : " + oldPasswordEd.getText().toString() + "\n"
-                                + "新密碼 : " + newPasswordEd.getText().toString() + "\n"
-                                + "確認密碼 : " + checkPasswordEd.getText().toString();
-                        Toast.makeText(SettingPersonalDataActivity.this, "confirm : \n" + resutltpwd,
-                                Toast.LENGTH_SHORT).show();
-                        imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
-                        dialog.dismiss();
+                        String oldPwd = oldPasswordEd.getText().toString();
+                        final String newPwd = newPasswordEd.getText().toString();
+                        String chkPwd = checkPasswordEd.getText().toString();
+                        if (oldPwd.equals(psnDataSettingShrPref.getPWD())){
+                            if (newPwd.equals(chkPwd)){
+                                if (!newPwd.equals(oldPwd)){
+                                    final MySyncingDialog mySyncingDialog =
+                                            new MySyncingDialog(false,
+                                                    SettingPersonalDataActivity.this, "資料同步中，請稍後");
+                                    new AsyncTask<String, Void, Boolean>() {
+                                        @Override
+                                        protected Boolean doInBackground(String... params) {
+                                            HTTCJSONAPI httcjsonapi = new HTTCJSONAPI();
+                                            JSONParser jsonParser = new JSONParser();
+                                            Boolean aBoolean = false;
+
+                                            JSONObject jsonObject;
+                                            try {
+                                                jsonObject = httcjsonapi.EditPsnPwd(params[0], params[1], params[2]);
+                                                aBoolean = jsonParser.parseBoolean(jsonObject);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            return aBoolean;
+                                        }
+
+                                        @Override
+                                        protected void onPreExecute() {
+                                            super.onPreExecute();
+                                            mySyncingDialog.show();
+                                        }
+
+                                        @Override
+                                        protected void onPostExecute(Boolean aBoolean) {
+                                            super.onPostExecute(aBoolean);
+                                            mySyncingDialog.dismiss();
+                                            if (aBoolean) {
+                                                psnDataSettingShrPref.setPWD(newPwd);
+                                                toast("密碼修改完成");
+                                            } else {
+                                                toast("系統發生錯誤，請稍後再嘗試");
+                                            }
+                                        }
+                                    }.execute(signInShrPref.getAID(), newPwd, psnDataSettingShrPref.getEMAIL());
+                                }
+                                imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
+                                dialog.dismiss();
+                            } else {
+                                toast("新密碼不一致");
+                            }
+                        } else {
+                            toast("原密碼錯誤");
+                        }
                         break;
                     case R.id.cancelTv:
-                        Toast.makeText(SettingPersonalDataActivity.this, "cancel", Toast.LENGTH_SHORT).show();
                         imm.hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
                         dialog.dismiss();
                         break;
                 }
             }
         };
+    }
+
+    private void toast(String msg) {
+        Toast.makeText(SettingPersonalDataActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -381,6 +604,8 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
      */
     private void initData() {
         signInShrPref = new SignInShrPref(this);
+        psnDataSettingShrPref = new PsnDataSettingShrPref(this, signInShrPref.getAID());
+        myDateSFormat = new MyDateSFormat();
     }
 
     private void signOot() {

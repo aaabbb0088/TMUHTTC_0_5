@@ -1086,6 +1086,97 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject EditPsnNickName(String aid,String nickName) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnNickName");
+        p.put("aid",mapObject(aid));
+        p.put("nickName",mapObject(nickName));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditPsnSex(String aid,String sex) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnSex");
+        p.put("aid",mapObject(aid));
+        p.put("sex",mapObject(sex));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditPsnBirthday(String aid,String birthday) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnBirthday");
+        p.put("aid",mapObject(aid));
+        p.put("birthday",mapObject(birthday));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditPsnPwd(String aid,String pwd,String email) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnPwd");
+        p.put("aid",mapObject(aid));
+        p.put("pwd",mapObject(pwd));
+        p.put("email",mapObject(email));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditPsnNotSetting(String aid,ArrayList<String> settings) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnNotSetting");
+        p.put("aid",mapObject(aid));
+        p.put("settings",mapObject(settings));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject EditPsnGPSSetting(String aid,String gpsSetting) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "EditPsnGPSSetting");
+        p.put("aid",mapObject(aid));
+        p.put("gpsSetting",mapObject(gpsSetting));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

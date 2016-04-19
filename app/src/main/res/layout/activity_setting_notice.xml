@@ -38,7 +38,7 @@
                 android:id="@+id/wDataSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:id="@+id/medSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -120,7 +120,7 @@
                 android:id="@+id/paySettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -161,7 +161,7 @@
                 android:id="@+id/rptSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -202,7 +202,7 @@
                 android:id="@+id/rcdSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -243,7 +243,7 @@
                 android:id="@+id/hBoardSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
@@ -284,7 +284,7 @@
                 android:id="@+id/hRspndSettingTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="開啟/關閉"
+                android:text="  -  "
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 

@@ -127,8 +127,8 @@
                     android:id="@+id/mySexTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="男/女"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="  -  " />
             </LinearLayout>
 
             <ImageView
@@ -162,15 +162,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:text="出生年月日"
+                    android:text="生日"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/myBirthdayTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="yyyy-MM-dd"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="  -  " />
             </LinearLayout>
 
             <ImageView
@@ -205,10 +205,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/textView103"
+                    android:id="@+id/myAidTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="xxxxxxxxxxxx"
+                    android:text="  -  "
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
