@@ -17,10 +17,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!--QRCode-->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- QRCode -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <!--************************************************************************************-->
+    <!--Location 允許使用GPS權限、允許使用網路定位權限-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- ************************************************************************************ -->
+
+    <receiver
+        android:name=".Z_other.GPS.ConnectionChangeReceiver"
+        android:label="NetworkConnection">
+        <intent-filter>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+        </intent-filter>
+    </receiver>
+
+    <!-- ************************************************************************************ -->
 
     <application
         android:allowBackup="true"
@@ -30,7 +44,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SignIn.LogoPageActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +54,8 @@
         <activity
             android:name=".SignIn.SignInActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"> <!-- 強制跳出鍵盤 -->
+            android:windowSoftInputMode="stateVisible|adjustPan">
+            <!-- 強制跳出鍵盤 -->
 
         </activity>
         <activity
@@ -50,15 +65,13 @@
             android:name=".SignIn.Ft2_forget.SignInForgetActivity"
             android:screenOrientation="portrait" />
 
-        <!--************************************************************************************-->
+        <!-- ************************************************************************************ -->
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"></activity>
 
-        </activity>
-
-        <!--************************************************************************************-->
+        <!-- ************************************************************************************ -->
 
         <activity
             android:name=".Tab1_person.VP1_data.Ft1_press.PersonDataPressActivity"
@@ -85,7 +98,7 @@
             android:name=".Tab1_person.VP2_service.Ft4_record.PersonServiceRecordActivity"
             android:screenOrientation="portrait" />
 
-        <!--************************************************************************************-->
+        <!-- ************************************************************************************ -->
 
         <activity
             android:name=".Tab2_friend.Ft1_board.FriendBoardActivity"
@@ -116,7 +129,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Tab2_friend.Ft3_personal.Ft7_msg.FriendMsgGlycemiaActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Tab2_friend.Ft3_personal.Ft7_msg.FriendMsgPressActivity"
             android:screenOrientation="portrait" />
@@ -124,7 +137,7 @@
             android:name=".Tab2_friend.Ft4_setting.FriendSettingActivity"
             android:screenOrientation="portrait" />
 
-        <!--************************************************************************************-->
+        <!-- ************************************************************************************ -->
 
         <activity
             android:name=".Tab4_setting.SettingPersonalDataActivity"
@@ -136,11 +149,15 @@
             android:name=".Tab4_setting.SettingFeedbackActivity"
             android:screenOrientation="portrait" />
 
-        <!--************************************************************************************-->
+        <!-- ************************************************************************************ -->
 
         <activity
             android:name="com.test.tonychuang.chat.ChatActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
+        <!-- ************************************************************************************ -->
+
+        <service android:name=".Z_other.GPS.MyGPSRecordService" />
 
     </application>
 

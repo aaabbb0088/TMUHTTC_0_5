@@ -1177,6 +1177,38 @@ public class HTTCJSONAPI {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject UpdateLocData(String aid,ArrayList<String> times,ArrayList<String> lngs,ArrayList<String> lat) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "UpdateLocData");
+        p.put("aid",mapObject(aid));
+        p.put("times",mapObject(times));
+        p.put("lngs",mapObject(lngs));
+        p.put("lat",mapObject(lat));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject LoadFriLocData(String friAid,String lastTime) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","HTTCJSONAPI");
+        o.put("method", "LoadFriLocData");
+        p.put("friAid",mapObject(friAid));
+        p.put("lastTime",mapObject(lastTime));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
 
 

@@ -1,9 +1,14 @@
 package com.test.tonychuang.tmuhttc_0_5;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -24,6 +29,7 @@ import com.test.tonychuang.tmuhttc_0_5.Tab1_person.PersonFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab2_friend.FriendFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab3_community.CommunityFragment;
 import com.test.tonychuang.tmuhttc_0_5.Tab4_setting.SettingFragment;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.GPS.MyGPSRecordService;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -66,6 +72,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -210,11 +217,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //判斷是否是遠距會員，決定Tab顯示
     private void initTabSetting() {
-//        //test code
-//        SignInShrPref signInShrPref = new SignInShrPref(this);
-//        signInShrPref.setMemberFlag(true);
-//        //test code
-
         if (signInShrPref.getMemberFlag()) {   //如果是遠距會員->if,如果是非遠距會員->else
             setTabSelection(0);// 第一次啟動時選中第0個tab
         } else {
@@ -2258,8 +2260,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateEndflag[Num] = true;
         int endFlagCount = 0;
 
-        for (int i = 0; i < updateEndflag.length; i++) {
-            if (updateEndflag[i]) {
+        for (Boolean anUpdateEndflag : updateEndflag) {
+            if (anUpdateEndflag) {
                 endFlagCount = endFlagCount + 1;
             }
         }
@@ -2273,6 +2275,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //更新完資料，載入Fragment
             initFragmentManager();
             initTabSetting();
+
+            //依照設定開啟關閉定位服務
+            Intent intent = new Intent(MainActivity.this, MyGPSRecordService.class);
+            PsnSettingShrPref psnSettingShrPref = new PsnSettingShrPref(MainActivity.this, signInShrPref.getAID());
+            if (psnSettingShrPref.getLOCATION_FLAG().equals("Y")){
+                if (isOpenGps()){
+                    startService(intent);
+                } else {
+                    Intent LocIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(LocIntent);
+                    toast("尚未開啟定位功能。\n請修改GPS設定。");
+                }
+            } else {
+                stopService(intent);
+            }
         }
+    }
+
+    /**
+     * 判斷GPS是否開啟，GPS或者AGPS開啟一個就認為是開啟的
+     */
+    private boolean isOpenGps() {
+        LocationManager locationManager
+                = (LocationManager) MainActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        // 通過GPS衛星定位，定位級別可以精確到街（通過24顆衛星定位，在室外和空曠的地方定位準確、速度快）
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 通過WLAN或移動網路(3G/2G)確定的位置（也稱作AGPS，輔助GPS定位。主要用於在室內或遮蓋物（建築群或茂密的深林等）密集的地方定位）
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**判斷className服務是否已啟動*/
+    private boolean isWorked(Context mContext,String className) {
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager)
+                mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList
+                = activityManager.getRunningServices(30);
+
+        if (!(serviceList.size()>0)) {
+            return false;
+        }
+
+        for (int i=0; i<serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(className)) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
+    }
+
+    private void toast(String msg) {
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
     }
 }

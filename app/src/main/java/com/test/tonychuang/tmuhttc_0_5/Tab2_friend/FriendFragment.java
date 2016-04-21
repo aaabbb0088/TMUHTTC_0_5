@@ -2148,6 +2148,10 @@ public class FriendFragment extends Fragment {
                         @Override
                         protected String doInBackground(Class<?>... params) {
                             Intent intent = new Intent(context, params[0]);
+                            intent.putExtra("friAid", finalFriAid);
+                            intent.putExtra("friName", friName);
+                            intent.putExtra("friendNickName", friendNickName);
+                            intent.putExtra("memberFlag", finalMemberFlag);
                             context.startActivity(intent);
                             return "finish";
                         }

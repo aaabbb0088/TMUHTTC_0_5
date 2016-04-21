@@ -21,6 +21,7 @@ import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreAvgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreDataRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreMsgRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PreThumbRow;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PsnLocRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.PsnNotRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SMedRow;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.SQLiteDB.RowDataFormat.SPayRow;
@@ -739,6 +740,30 @@ public class JSONParser {
                         jsonObj.getInt("BG_AM_Min"),
                         jsonObj.getInt("BG_AM_MaxDang"),
                         jsonObj.getInt("BG_AM_MinDang")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser =>Department", e.getMessage());
+        }
+        return arrayList;
+    }
+
+    public ArrayList<PsnLocRow> parsePsnLocRow(JSONObject object) {
+        ArrayList<PsnLocRow> arrayList = new ArrayList<PsnLocRow>();
+        try {
+            JSONArray jsonArray = object.getJSONArray("Value");
+            JSONObject jsonObj = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                arrayList.add(new PsnLocRow(
+                        jsonObj.getString("PsnLoc_aid"),
+                        jsonObj.getLong("PsnLoc_table_id"),
+                        jsonObj.getString("PsnLoc_datetime"),
+                        jsonObj.getDouble("PsnLoc_longitude"),
+                        jsonObj.getDouble("PsnLoc_latitude"),
+                        "Y"
                 ));
             }
 

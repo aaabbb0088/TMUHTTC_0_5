@@ -5,8 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.Gravity;
@@ -24,6 +26,7 @@ import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.GPS.MyGPSRecordService;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
@@ -105,7 +108,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.gpsLayout:
-//                settingGPSBottomSheet();
                 settingGPSBottomDialog();
                 break;
             case R.id.feedbackLayout:
@@ -183,7 +185,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 .setContentHolder(new ViewHolder(dialogView))
                 .setGravity(Gravity.BOTTOM)
                 .setCancelable(false)                       //按主畫面不要縮下去
-                .setOnClickListener(getOnClickListener())   //確認鍵、取消鍵
+                .setOnClickListener(getGPSOnClickListener())   //確認鍵、取消鍵
                 .setOnBackPressListener(getOnBackPressListener())  //按返回鍵會縮下去
                 .create();
         dialog.show();
@@ -196,14 +198,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     /**
      *
      */
-    private OnClickListener getOnClickListener() {
+    private OnClickListener getGPSOnClickListener() {
         return new OnClickListener() {
             @Override
             public void onClick(DialogPlus dialog, View view) {
                 switch (view.getId()) {
                     case R.id.gpsOnText:
-                        upDateSetting("Y");
-                        dialog.dismiss();
+                        if (isOpenGps()){
+                            upDateSetting("Y");
+                            dialog.dismiss();
+                        } else {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                            toast("尚未開啟定位功能。\n請修改GPS設定後，再開啟定位功能。");
+                        }
                         break;
                     case R.id.gpsOffText:
                         upDateSetting("N");
@@ -285,8 +293,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     if (aBoolean) {
                         psnSettingShrPref.setLOCATION_FLAG(GPSSettingStr);
                         if (GPSSettingStr.equals("Y")){
+                            Intent startintent = new Intent(getActivity(), MyGPSRecordService.class);
+                            getActivity().startService(startintent);
                             setGPSTv(true);
                         } else {
+                            Intent stopintent = new Intent(getActivity(), MyGPSRecordService.class);
+                            getActivity().stopService(stopintent);
                             setGPSTv(false);
                         }
                     } else {
@@ -304,8 +316,24 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     /**
      *
      */
+    /**
+     * 判斷GPS是否開啟，GPS或者AGPS開啟一個就認為是開啟的
+     */
+    private boolean isOpenGps() {
+        LocationManager locationManager
+                = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        // 通過GPS衛星定位，定位級別可以精確到街（通過24顆衛星定位，在室外和空曠的地方定位準確、速度快）
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 通過WLAN或移動網路(3G/2G)確定的位置（也稱作AGPS，輔助GPS定位。主要用於在室內或遮蓋物（建築群或茂密的深林等）密集的地方定位）
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
+    }
+
     private void toast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
 }
