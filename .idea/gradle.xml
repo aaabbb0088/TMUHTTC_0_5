@@ -5,14 +5,14 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/chat" />
+            <option value="$PROJECT_DIR$/datepicker" />
             <option value="$PROJECT_DIR$/secrettextview" />
-            <option value="$PROJECT_DIR$/timescroller" />
+            <option value="$PROJECT_DIR$/timeruler" />
           </set>
         </option>
         <option name="myModules">
@@ -20,8 +20,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/chat" />
+            <option value="$PROJECT_DIR$/datepicker" />
             <option value="$PROJECT_DIR$/secrettextview" />
-            <option value="$PROJECT_DIR$/timescroller" />
+            <option value="$PROJECT_DIR$/timeruler" />
           </set>
         </option>
       </GradleProjectSettings>

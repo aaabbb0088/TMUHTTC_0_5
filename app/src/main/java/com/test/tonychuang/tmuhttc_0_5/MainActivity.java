@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     //region 按下返回鍵出現確認離開視窗 onKeyDown, dialog

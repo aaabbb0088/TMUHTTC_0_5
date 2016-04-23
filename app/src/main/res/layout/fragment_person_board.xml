@@ -13,60 +13,56 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/background_table_layout"
+        android:background="@drawable/background_psnnot_table_layout"
         android:gravity="top|center_horizontal"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:id="@+id/NotRGroup"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/CtrButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/select_draw_radiobutton_topleft"
+                android:background="@drawable/select_not_radiobutton_topleft"
                 android:button="@null"
                 android:checked="false"
                 android:gravity="center"
-                android:text="中心訊息"
-                android:textColor="@color/color_text_brown_radiobutton"
+                android:text="中\n心\n訊\n息"
+                android:textColor="@color/color_text_blue_radiobutton"
                 android:textSize="17sp" />
 
             <RadioButton
-                android:id="@+id/radioButton4"
+                android:id="@+id/PsnButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/select_draw_radiobutton_topright"
+                android:background="@drawable/select_not_radiobutton_topright"
                 android:button="@null"
                 android:checked="false"
                 android:gravity="center"
-                android:text="個人訊息"
-                android:textColor="@color/color_text_brown_radiobutton"
+                android:text="個\n人\n訊\n息"
+                android:textColor="@color/color_text_blue_radiobutton"
                 android:textSize="17sp" />
         </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/listView"
+                android:id="@+id/CtrNotLv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ListView
-                android:id="@+id/listView2"
+                android:id="@+id/PsnNotLv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

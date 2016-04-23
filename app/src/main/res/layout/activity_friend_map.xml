@@ -1,61 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ruler="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:orientation="vertical"
     tools:context="com.test.tonychuang.tmuhttc_0_5.Tab2_friend.Ft2_map.FriendMapActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="75dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/dateLy"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/dateTv"
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/dateMTv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:background="@drawable/background_map_clr_mounth"
                 android:gravity="center"
-                android:text="MM月\ndd日"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:singleLine="true"
+                android:text="M月"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white" />
 
-            <com.test.tonychuang.timescroller.Ruler
-                android:id="@+id/timeRuler"
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/dateDTv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#55AAAAAA"
-                android:orientation="horizontal"
-                ruler:mark_color="@android:color/white"
-                ruler:max_unit_count="24"
-                ruler:min_unit_size="3dp"
-                ruler:per_unit_count="10"
-                ruler:theme="@style/AppTheme"
-                ruler:unit_bmp_height="10dp"
-                ruler:unit_visible="mid" />
-
-
+                android:background="@drawable/background_map_clr_day"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="d日"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView56"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="地圖控件"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/curValue_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text=""
+                android:textColor="#ff0989"
+                android:textSize="20sp" />
+
+            <com.test.tonychuang.timeruler.RulerWheel
+                android:id="@+id/ruler_view"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@drawable/background_map_timeruler"
+                app:MaxBarSize="2dp"
+                app:MidBarSize="1dp"
+                app:MinBarSize="1dp"
+                app:line_divider="10dp"
+                app:mask_bg="@drawable/icon_arrow"
+                app:max_value="100"
+                app:min_value="0"
+                app:mode="SCALE"
+                app:scaleWidth="1dp"
+                app:showGradient="true"
+                app:showScaleValue="true"
+                app:text_Size="30"
+                app:text_color="#797979" />
+        </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#797979" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <View
         android:id="@+id/grayV"
@@ -64,4 +112,4 @@
         android:background="#66000000"
         android:visibility="gone" />
 
-</RelativeLayout>
+</LinearLayout>

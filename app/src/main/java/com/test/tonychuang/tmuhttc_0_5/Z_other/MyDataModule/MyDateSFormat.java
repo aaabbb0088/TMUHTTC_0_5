@@ -11,10 +11,6 @@ public class MyDateSFormat {
     public MyDateSFormat() {
     }
 
-    public SimpleDateFormat getC2MFrmt_yMdahm() {
-        return new SimpleDateFormat("yyyy/MM/dd a hh:mm", Locale.TAIWAN);
-    }
-
     public SimpleDateFormat getFrmt_yMd() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN);
     }
@@ -37,5 +33,9 @@ public class MyDateSFormat {
 
     public SimpleDateFormat getFrmt_Md() {
         return new SimpleDateFormat("M/d", Locale.TAIWAN);
+    }
+
+    public SimpleDateFormat getFrmt_GPS_yMd_Clr() {
+        return new SimpleDateFormat("yyyy-M-d", Locale.TAIWAN);
     }
 }

@@ -20,9 +20,17 @@
     <!-- QRCode -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!--Location 允許使用GPS權限、允許使用網路定位權限-->
+    <!--Location 允許使用GPS權限、允許使用網路定位權限--> <!--MAP權限-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <permission android:name="com.test.tonychuang.tmuhttc_0_5.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.test.tonychuang.tmuhttc_0_5.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+    <!--Location 允許使用GPS權限、允許使用網路定位權限--> <!--MAP權限-->
+
 
     <!-- ************************************************************************************ -->
 
@@ -158,6 +166,12 @@
         <!-- ************************************************************************************ -->
 
         <service android:name=".Z_other.GPS.MyGPSRecordService" />
+
+        <!-- ************************************************************************************ -->
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBQeud2TCxEGeeqhUU6-mb5Vu456sJ1IYo" />
 
     </application>
 

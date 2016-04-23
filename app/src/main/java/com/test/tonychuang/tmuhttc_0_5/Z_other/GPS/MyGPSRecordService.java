@@ -2,6 +2,7 @@ package com.test.tonychuang.tmuhttc_0_5.Z_other.GPS;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -54,7 +55,7 @@ public class MyGPSRecordService extends Service {
 
     private Handler GPSUploadHandler;
     private Runnable GPSUploadRunnable;
-    private static final int GSPUploadTime = 60000; //正式:3分鐘、測試5秒
+    private static final int GSPUploadTime = 60000; //正式:1分鐘、測試5秒
     private UpdateLocDataAsyTk updateLocDataAsyTk;
     private ArrayList<String> timeAry;
     private ArrayList<String> lngAry;
@@ -68,6 +69,8 @@ public class MyGPSRecordService extends Service {
     private static final int GPSUpdateTime = 60000; //正式:1分鐘、測試3秒
     private double lng; //經度
     private double lat; //緯度
+    private String datetimeString; //時間
+    private String dateString; //日期
     private String timeString; //時間
 
 
@@ -134,24 +137,39 @@ public class MyGPSRecordService extends Service {
                         DataBase mainDB = LiteOrm.newSingleInstance(getApplicationContext(), signInShrPref.getAID());
                         ArrayList<PsnLocRow> psnLocRows = mainDB.query(new QueryBuilder<PsnLocRow>(PsnLocRow.class)
                                 .where(new WhereBuilder(PsnLocRow.class)
-                                        .greaterThan(PsnLocRow.PSNLOC_DATETIME, timeString)
+                                        .greaterThan(PsnLocRow.PSNLOC_DATE, dateString)
                                         .and()
                                         .equals(PsnLocRow.PSNLOC_AID, signInShrPref.getAID())
                                         .or()
-                                        .equals(PsnLocRow.PSNLOC_DATETIME, timeString)
+                                        .equals(PsnLocRow.PSNLOC_DATE, dateString)
+                                        .and()
+                                        .greaterThan(PsnLocRow.PSNLOC_TIME, timeString)
+                                        .and()
+                                        .equals(PsnLocRow.PSNLOC_AID, signInShrPref.getAID())
+                                        .or()
+                                        .equals(PsnLocRow.PSNLOC_DATE, dateString)
+                                        .and()
+                                        .equals(PsnLocRow.PSNLOC_TIME, timeString)
                                         .and()
                                         .equals(PsnLocRow.PSNLOC_AID, signInShrPref.getAID())));
 
                         if (psnLocRows.size() == 0) {
-                            PsnLocRow psnLocRow = new PsnLocRow(signInShrPref.getAID(), 0L, timeString, lng, lat, "N");
+                            PsnLocRow psnLocRow = new PsnLocRow(signInShrPref.getAID(), 0L, dateString, timeString, lng, lat, "N");
                             mainDB.save(psnLocRow);
                         }
+//                        //test
+//                        long count = mainDB.queryCount(PsnLocRow.class);
+//                        toast("總筆數 : " + count + "\n資料來源 : " + provider + "\n更新時間 : " + datetimeString);
+//                        //test
                         LiteOrm.releaseMemory();
                         mainDB.close();
                     }
-
+//                    //test
+//                    toast("no Data");
+//                    //test
                     GPSInsertHandler.postDelayed(this, GSPINSERTTime);
                 } else {
+                    LiteOrm.releaseMemory();
                     GPSInsertHandler.removeCallbacks(GPSInsertRunnable);
                 }
             }
@@ -171,15 +189,15 @@ public class MyGPSRecordService extends Service {
                                     .equals(PsnLocRow.PSNLOC_AID, signInShrPref.getAID())
                                     .and()
                                     .equals(PsnLocRow.PSNLOC_UPLOADED_FLAG, "N"))
-                            .appendOrderAscBy(PsnLocRow.PSNLOC_DATETIME));
+                            .appendOrderAscBy(PsnLocRow.ID));
                     LiteOrm.releaseMemory();
                     mainDB.close();
-                    if (psnLocRows.size() != 0){
+                    if (psnLocRows.size() != 0) {
                         timeAry.clear();
                         lngAry.clear();
                         latAry.clear();
                         for (int i = 0; i < psnLocRows.size(); i++) {
-                            timeAry.add(psnLocRows.get(i).getPsnLoc_datetime());
+                            timeAry.add(psnLocRows.get(i).getPsnLoc_date() + " " + psnLocRows.get(i).getPsnLoc_time());
                             lngAry.add(String.valueOf(psnLocRows.get(i).getPsnLoc_longitude()));
                             latAry.add(String.valueOf(psnLocRows.get(i).getPsnLoc_latitude()));
                         }
@@ -193,7 +211,6 @@ public class MyGPSRecordService extends Service {
             }
         };
         GPSUploadHandler.postDelayed(GPSUploadRunnable, GSPUploadTime);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -257,17 +274,26 @@ public class MyGPSRecordService extends Service {
 //			return true;
 //		}
 
-        //4.第一次開啟定位設定時，優先選擇網路提供器
-        if (checkNetworkConnected() && locationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            provider = LocationManager.NETWORK_PROVIDER;
-            return true;
-        } else {
-            if (locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//        //4.第一次開啟定位設定時，優先選擇網路提供器
+//        if (checkNetworkConnected() && locationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+//            provider = LocationManager.NETWORK_PROVIDER;
+//            return true;
+//        } else {
+//            if (locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                provider = LocationManager.GPS_PROVIDER;
+//                return true;
+//            }
+//        }
+
+        if (locationMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (checkNetworkConnected()) {
+                provider = LocationManager.NETWORK_PROVIDER;
+                return true;
+            } else {
                 provider = LocationManager.GPS_PROVIDER;
                 return true;
             }
         }
-
         return false;
     }
 
@@ -313,12 +339,14 @@ public class MyGPSRecordService extends Service {
             float speed = location.getSpeed();
             //時間
             long time = location.getTime();
-            timeString = getTimeString(time);
+            datetimeString = getTimeString(time);
+            dateString = datetimeString.substring(0, 10);
+            timeString = datetimeString.substring(11, 16);
 
             where = "經度: " + lng +
                     "\n緯度: " + lat +
                     "\n速度: " + speed +
-                    "\n時間: " + timeString +
+                    "\n時間: " + datetimeString +
                     "\nProvider: " + provider;
 
             Log.v(TAG, where);
@@ -409,9 +437,9 @@ public class MyGPSRecordService extends Service {
             JSONObject jsonObject;
             try {
                 jsonObject = httcjsonapi.UpdateLocData((String) params[0]
-                        ,(ArrayList<String>) params[1]
-                        ,(ArrayList<String>) params[2]
-                        ,(ArrayList<String>) params[3]);
+                        , (ArrayList<String>) params[1]
+                        , (ArrayList<String>) params[2]
+                        , (ArrayList<String>) params[3]);
                 aBoolean = jsonParser.parseBoolean(jsonObject);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -470,4 +498,48 @@ public class MyGPSRecordService extends Service {
         });
     }
 
+    //用來接收網路連線狀態
+    public class ConnectionChangeReceiver extends BroadcastReceiver {
+        private String TAG = "ConnectionChangeReceiver";
+
+        public ConnectionChangeReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.v(TAG, "網絡狀態改變");
+
+            boolean success = false;
+
+            ConnectivityManager CM = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (CM == null) {
+                success = false;
+            } else {
+                NetworkInfo info = CM.getActiveNetworkInfo();
+                if (info != null && info.isConnected()) {
+                    if (!info.isAvailable()) {
+                        success = false;
+                    } else {
+                        success = true;
+                    }
+                }
+            }
+
+            if (ActivityCompat.checkSelfPermission(MyGPSRecordService.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(MyGPSRecordService.this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            if (success) {
+                MyGPSRecordService.provider = LocationManager.NETWORK_PROVIDER;
+                locationMgr.removeUpdates(locationListener);
+                locationMgr.requestLocationUpdates(provider, GPSUpdateTime, 0.0f, locationListener);
+            } else {
+                MyGPSRecordService.provider = LocationManager.GPS_PROVIDER;
+                locationMgr.removeUpdates(locationListener);
+                locationMgr.requestLocationUpdates(provider, GPSUpdateTime, 0.0f, locationListener);
+            }
+        }
+    }
 }

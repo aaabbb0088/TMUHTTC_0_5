@@ -760,7 +760,8 @@ public class JSONParser {
                 arrayList.add(new PsnLocRow(
                         jsonObj.getString("PsnLoc_aid"),
                         jsonObj.getLong("PsnLoc_table_id"),
-                        jsonObj.getString("PsnLoc_datetime"),
+                        jsonObj.getString("PsnLoc_date"),
+                        jsonObj.getString("PsnLoc_time"),
                         jsonObj.getDouble("PsnLoc_longitude"),
                         jsonObj.getDouble("PsnLoc_latitude"),
                         "Y"

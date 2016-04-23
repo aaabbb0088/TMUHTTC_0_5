@@ -96,6 +96,23 @@
                     android:layout_toLeftOf="@+id/textView4"
                     android:layout_toStartOf="@+id/textView4"
                     android:src="@mipmap/pressure_wi" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/pressValueText"
+                    android:layout_toStartOf="@+id/pressValueText">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/pressWLIv"
+                        android:layout_gravity="center" />
+                </FrameLayout>
+
             </RelativeLayout>
 
         </LinearLayout>
@@ -242,6 +259,23 @@
                     android:layout_toLeftOf="@+id/glycemiaMealText"
                     android:layout_toStartOf="@+id/glycemiaMealText"
                     android:src="@mipmap/glycemia_gwi" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_toLeftOf="@+id/glycemiaValueText"
+                    android:layout_toStartOf="@+id/glycemiaValueText">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/glycemiaWLIv"
+                        android:layout_gravity="center" />
+                </FrameLayout>
+
             </RelativeLayout>
         </LinearLayout>
 

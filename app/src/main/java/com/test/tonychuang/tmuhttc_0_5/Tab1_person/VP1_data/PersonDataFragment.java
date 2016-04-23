@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -59,6 +60,8 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
     private TextView pressValueText;
     private TextView glycemiaValueText;
     private TextView glycemiaMealText;
+    private ImageView pressWLIv;
+    private ImageView glycemiaWLIv;
     private TextView pressDateText;
     private TextView glycemiaDateText;
     private TextView pressUnitText;
@@ -154,6 +157,8 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
         pressValueText = (TextView) view.findViewById(R.id.pressValueText);
         glycemiaValueText = (TextView) view.findViewById(R.id.glycemiaValueText);
         glycemiaMealText = (TextView) view.findViewById(R.id.glycemiaMealText);
+        pressWLIv = (ImageView) view.findViewById(R.id.pressWLIv);
+        glycemiaWLIv = (ImageView) view.findViewById(R.id.glycemiaWLIv);
         pressDateText = (TextView) view.findViewById(R.id.pressDateText);
         glycemiaDateText = (TextView) view.findViewById(R.id.glycemiaDateText);
         pressUnitText = (TextView) view.findViewById(R.id.pressUnitText);
@@ -275,15 +280,19 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         new MyPressPsnJudgment(wLevelShrPref,
                                 preDataRows.get(0).getPData_sys(),
                                 preDataRows.get(0).getPData_dia());
+                pressWLIv.setVisibility(View.VISIBLE);
                 switch (myPressPsnJudgment.getResult()) {
                     case "normal":
                         presslayout.setBackgroundResource(R.drawable.selector_presslayout);
+                        pressWLIv.setImageResource(R.mipmap.happy);
                         break;
                     case "warn":
                         presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                        pressWLIv.setImageResource(R.mipmap.neutral);
                         break;
                     case "dang":
                         presslayout.setBackgroundResource(R.drawable.selector_redlayout);
+                        pressWLIv.setImageResource(R.mipmap.sad);
                         break;
                 }
 
@@ -317,6 +326,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
             } else {
                 pressValueText.setText("今天未量測");
                 presslayout.setBackgroundResource(R.drawable.selector_nodatalayout);
+                pressWLIv.setVisibility(View.GONE);
                 pressDateText.setText("");
                 pressUnitText.setVisibility(View.INVISIBLE);
                 pressThumbTv.setVisibility(View.GONE);
@@ -361,15 +371,19 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
                         new MyGlycemiaPsnJudgment(wLevelShrPref,
                                 glyDataRows.get(0).getGData_value(),
                                 glyDataRows.get(0).getGData_meal_flag());
+                glycemiaWLIv.setVisibility(View.VISIBLE);
                 switch (myGlycemiaPsnJudgment.getResult()) {
                     case "normal":
                         glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
+                        glycemiaWLIv.setImageResource(R.mipmap.happy);
                         break;
                     case "warn":
                         glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                        glycemiaWLIv.setImageResource(R.mipmap.neutral);
                         break;
                     case "dang":
                         glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
+                        glycemiaWLIv.setImageResource(R.mipmap.sad);
                         break;
                 }
 
@@ -403,6 +417,7 @@ public class PersonDataFragment extends Fragment implements View.OnClickListener
             } else {
                 glycemiaValueText.setText("今天未量測");
                 glycemialayout.setBackgroundResource(R.drawable.selector_nodatalayout);
+                glycemiaWLIv.setVisibility(View.GONE);
                 glycemiaDateText.setText("");
                 glycemiaUnitText.setVisibility(View.INVISIBLE);
                 glycemiaThumbTv.setVisibility(View.GONE);

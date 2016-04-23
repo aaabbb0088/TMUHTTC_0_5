@@ -1,1 +1,1 @@
-include ':app', ':timescroller', ':secrettextview', ':chat'
+include ':app', ':secrettextview', ':chat', ':timeruler', ':datepicker'

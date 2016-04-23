@@ -28,12 +28,14 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.test.tonychuang.tmuhttc_0_5.MainActivity;
 import com.test.tonychuang.tmuhttc_0_5.R;
 import com.test.tonychuang.tmuhttc_0_5.SignIn.SignInActivity;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.GPS.MyGPSRecordService;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.HTTCJSONAPI;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.JSON.JSONParser;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MyInitReturnBar;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.LittleWidgetModule.MySyncingDialog;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.MyDataModule.MyDateSFormat;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnDataSettingShrPref;
+import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.PsnSettingShrPref;
 import com.test.tonychuang.tmuhttc_0_5.Z_other.ShrPref.SignInShrPref;
 
 import org.json.JSONObject;
@@ -99,7 +101,6 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.signOutBtn:
                 signOot();
-//                Toast.makeText(SettingPersonalDataActivity.this, "SignOut", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -531,9 +532,9 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                         String oldPwd = oldPasswordEd.getText().toString();
                         final String newPwd = newPasswordEd.getText().toString();
                         String chkPwd = checkPasswordEd.getText().toString();
-                        if (oldPwd.equals(psnDataSettingShrPref.getPWD())){
-                            if (newPwd.equals(chkPwd)){
-                                if (!newPwd.equals(oldPwd)){
+                        if (oldPwd.equals(psnDataSettingShrPref.getPWD())) {
+                            if (newPwd.equals(chkPwd)) {
+                                if (!newPwd.equals(oldPwd)) {
                                     final MySyncingDialog mySyncingDialog =
                                             new MySyncingDialog(false,
                                                     SettingPersonalDataActivity.this, "資料同步中，請稍後");
@@ -638,6 +639,12 @@ public class SettingPersonalDataActivity extends AppCompatActivity implements Vi
                 super.onPostExecute(aBoolean);
                 mySyncingDialog.dismiss();
                 if (aBoolean) {
+                    //關閉GPS
+                    PsnSettingShrPref psnSettingShrPref = new PsnSettingShrPref(SettingPersonalDataActivity.this, signInShrPref.getAID());
+                    psnSettingShrPref.setLOCATION_FLAG("N");
+                    Intent stopintent = new Intent(SettingPersonalDataActivity.this, MyGPSRecordService.class);
+                    stopService(stopintent);
+
                     signInShrPref.setSignInStatus(false);
                     signInShrPref.setSignInDatetime(new MyDateSFormat().getFrmt_yMdHm().format(new Date()));
                     Intent intent = new Intent(SettingPersonalDataActivity.this, SignInActivity.class);

@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,6 +73,8 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
     private TextView pressValueText;
     private TextView glycemiaValueText;
     private TextView glycemiaMealText;
+    private ImageView pressWLIv;
+    private ImageView glycemiaWLIv;
     private TextView pressDateText;
     private TextView glycemiaDateText;
     private TextView pressUnitText;
@@ -227,6 +230,8 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
         pressValueText = (TextView) findViewById(R.id.pressValueText);
         glycemiaValueText = (TextView) findViewById(R.id.glycemiaValueText);
         glycemiaMealText = (TextView) findViewById(R.id.glycemiaMealText);
+        pressWLIv = (ImageView) findViewById(R.id.pressWLIv);
+        glycemiaWLIv = (ImageView) findViewById(R.id.glycemiaWLIv);
         pressDateText = (TextView) findViewById(R.id.pressDateText);
         glycemiaDateText = (TextView) findViewById(R.id.glycemiaDateText);
         pressUnitText = (TextView) findViewById(R.id.pressUnitText);
@@ -1204,7 +1209,9 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
         glycemiaThbBtn.setEnabled(false);
         glycemiaMsgBtn.setEnabled(false);
         presslayout.setBackgroundResource(R.drawable.background_person_data_nodata_false);
+        pressWLIv.setVisibility(View.GONE);
         glycemialayout.setBackgroundResource(R.drawable.background_person_data_nodata_false);
+        glycemiaWLIv.setVisibility(View.GONE);
     }
 
     private void noShareMed() {
@@ -1290,15 +1297,19 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
                     new FriPressPsnJudgment(fwLevelRow,
                             preDataRows.get(0).getPData_sys(),
                             preDataRows.get(0).getPData_dia());
+            pressWLIv.setVisibility(View.VISIBLE);
             switch (friPressPsnJudgment.getResult()) {
                 case "normal":
                     presslayout.setBackgroundResource(R.drawable.selector_presslayout);
+                    pressWLIv.setImageResource(R.mipmap.happy);
                     break;
                 case "warn":
                     presslayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                    pressWLIv.setImageResource(R.mipmap.neutral);
                     break;
                 case "dang":
                     presslayout.setBackgroundResource(R.drawable.selector_redlayout);
+                    pressWLIv.setImageResource(R.mipmap.sad);
                     break;
             }
 
@@ -1332,6 +1343,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
         } else {
             pressValueText.setText("今天未量測");
             presslayout.setBackgroundResource(R.drawable.selector_nodatalayout);
+            pressWLIv.setVisibility(View.GONE);
             pressDateText.setText("");
             pressUnitText.setVisibility(View.INVISIBLE);
             pressThumbTv.setVisibility(View.GONE);
@@ -1375,15 +1387,19 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
                     new FriGlycemiaPsnJudgment(fwLevelRow,
                             glyDataRows.get(0).getGData_value(),
                             glyDataRows.get(0).getGData_meal_flag());
+            glycemiaWLIv.setVisibility(View.VISIBLE);
             switch (friGlycemiaPsnJudgment.getResult()) {
                 case "normal":
                     glycemialayout.setBackgroundResource(R.drawable.selector_glycemialayout);
+                    glycemiaWLIv.setImageResource(R.mipmap.happy);
                     break;
                 case "warn":
                     glycemialayout.setBackgroundResource(R.drawable.selector_yellowlayout);
+                    glycemiaWLIv.setImageResource(R.mipmap.neutral);
                     break;
                 case "dang":
                     glycemialayout.setBackgroundResource(R.drawable.selector_redlayout);
+                    glycemiaWLIv.setImageResource(R.mipmap.sad);
                     break;
             }
 
@@ -1417,6 +1433,7 @@ public class FriendPersonalActivity extends AppCompatActivity implements View.On
         } else {
             glycemiaValueText.setText("今天未量測");
             glycemialayout.setBackgroundResource(R.drawable.selector_nodatalayout);
+            glycemiaWLIv.setVisibility(View.GONE);
             glycemiaDateText.setText("");
             glycemiaUnitText.setVisibility(View.INVISIBLE);
             glycemiaThumbTv.setVisibility(View.GONE);

@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class HTTCJSONAPI {
 
-    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
-//    private final String urlString = "http://192.168.0.12:9999//HTTCJSONAPI/Handler.ashx";
+//    private final String urlString = "http://192.168.11.92:9999/HTTCJSONAPI/Handler.ashx";
+    private final String urlString = "http://192.168.0.12:9999//HTTCJSONAPI/Handler.ashx";
 //    private final String urlString = "http://120.97.32.179:9999/Handler.ashx";
 //    private final String urlString = "http://10.15.2.113:9999/HTTCJSONAPI/Handler.ashx";
 //    private final String urlString = "http://192.168.0.107:9999/HTTCJSONAPI/Handler.ashx";

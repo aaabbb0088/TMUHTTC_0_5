@@ -31,8 +31,6 @@ dependencies {
     //processBtn
     //多功能EditText
     //password EditText
-    compile project(':timescroller')
-    //時間scroller
     compile project(':secrettextview')
     //隨機淡入淡出TextView
     compile project(':chat')
@@ -65,6 +63,9 @@ dependencies {
     compile 'com.brucetoo.pickview:library:1.1.1'
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0'
     compile files('libs/lite-orm-1.8.1.jar')
+    compile project( ':timeruler')
+    compile project(':datepicker')
+    compile 'com.google.android.gms:play-services:8.4.0'
 }
 
 
